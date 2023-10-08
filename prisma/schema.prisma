@@ -8,47 +8,63 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum RoleName {
+  ADMIN
+  CUSTOMER
+}
+
+enum PermissionName {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+}
+
 //  This model will define the role of a user, i.e admin, customer, etc
 model Role {
-  id   Int    @id @default(autoincrement())
-  name String @unique // A role should have a unique name. i.e admin, customer
+  id   String   @id @default(uuid())
+  name RoleName @unique // A role should have a unique name. i.e admin, customer, etc
 
   permissions Permission[] // A role can have many permissions
   users       User[] // A role can have many users
 }
 
-// 
 model Permission {
-  id   Int    @id @default(autoincrement())
-  name String @unique // A permission should have a unique name. i.e create, read, update, delete, etc
+  id   String         @id @default(uuid())
+  name PermissionName @unique // A permission should have a unique name. i.e create, read, update, delete
 
   roles Role[] // A permission can have many roles
 }
 
 model User {
-  id             Int       @id @default(autoincrement())
+  id             String    @id @default(uuid())
   username       String    @unique
   email          String    @unique
   emailVerified  DateTime?
   phoneNumber    String?
   hashedPassword String
-  image          String?
-  roleId         Int?
+  image          String? // This will serve as the user's avatar or profile picture
+  isActive       Boolean   @default(true)
 
+  roleId    String?
+  cartId    String?
+  walletId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   role   Role?   @relation(fields: [roleId], references: [id]) // A user can have one role
-  cart   Cart?   // A user can have one cart
+  cart   Cart? // A user can have one cart
   orders Order[] // A user can have many orders
-  wallet Wallet? // A user can have one wallet
+  wallet Wallet? // A user has wallet
 
   @@index([roleId], name: "role_id")
+  @@index([cartId], name: "cart_id")
+  @@index([walletId], name: "wallet_id")
 }
 
 model Cart {
-  id     Int @id @default(autoincrement())
-  userId Int // A cart is associated with a user
+  id     String @id @default(uuid())
+  userId String // A cart is associated with a user
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,11 +77,11 @@ model Cart {
 }
 
 model CartItem {
-  id       Int @id @default(autoincrement())
+  id       String @id @default(uuid())
   quantity Int
 
-  cartId    Int
-  productId Int
+  cartId    String
+  productId String
 
   product Product @relation(fields: [productId], references: [id]) // A cart item is associated with a product
   cart    Cart    @relation(fields: [cartId], references: [id]) // A cart item is associated with a cart
@@ -78,7 +94,7 @@ model CartItem {
 }
 
 model Category {
-  id   Int    @id @default(autoincrement())
+  id   String @id @default(uuid())
   name String @unique(map: "unique_category_name")
 
   products Product[] // A category can have many products
@@ -93,32 +109,33 @@ model Category {
 
 // This model will represent the overall order of a user and its information
 model Order {
-  id            Int     @id @default(autoincrement())
-  userId        Int
-  orderStatus   String
-  paymentMethod String?
-  transactionId String?
-  // shippingAddress String?
-  totalAmount   Float?
+  id              String  @id @default(uuid())
+  orderStatus     String
+  paymentMethod   String?
+  shippingAddress String?
+  isPaid          Boolean @default(false)
+  totalAmount     Decimal
+
+  userId String
+  // transactionId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  transaction Transaction?
-  isPaid      Boolean      @default(false)
-
-  orderItems OrderItem[] // An order can have many items
-  user       User        @relation(fields: [userId], references: [id]) // An order is associated with a user
+  orderItems  OrderItem[] // An order can have many items
+  users       User         @relation(fields: [userId], references: [id]) // An order is associated with a user
+  transaction Transaction? // An order can have one transaction
 
   @@index([userId], name: "user_id")
 }
 
 // This model will represent each individual item in an order
 model OrderItem {
-  id        Int @id @default(autoincrement())
-  orderId   Int
-  productId Int
-  quantity  Int
+  id       String @id @default(uuid())
+  quantity Int
+
+  orderId   String
+  productId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -131,39 +148,48 @@ model OrderItem {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          String  @id @default(uuid())
   name        String
   description String
-  price       Float
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  price       Decimal
+  quantity    Int
+  published   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  categoryId String // Foreign Key
 
   images     Image[]
   inventory  Inventory[]
   cartItems  CartItem[] // A product can have many cart items
   orderItems OrderItem[] // A product can have many order items
-  category   Category?   @relation(fields: [categoryId], references: [id]) // A product is associated with a category
-  categoryId Int? // Foreign Key
+  category   Category    @relation(fields: [categoryId], references: [id]) // A product is associated with a category
 
   @@index([categoryId])
 }
 
 // This model will represent the images associated with a product
 model Image {
-  id        Int     @id @default(autoincrement())
-  url       String  @unique(map: "unique_image_url")
-  productId Int
-  product   Product @relation(fields: [productId], references: [id], map: "image_product_id") // An image is associated with a product
+  id  String @id @default(uuid())
+  url String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productId String
+
+  product Product @relation(fields: [productId], references: [id], map: "image_product_id") // An image is associated with a product
 
   @@index([productId], name: "image_product_id")
 }
 
 model Inventory {
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
 
-  productId Int // Foreign Key
+  productId String // Foreign Key
 
-  quantity  Int
+  // quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -174,26 +200,29 @@ model Inventory {
 
 // This model will represent the transaction associated with an order
 model Transaction {
-  id                Int     @id @default(autoincrement())
-  transactionId     String
-  orderId           Int
-  totalAmount       Float
-  transactionStatus String
-  paymentMethod     String?
+  id String @id @default(uuid())
+  // transactionId     String
 
-  order Order @relation(fields: [orderId], references: [id])
+  totalAmount       Decimal
+  transactionStatus String
+  paymentMethod     String
+
+  orderId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id])
 
   @@unique([orderId], name: "unique_order_id")
   @@index([orderId], name: "order_id")
 }
 
 model Wallet {
-  id        Int     @id @default(autoincrement())
-  userId    Int
-  balance   Float
+  id             String  @id @default(uuid())
+  userId         String
+  currentBalance Decimal @default(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
