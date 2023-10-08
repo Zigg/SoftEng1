@@ -37,45 +37,69 @@ const AuthForm = () => {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      username: "",
       email: "",
+      username: "",
       password: "",
     },
   });
 
-  const sleep = (ms: number): Promise<void> => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  };
+  // const sleep = (ms: number): Promise<void> => {
+  //   return new Promise((resolve) => setTimeout(resolve, ms));
+  // };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
     if (variant === "Register") {
       axios
         .post("/api/users/register", data)
-        // FIXME:After registering the toast disappears too quickly
-        .then(() => toast.success("Successfully Registered!"))
-        // TODO: Just a hotfix, try to make the toast persist using states i guess?
-        .then(() => sleep(2000))
-        .then(() => signIn("credentials", data))
-        .catch(() => toast.error("Something went Wrong!"))
+        .then(() => {
+          toast.success("Successfully Registered!");
+          return signIn("credentials", data);
+        })
+        .catch((error) => {
+          if (error.response && error.response.data) {
+            const errorMessage = error.response.data.message;
+
+            if (
+              errorMessage &&
+              errorMessage.includes("Username already exists")
+            ) {
+              toast.error("Username already exists");
+            } else if (
+              errorMessage &&
+              errorMessage.includes("Email already exists")
+            ) {
+              toast.error("Email already exists");
+            }
+          } else {
+            toast.error("Something went wrong!");
+          }
+        })
         .finally(() => setIsLoading(false));
     }
-    // TODO: Properly implement the sign-in api route
+
+    // FIXME: Properly implement the sign-in api route
     if (variant === "Login") {
-      axios
-        .post("/api/users/login", data)
-        .then((response) => {
-          if (response.data.status === 401) {
+      signIn("credentials", {
+        ...data,
+        redirect: false,
+      })
+        .then((callback) => {
+          if (callback?.error) {
             toast.error("Invalid credentials!");
-          } else if (response.data.status === 404) {
-            toast.error("User not found!");
-          } else if (response.data.status === 200) {
-            router.push("/");
+          }
+
+          // TODO: <Placeholder> for now | This will be where the user will be redirected after successful login
+          if (callback?.ok) {
+            router.push("/users");
           }
         })
         .catch((error) => {
-          console.error("Error:", error);
+          if (error.response && error.response.data) {
+            toast.error("Something went wrong!");
+          }
         })
+
         .finally(() => setIsLoading(false));
     }
   };
