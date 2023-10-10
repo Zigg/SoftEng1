@@ -33,7 +33,7 @@ const Auth = () => {
             text-gray-900
           "
         >
-          Sign in to your account
+          Ordering System
         </h2>
       </div>
       <AuthForm />
