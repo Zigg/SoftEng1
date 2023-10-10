@@ -37,14 +37,15 @@ model Permission {
 }
 
 model User {
-  id             String    @id @default(uuid())
-  username       String    @unique
-  email          String    @unique
-  emailVerified  DateTime?
-  phoneNumber    String?
-  hashedPassword String
-  image          String? // This will serve as the user's avatar or profile picture
-  isActive       Boolean   @default(true)
+  id               String    @id @default(uuid())
+  username         String    @unique
+  email            String    @unique
+  emailVerified    DateTime?
+  phoneNumber      String?
+  hashedPassword   String
+  image            String? // This will serve as the user's avatar or profile picture
+  userIsActive     Boolean   @default(true) // This is account duration active i.e x months active then set to false is more than x months
+  accountActivated Boolean   @default(false) // This is to check if the user has activated their account using the email verification
 
   roleId    String?
   cartId    String?
@@ -52,14 +53,30 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  role   Role?   @relation(fields: [roleId], references: [id]) // A user can have one role
-  cart   Cart? // A user can have one cart
-  orders Order[] // A user can have many orders
-  wallet Wallet? // A user has wallet
+  role             Role?             @relation(fields: [roleId], references: [id]) // A user can have one role
+  cart             Cart? // A user can have one cart
+  orders           Order[] // A user can have many orders
+  wallet           Wallet? // A user has wallet
+  activationTokens ActivationToken[] // A user can have many activation tokens
 
   @@index([roleId], name: "role_id")
   @@index([cartId], name: "cart_id")
   @@index([walletId], name: "wallet_id")
+}
+
+model ActivationToken {
+  id          String    @id @default(uuid())
+  token       String    @unique
+  activatedAt DateTime?
+
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId], name: "user_id")
 }
 
 model Cart {
@@ -111,34 +128,35 @@ model Category {
 model Order {
   id              String  @id @default(uuid())
   orderStatus     String
-  paymentMethod   String?
-  shippingAddress String?
+  // paymentMethod   String?
+  shippingAddress String  @default("No address provided")
   isPaid          Boolean @default(false)
   totalAmount     Decimal
 
-  userId String
-  // transactionId String?
+  userId        String
+  orderId       String
+  transactionId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   orderItems  OrderItem[] // An order can have many items
-  users       User         @relation(fields: [userId], references: [id]) // An order is associated with a user
-  transaction Transaction? // An order can have one transaction
+  users       User          @relation(fields: [userId], references: [id]) // An order is associated with a user
+  transaction Transaction[] // An order can have multiple transactions on a single order
 
   @@index([userId], name: "user_id")
 }
 
 // This model will represent each individual item in an order
 model OrderItem {
-  id       String @id @default(uuid())
-  quantity Int
+  id String @id @default(uuid())
+  // quantity Int
 
   orderId   String
   productId String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // createdAt DateTime @default(now())
+  // updatedAt DateTime @updatedAt
 
   product Product @relation(fields: [productId], references: [id]) // An order item is associated with a product
   order   Order   @relation(fields: [orderId], references: [id], map: "order_items_order_id") // An order item is associated with an order
@@ -165,8 +183,11 @@ model Product {
   cartItems  CartItem[] // A product can have many cart items
   orderItems OrderItem[] // A product can have many order items
   category   Category    @relation(fields: [categoryId], references: [id]) // A product is associated with a category
+  store      Store       @relation(fields: [storeId], references: [id])
+  storeId    String
 
   @@index([categoryId])
+  @@index([storeId])
 }
 
 // This model will represent the images associated with a product
@@ -184,6 +205,20 @@ model Image {
   @@index([productId], name: "image_product_id")
 }
 
+model Store {
+  id        String @id @default(uuid())
+  name      String
+  userId    String
+  address   String
+  logoImage String
+
+  inventory Inventory[]
+  products  Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Inventory {
   id String @id @default(uuid())
 
@@ -194,8 +229,11 @@ model Inventory {
   updatedAt DateTime @updatedAt
 
   product Product @relation(fields: [productId], references: [id], map: "inventory_product_id") // An inventory is associated with a product
+  Store   Store?  @relation(fields: [storeId], references: [id])
+  storeId String?
 
   @@index([productId], name: "inventory_product_id")
+  @@index([storeId])
 }
 
 // This model will represent the transaction associated with an order
