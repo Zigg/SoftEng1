@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
+import db from "@/app/libs/prismadb";
 
 type Variant = "Login" | "Register";
 
@@ -18,7 +19,7 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (session?.status === "authenticated") {
-      // TODO: Once the user is logged in, redirect them to their user page, not working yet
+      // TODO: Once the user is logged in, redirect them to their user home page, not working yet
       router.push("/");
     }
   }, [session?.status, router]);
@@ -79,30 +80,38 @@ const AuthForm = () => {
     }
 
     // FIXME: Properly implement the sign-in api route
+    // DONE: Login API should be properly working now...
     if (variant === "Login") {
       signIn("credentials", {
         ...data,
         redirect: false,
       })
         .then((callback) => {
-          if (callback?.error) {
-            toast.error("Invalid credentials!");
-          }
-
-          // TODO: <Placeholder> for now | This will be where the user will be redirected after successful login
           if (callback?.ok) {
-            router.push("/users");
+            // TODO:Make it say welcome back <username> instead of welcome back
+            // TODO:Make this a dynamic route based on the user id
+            router.push(`/dashboard/`);
+            toast.success(`Welcome back!`);
+          } else if (callback?.error) {
+            toast.error(callback.error); 
           }
         })
         .catch((error) => {
-          if (error.response && error.response.data) {
-            toast.error("Something went wrong!");
+          if (error.response && error.response.data === "Invalid credentials") {
+            toast.error("Invalid Credentials!");
+          } else if (error.response && error.response.data === "Email not verified") {
+            toast.error("Email not verified.");
+          } else {
+            console.error("Login error:", error);
+            toast.error("Something went wrong");
           }
         })
-
         .finally(() => setIsLoading(false));
     }
+    
+    
   };
+
   return (
     <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div
