@@ -13,28 +13,29 @@ enum RoleName {
   CUSTOMER
 }
 
-enum PermissionName {
-  CREATE
-  READ
-  UPDATE
-  DELETE
-}
+// enum PermissionName {
+//   CREATE
+//   READ
+//   UPDATE
+//   DELETE
+// }
 
 //  This model will define the role of a user, i.e admin, customer, etc
 model Role {
   id   String   @id @default(uuid())
   name RoleName @unique // A role should have a unique name. i.e admin, customer, etc
 
-  permissions Permission[] // A role can have many permissions
-  users       User[] // A role can have many users
+  // permissions Permission[] // A role can have many permissions
+  users User[] // A role can have many users
 }
 
-model Permission {
-  id   String         @id @default(uuid())
-  name PermissionName @unique // A permission should have a unique name. i.e create, read, update, delete
+// TODO: Just implement RBAC, no need for permissions
+// model Permission {
+//   id   String         @id @default(uuid())
+//   name PermissionName @unique // A permission should have a unique name. i.e create, read, update, delete
 
-  roles Role[] // A permission can have many roles
-}
+//   roles Role[] // A permission can have many roles
+// }
 
 model User {
   id               String    @id @default(uuid())
@@ -47,17 +48,21 @@ model User {
   userIsActive     Boolean   @default(true) // This is account duration active i.e x months active then set to false is more than x months
   accountActivated Boolean   @default(false) // This is to check if the user has activated their account using the email verification
 
-  roleId    String?
-  cartId    String?
-  walletId  String?
+  roleId       String  @default("CUSTOMER") // A user should have a role, default is customer
+  cartId       String?
+  walletId     String?
+  restaurantId String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  role             Role?             @relation(fields: [roleId], references: [id]) // A user can have one role
+  role Role @relation(fields: [roleId], references: [id]) // A user can have one role
+
   cart             Cart? // A user can have one cart
   orders           Order[] // A user can have many orders
   wallet           Wallet? // A user has wallet
   activationTokens ActivationToken[] // A user can have many activation tokens
+  Restaurant       Restaurant[]
 
   @@index([roleId], name: "role_id")
   @@index([cartId], name: "cart_id")
@@ -110,6 +115,7 @@ model CartItem {
   @@index([productId], name: "cart_items_product_id")
 }
 
+// This model will represent the different categories of products, i.e drinks, foods, and will be used to group products i.e foods can have "pizza, burger, desserts, etc" as categories and drinks can have "soda, juice, , wine, , desserts, etc" as categories and desserts can have "ice cream, cake, etc" as categories and addons can have "cheese, bacon, etc" as categories. 
 model Category {
   id   String @id @default(uuid())
   name String @unique(map: "unique_category_name")
@@ -171,20 +177,20 @@ model Product {
   description String
   price       Decimal
   quantity    Int
-  published   Boolean @default(false)
+  isPublished Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   categoryId String // Foreign Key
 
-  images     Image[]
-  inventory  Inventory[]
-  cartItems  CartItem[] // A product can have many cart items
-  orderItems OrderItem[] // A product can have many order items
-  category   Category    @relation(fields: [categoryId], references: [id]) // A product is associated with a category
-  store      Store       @relation(fields: [storeId], references: [id])
-  storeId    String
+  images      Image[]
+  inventory   Inventory[]
+  cartItems   CartItem[] // A product can have many cart items
+  orderItems  OrderItem[] // A product can have many order items
+  category    Category    @relation(fields: [categoryId], references: [id]) // A product is associated with a category
+  restaurants Restaurant  @relation("RestaurantToProduct", fields: [storeId], references: [id])
+  storeId     String
 
   @@index([categoryId])
   @@index([storeId])
@@ -205,18 +211,83 @@ model Image {
   @@index([productId], name: "image_product_id")
 }
 
-model Store {
-  id        String @id @default(uuid())
+model Restaurant {
+  id        String  @id @default(uuid())
   name      String
   userId    String
-  address   String
-  logoImage String
+  address   String?
+  logoImage String?
 
-  inventory Inventory[]
-  products  Product[]
+  inventory Inventory[] @relation("RestaurantToInventory")
+  products  Product[]   @relation("RestaurantToProduct")
+  foods     Food[]      @relation("RestaurantToFood")
+  drinks    Drink[]     @relation("RestaurantToDrink")
+
+  users User @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Food {
+  id          String  @id @default(uuid())
+  name        String
+  price       Decimal
+  description String
+  // available   Boolean @default(true)
+
+  categoryId   String // Foreign Key
+  addons       AddOn[] @relation("FoodToAddon") // A food can have many addons
+  restaurantId String // Foreign Key
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  restaurants Restaurant @relation("RestaurantToFood", fields: [restaurantId], references: [id])
+  // TODO: Create the relations 
+
+  @@index([restaurantId])
+}
+
+model Drink {
+  id          String  @id @default(uuid())
+  name        String
+  price       Decimal
+  description String
+  size        String
+
+  categoryId   String // Foreign Key
+  restaurantId String // Foreign Key
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  restaurants Restaurant @relation("RestaurantToDrink", fields: [restaurantId], references: [id])
+
+  // TODO: Create the relations 
+
+  @@index([restaurantId])
+}
+
+model AddOn {
+  id    String  @id @default(uuid())
+  name  String
+  price Decimal
+
+  categoryId String // Foreign Key
+
+  foodId       String // Foreign Key
+  restaurantId String // Foreign Key
+
+  foods Food @relation("FoodToAddon", fields: [foodId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // TODO: Create the relations 
+
+  @@index([foodId], name: "addon_food_id")
 }
 
 model Inventory {
@@ -228,12 +299,15 @@ model Inventory {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  product Product @relation(fields: [productId], references: [id], map: "inventory_product_id") // An inventory is associated with a product
-  Store   Store?  @relation(fields: [storeId], references: [id])
-  storeId String?
+  restaurantId String // Foreign Key
+
+  product     Product     @relation(fields: [productId], references: [id], map: "inventory_product_id") // An inventory is associated with a product
+  restaurants Restaurant? @relation("RestaurantToInventory", fields: [restaurantId], references: [id])
+  storeId     String?
 
   @@index([productId], name: "inventory_product_id")
   @@index([storeId])
+  @@index([restaurantId])
 }
 
 // This model will represent the transaction associated with an order
