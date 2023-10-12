@@ -2,7 +2,15 @@ import bcrypt from "bcrypt";
 import db from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
 
-// FIXME: Weird response body in the header, it throws an image null for some reason? The session throws a random image response upon being redirect to /
+// TODO: Email Verification
+// For email verification
+// const nodemailer = require('nodemailer');
+// const { google } = require('googleapis');
+
+// FIXME: After registering properly route the user to the email verification page and send the email verification link to the user's email setup a page for resending the email verification link if applicable 
+// TODO: For now we can just set the email within the database as verified to bypass this filter for testing purposes. Once the admin dashboard is done we will try and implement it there
+
+
 export async function POST(req: Request) {
 
   const body = await req.json();
@@ -33,12 +41,14 @@ export async function POST(req: Request) {
   if (existingUserName) {
     return NextResponse.json({ user: null, message: "Username already exists" }, { status: 409 });
   }
-  else if (existingUserEmail) {
+  if (existingUserEmail) {
     return NextResponse.json({ user: null, message: "Email already exists" }, { status: 409 });
   }
 
 
   const hashedPassword = await bcrypt.hash(password, 12);
+
+
 
   // DONE: Initialize the cart and wallet for the new user
   const newUser = await db.user.create({
@@ -47,19 +57,70 @@ export async function POST(req: Request) {
       username,
       hashedPassword,
       // TODO: Commented out first as this will result in increased row reads and insert to the database
-      // For initializing the cart and wallet for the new user
       wallet: {
         create: {},
       },
       cart: {
         create: {},
       },
+
     },
     include: {
       wallet: true,
       cart: true,
     },
   })
+
+  // const oAuth2Client = new google.auth.OAuth2(
+  //   process.env.GMAIL_CLIENT_ID,
+  //   process.env.GMAIL_CLIENT_SECRET,
+  //   'https://developers.google.com/oauthplayground'
+  // );
+  
+  // oAuth2Client.setCredentials({ refresh_token: process.env.GMAIL_REFRESH_TOKEN });
+
+  // const accessToken = oAuth2Client.getAccessToken();
+
+  // // TODO: Fetch these keys
+  // let transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     type: 'OAuth2',
+  //     user: 'your-email@gmail.com',
+  //     clientId: process.env.GMAIL_CLIENT_ID,
+  //     clientSecret: process.env.GMAIL_CLIENT_SECRET,
+  //     refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+  //     accessToken: accessToken,
+  //   },
+  // });
+  
+
+  const activationToken = await db.activationToken.create({
+    data: {
+      token: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+      userId: newUser.id,
+    }
+  });
+
+
+  // const mailOptions = {
+  //   from: 'Email Verification <your-email@gmail.com>', // sender address
+  //   to: newUser.email, // list of receivers
+  //   subject: 'Email Verification', // Subject line
+  //   text: 'Hello ' + newUser.username + ',\n\n' +
+  //     `Please verify your account by clicking the link: http://localhost:3000/verification/${activationToken.token}\n\n` +
+  //     'Thank you!\n' // plain text body
+  // };
+  
+  // // send mail with defined transport object
+  // transporter.sendMail(mailOptions, (error: any, info: { messageId: any; }) => {
+  //   if (error) {
+  //     return console.log(error);
+  //   }
+  //   console.log('Message sent: %s', info.messageId);
+  // });
+
+
 
 
 
