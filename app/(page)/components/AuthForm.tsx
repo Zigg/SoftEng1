@@ -4,10 +4,10 @@ import Input from "@/app/components/inputs/Input";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { signIn, useSession } from "next-auth/react";
+import { getSession, signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
-import db from "@/app/libs/prismadb";
+
 
 type Variant = "Login" | "Register";
 
@@ -19,7 +19,7 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (session?.status === "authenticated") {
-      // TODO: Once the user is logged in, redirect them to their user home page, not working yet
+      // TODO: Once the user is logged in, redirect them to their user home page, not working yet | Set as admin dashboard if admin and customer dashboard if user
       router.push("/");
     }
   }, [session?.status, router]);
@@ -86,20 +86,30 @@ const AuthForm = () => {
         ...data,
         redirect: false,
       })
-        .then((callback) => {
+        .then(async (callback: any) => {
           if (callback?.ok) {
-            // TODO:Make it say welcome back <username> instead of welcome back
-            // TODO:Make this a dynamic route based on the user id
-            router.push(`/dashboard/`);
+            // Fetch the current session
+
+            // TODO: Properly query the user's role and redirect them to the appropriate dashboard
+            // const session = await getSession();
+            // Check the user's role and redirect them to the appropriate dashboard (routes set as route group)
+            // if (session?.user?.role === "ADMIN") {
+            //   router.push(`/admin`);
+            // } else if (session?.user?.role === "CUSTOMER") {
+            //   router.push(`/customer`);
+            // }
             toast.success(`Welcome back!`);
           } else if (callback?.error) {
-            toast.error(callback.error); 
+            toast.error(callback.error);
           }
         })
         .catch((error) => {
           if (error.response && error.response.data === "Invalid credentials") {
             toast.error("Invalid Credentials!");
-          } else if (error.response && error.response.data === "Email not verified") {
+          } else if (
+            error.response &&
+            error.response.data === "Email not verified"
+          ) {
             toast.error("Email not verified.");
           } else {
             console.error("Login error:", error);
