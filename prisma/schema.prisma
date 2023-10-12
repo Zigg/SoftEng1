@@ -23,7 +23,7 @@ enum RoleName {
 //  This model will define the role of a user, i.e admin, customer, etc
 model Role {
   id   String   @id @default(uuid())
-  name RoleName @unique // A role should have a unique name. i.e admin, customer, etc
+  name RoleName @default(CUSTOMER) // A role should have a unique name. i.e admin, customer, etc
 
   // permissions Permission[] // A role can have many permissions
   users User[] // A role can have many users
@@ -48,7 +48,7 @@ model User {
   userIsActive     Boolean   @default(true) // This is account duration active i.e x months active then set to false is more than x months
   accountActivated Boolean   @default(false) // This is to check if the user has activated their account using the email verification
 
-  roleId       String  @default("CUSTOMER") // A user should have a role, default is customer
+  roleId       String?
   cartId       String?
   walletId     String?
   restaurantId String?
@@ -56,13 +56,13 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  role Role @relation(fields: [roleId], references: [id]) // A user can have one role
+  role Role? @relation(fields: [roleId], references: [id]) // A user can have one role
 
   cart             Cart? // A user can have one cart
   orders           Order[] // A user can have many orders
   wallet           Wallet? // A user has wallet
   activationTokens ActivationToken[] // A user can have many activation tokens
-  Restaurant       Restaurant[]
+  restaurants      Restaurant[]
 
   @@index([roleId], name: "role_id")
   @@index([cartId], name: "cart_id")
@@ -135,7 +135,7 @@ model Order {
   id              String  @id @default(uuid())
   orderStatus     String
   // paymentMethod   String?
-  shippingAddress String  @default("No address provided")
+  shippingAddress String
   isPaid          Boolean @default(false)
   totalAmount     Decimal
 
@@ -146,9 +146,9 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orderItems  OrderItem[] // An order can have many items
-  users       User          @relation(fields: [userId], references: [id]) // An order is associated with a user
-  transaction Transaction[] // An order can have multiple transactions on a single order
+  orderItems   OrderItem[] // An order can have many items
+  users        User          @relation(fields: [userId], references: [id]) // An order is associated with a user
+  transactions Transaction[] // An order can have multiple transactions on a single order
 
   @@index([userId], name: "user_id")
 }
