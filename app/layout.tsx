@@ -19,6 +19,7 @@ export default function RootLayout({
         {/* TODO: */}
         {/* Below is the login/register page just commenting out for the mean time, this wont be inputted here but I just put it for viewing purposes*/}
         {/* Focus on first sprint first */}
+        {/* TODO: Enforce the AuthContext for all pages */}
         <AuthContext>
           <ToasterContext />
           {children}
