@@ -48,7 +48,7 @@ model User {
   userIsActive     Boolean   @default(true) // This is account duration active i.e x months active then set to false is more than x months
   accountActivated Boolean   @default(false) // This is to check if the user has activated their account using the email verification
 
-  roleId       String?
+  roleId       String
   cartId       String?
   walletId     String?
   restaurantId String?
