@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import db from "@/app/libs/prismadb";
 import { NextResponse } from "next/server";
+import { RoleName } from "@prisma/client";
 
 // TODO: Email Verification
 // For email verification
@@ -51,32 +52,53 @@ export async function POST(req: Request) {
 
 
   // DONE: Initialize the cart and wallet for the new user
-  const newUser = await db.user.create({
-    data: {
-      email,
-      username,
-      hashedPassword,
-      // TODO: Commented out first as this will result in increased row reads and insert to the database
-      wallet: {
-        create: {},
-      },
-      cart: {
-        create: {},
-      },
+  
+ // Fetch the 'CUSTOMER' role
+// Fetch the 'CUSTOMER' role
+// Fetch the 'CUSTOMER' role
+// Fetch the 'CUSTOMER' role
+const customerRole = await db.role.findFirst({ where: { name: 'CUSTOMER' } });
 
+if (!customerRole) {
+  throw new Error('Role CUSTOMER not found');
+}
+
+// Create a new user with the 'CUSTOMER' role, new wallet, and new cart
+const newUser = await db.user.create({
+  data: {
+    email,
+    username,
+    hashedPassword,
+    wallet: {
+      create: {},
     },
-    include: {
-      wallet: true,
-      cart: true,
+    cart: {
+      create: {},
     },
-  })
+    role: {
+      connect: {
+        id: customerRole.id,
+      },
+    },
+  },
+  include: {
+    wallet: true,
+    cart: true,
+    role: true,
+  },
+});
+
+
+
+
+  
 
   // const oAuth2Client = new google.auth.OAuth2(
   //   process.env.GMAIL_CLIENT_ID,
   //   process.env.GMAIL_CLIENT_SECRET,
   //   'https://developers.google.com/oauthplayground'
   // );
-  
+
   // oAuth2Client.setCredentials({ refresh_token: process.env.GMAIL_REFRESH_TOKEN });
 
   // const accessToken = oAuth2Client.getAccessToken();
@@ -93,7 +115,7 @@ export async function POST(req: Request) {
   //     accessToken: accessToken,
   //   },
   // });
-  
+
 
   const activationToken = await db.activationToken.create({
     data: {
@@ -111,7 +133,7 @@ export async function POST(req: Request) {
   //     `Please verify your account by clicking the link: http://localhost:3000/verification/${activationToken.token}\n\n` +
   //     'Thank you!\n' // plain text body
   // };
-  
+
   // // send mail with defined transport object
   // transporter.sendMail(mailOptions, (error: any, info: { messageId: any; }) => {
   //   if (error) {
