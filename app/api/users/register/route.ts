@@ -54,14 +54,17 @@ export async function POST(req: Request) {
   // DONE: Initialize the cart and wallet for the new user
   
  // Fetch the 'CUSTOMER' role
-// Fetch the 'CUSTOMER' role
-// Fetch the 'CUSTOMER' role
-// Fetch the 'CUSTOMER' role
-const customerRole = await db.role.findFirst({ where: { name: 'CUSTOMER' } });
+//  Remember to run the script to seed the roles otherwise this will throw an error
+// Any user who signs up will have a default role set to customer
+// TODO: fix the admin-seed script to properly seed an admin user, only one seed will be needed, then after you can just assign an admin user within the admin dashboard and also allow for admins to register users ?? not sure yet 
+const customerRole = await db.role.findFirst({ where: { name: RoleName.CUSTOMER } });
 
 if (!customerRole) {
   throw new Error('Role CUSTOMER not found');
 }
+
+
+
 
 // Create a new user with the 'CUSTOMER' role, new wallet, and new cart
 const newUser = await db.user.create({
@@ -78,6 +81,7 @@ const newUser = await db.user.create({
     role: {
       connect: {
         id: customerRole.id,
+        
       },
     },
   },
