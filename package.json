@@ -37,9 +37,12 @@
     "@types/node": "20.8.2",
     "@types/react": "^18.2.25",
     "prisma": "^5.4.1",
+    "ts-node": "^10.9.1",
     "typescript": "5.2.2"
   },
   "scripts": {
-    "dev": "next dev"
+    "dev": "next dev",
+    "role-seed": "ts-node scripts/role-seed.ts",
+    "admin-seed": "ts-node scripts/admin-seed.ts"
   }
 }
