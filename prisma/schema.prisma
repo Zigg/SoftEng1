@@ -8,25 +8,15 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Role {
+  id    String   @id @default(uuid())
+  name  RoleName @unique
+  users User[] // A role can have many users
+}
+
 enum RoleName {
   ADMIN
   CUSTOMER
-}
-
-// enum PermissionName {
-//   CREATE
-//   READ
-//   UPDATE
-//   DELETE
-// }
-
-//  This model will define the role of a user, i.e admin, customer, etc
-model Role {
-  id   String   @id @default(uuid())
-  name RoleName @default(CUSTOMER) // A role should have a unique name. i.e admin, customer, etc
-
-  // permissions Permission[] // A role can have many permissions
-  users User[] // A role can have many users
 }
 
 // TODO: Just implement RBAC, no need for permissions
@@ -49,24 +39,21 @@ model User {
   accountActivated Boolean   @default(false) // This is to check if the user has activated their account using the email verification
 
   roleId       String
-  cartId       String?
-  walletId     String?
-  restaurantId String?
+  restaurantId String? // This is nullable as not all users will be restaurant owners but an admin can create a restaurant 
+  // cartId       String? // This is nullable as not all users will have a cart, only customers will have a cart
+  // walletId     String? // This is nullable as not all users will have a wallet, only customers will have a wallet
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role Role @relation(fields: [roleId], references: [id]) // A user can have one role
 
-  role Role? @relation(fields: [roleId], references: [id]) // A user can have one role
-
-  cart             Cart? // A user can have one cart
+  cart             Cart?
   orders           Order[] // A user can have many orders
-  wallet           Wallet? // A user has wallet
+  wallet           Wallet?
   activationTokens ActivationToken[] // A user can have many activation tokens
-  restaurants      Restaurant[]
+  restaurants      Restaurant[] // An admin can have many restaurants
 
   @@index([roleId], name: "role_id")
-  @@index([cartId], name: "cart_id")
-  @@index([walletId], name: "wallet_id")
 }
 
 model ActivationToken {
@@ -79,7 +66,7 @@ model ActivationToken {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
+  users User @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "user_id")
 }
@@ -91,8 +78,8 @@ model Cart {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  user      User       @relation(fields: [userId], references: [id])
   cartItems CartItem[] // A cart can have many items
-  users     User       @relation(fields: [userId], references: [id]) // A cart is only associated with one user
 
   @@unique([userId], name: "unique_user_id") // A user can only have one cart, reenforced by the unique constraint
   @@index([userId], name: "user_id")
@@ -332,14 +319,7 @@ model Transaction {
 
 model Wallet {
   id             String  @id @default(uuid())
-  userId         String
+  userId         String  @unique
   currentBalance Decimal @default(0)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id])
-
-  @@unique([userId], name: "unique_user_id")
-  @@index([userId], name: "user_id")
+  user           User    @relation(fields: [userId], references: [id])
 }
