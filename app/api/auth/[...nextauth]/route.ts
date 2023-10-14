@@ -9,7 +9,7 @@ import { NextResponse } from "next/server"
 import { User } from "@prisma/client"
 
 
-// Properly implement this later
+// Properly implement this later this will serve as the default pages for the auth routes
 
 // const pages = {
 //   signIn: '/auth/signin',
@@ -42,15 +42,15 @@ export const authOptions: AuthOptions = {
           }
         });
 
-        // If i use NextResponse here, authorize throws an error. Finding out why this causing a type error????. First cause was when i set model id's to int instead of string
+        
         if (!user || !user.hashedPassword) {
-          // return NextResponse.json({ user: null, message: "User not found" }, { status: 404 });
+          
           throw new Error('Invalid credentials');
         }
 
-        // FIXME: Properly return the toast error within the callback function to the client, to properly display the error message. Currently throws "Invalid credentials"
+        // TODO: Return a page that says email not verified and a button to resend the email verification link | for now it just says an error screen that is not styled and is not a good ui/ux experience
         if (!user.accountActivated) {
-          // return NextResponse.json({ user: null, message: "Email not verified" }, { status: 401 });
+          
 
           throw new Error('Email not verified');
 
@@ -62,7 +62,7 @@ export const authOptions: AuthOptions = {
         );
 
         if (!isCorrectPassword) {
-          // return NextResponse.json({ user: null, message: "Invalid credentials" }, { status: 401 });
+          
           throw new Error('Invalid credentials');
         }
 
@@ -74,9 +74,11 @@ export const authOptions: AuthOptions = {
 
   // TODO: Test these callbacks if they properly fetch the current users role
   callbacks: {
-    async jwt({ token, user }: { token: any, user?: any }) {
+    async jwt({ token, user }: { token: any; user?: any }) {
       if (user) {
-        const User = await db.user.findUnique({ where: { email: user.email } });
+        const User = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
         if (User) {
           token.role = User.roleId;
         }
@@ -84,14 +86,13 @@ export const authOptions: AuthOptions = {
 
       return token;
     },
-    async session({ session, token }: { session: any, token: any }) {
+    async session({ session, token }: { session: any; token: any }) {
       if (session && token && token.role) {
         session.user = session.user || {};
         session.user.role = token.role;
       }
       return session;
-    }
-
+    },
   },
 
 
