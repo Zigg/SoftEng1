@@ -6,8 +6,7 @@ import { app } from "../config/firebase.config.js";
 import { useNavigate } from "react-router-dom";
 // import { useDispatch, useSelector } from "react-redux";
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import toast, { Toaster } from "react-hot-toast";
 
 import {
   getAuth,
@@ -15,6 +14,7 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { validateUserJWTToken } from "../api";
+
 // FIXME: The main app api is working I tested the Routes, however the login api end point for the frontend states that the auth/api is invalid??????
 export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,6 +25,7 @@ export const Login = () => {
   const navigate = useNavigate();
   // const dispatch = useDispatch();
   const firebaseAuth = getAuth(app);
+
   // TODO: There is a console error stating : Route path "/login*" will be treated as if it were "/login/*" because the `*` character must always follow a `/` in the pattern. To get rid of this warning, please change the route path to "/login/*".
 
   // TODO: Setup toast notifications for user feedback
@@ -48,23 +49,47 @@ export const Login = () => {
     setEmail("");
     setPassword("");
     setUsername("");
-  
-    await createUserWithEmailAndPassword(
-      firebaseAuth,
-      email,
-      password
-    ).then((userCred) => {
+
+    // TODO: Setup cloud functions to add custom queries to the firebase database, to querying the current username, this doesnt come bundled with the firebase auth
+
+    // const usernameRef = collection(db, "usernames");
+    // const usernameQuery = query(usernameRef, where("username", "==", username));
+    // const usernameSnapshot = await getDocs(usernameQuery);
+    // if (!usernameSnapshot.empty) {
+    //   // Username is already in use, throw an error
+    //   throw new Error("auth/username-already-in-use");
+    // }
+
+    try {
+      const userCred = await createUserWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
       const user = userCred.user;
-      user.updateProfile({
-        displayName: username
-      }).then(() => {
-        console.log("User profile updated");
-      }).catch((error) => {
-        // An error occurred
-        console.error(error);
-      });
+      await user.sendEmailVerification();
       navigate("/", { replace: true });
-    });
+      toast.success("Account created successfully");
+    } catch (error) {
+      console.error(error);
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          toast.error("Email already exists");
+          break;
+        // case "auth/username-already-in-use":
+        //   toast.error("Username already exists");
+        //   break;
+        case "auth/invalid-email":
+          toast.error("Invalid email format");
+          break;
+        case "auth/weak-password":
+          toast.error("Password is too weak");
+          break;
+        default:
+          toast.error("Something went wrong");
+          break;
+      }
+    }
   };
   // TODO: Add toast for user feedback regarding events
 
@@ -72,13 +97,30 @@ export const Login = () => {
   const signInWithEmailPass = async () => {
     setEmail("");
     setPassword("");
-    await signInWithEmailAndPassword(firebaseAuth, email, password).then(
-      // TODO: CUrrently routes to root path, need to change this to appropriate page idk yet maybe..
-      (userCred) => {
-
+    try {
+      const userCred = await signInWithEmailAndPassword(
+        firebaseAuth,
+        email,
+        password
+      );
+      const user = userCred.user;
+      if (user.emailVerified) {
         navigate("/", { replace: true });
+        toast.success("Signed in successfully");
+      } else {
+        toast.error("Email not verified");
       }
-    );
+    } catch (error) {
+      console.error(error);
+      switch (error.code) {
+        case "auth/invalid-login-credentials":
+          toast.error("Invalid credentials");
+          break;
+        default:
+          toast.error("Something went wrong");
+          break;
+      }
+    }
   };
 
   // Create a function for handling form submission
