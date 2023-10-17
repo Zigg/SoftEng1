@@ -12,10 +12,9 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
-import { validateUserJWTToken } from "../api";
 
-// FIXME: The main app api is working I tested the Routes, however the login api end point for the frontend states that the auth/api is invalid??????
 export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -25,8 +24,6 @@ export const Login = () => {
   const navigate = useNavigate();
   // const dispatch = useDispatch();
   const firebaseAuth = getAuth(app);
-
-  // TODO: There is a console error stating : Route path "/login*" will be treated as if it were "/login/*" because the `*` character must always follow a `/` in the pattern. To get rid of this warning, please change the route path to "/login/*".
 
   // TODO: Setup toast notifications for user feedback
   // TODO: Setup the API endpoints and routes
@@ -44,21 +41,11 @@ export const Login = () => {
   //   }
   // };
 
-  // TODO: Test these endpoints
+
   const signUpWithEmailPass = async () => {
     setEmail("");
     setPassword("");
     setUsername("");
-
-    // TODO: Setup cloud functions to add custom queries to the firebase database, to querying the current username, this doesnt come bundled with the firebase auth
-
-    // const usernameRef = collection(db, "usernames");
-    // const usernameQuery = query(usernameRef, where("username", "==", username));
-    // const usernameSnapshot = await getDocs(usernameQuery);
-    // if (!usernameSnapshot.empty) {
-    //   // Username is already in use, throw an error
-    //   throw new Error("auth/username-already-in-use");
-    // }
 
     try {
       const userCred = await createUserWithEmailAndPassword(
@@ -66,9 +53,24 @@ export const Login = () => {
         email,
         password
       );
-      const user = userCred.user;
-      await user.sendEmailVerification();
-      navigate("/", { replace: true });
+      // For setting the user within the firestore database still checking this
+      // await this.firestore
+      // .doc(`users/${userCred.user.uid}`)
+      // .set({email, username});
+
+      // TODO: After confirming the email the user should be redirected to the login page 
+      // TODO: Create a verification page for the user to verify their email | maybe also setup a resend email verification?
+      
+      sendEmailVerification(firebaseAuth.currentUser).then(() => {
+        toast.success("Email verification sent");
+      });
+
+      // TODO: This should be changing the state after registering
+      // this.setIsLogin((isLogin) => ({
+      //   check: !isLogin,
+      // }));
+
+      navigate("/login", { replace: true });
       toast.success("Account created successfully");
     } catch (error) {
       console.error(error);
@@ -76,9 +78,6 @@ export const Login = () => {
         case "auth/email-already-in-use":
           toast.error("Email already exists");
           break;
-        // case "auth/username-already-in-use":
-        //   toast.error("Username already exists");
-        //   break;
         case "auth/invalid-email":
           toast.error("Invalid email format");
           break;
@@ -91,9 +90,9 @@ export const Login = () => {
       }
     }
   };
-  // TODO: Add toast for user feedback regarding events
 
-  // TODO: Create the function for signing in with email and password usinng firebase
+
+  // Function for signing in with email and password
   const signInWithEmailPass = async () => {
     setEmail("");
     setPassword("");
@@ -116,6 +115,9 @@ export const Login = () => {
         case "auth/invalid-login-credentials":
           toast.error("Invalid credentials");
           break;
+        case "auth/user-disabled":
+          toast.error("User disabled");
+          break;
         default:
           toast.error("Something went wrong");
           break;
@@ -123,10 +125,9 @@ export const Login = () => {
     }
   };
 
-  // Create a function for handling form submission
+  // Function for signing up with email and password
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Check if the user is signing up or signing in
     if (isLogin) {
       signInWithEmailPass();
     } else {
@@ -134,7 +135,7 @@ export const Login = () => {
     }
   };
 
-  // TODO: Setup the API endpoints and routes
+  // TODO: Setup routes
   return (
     <div>
       <section>
@@ -142,7 +143,7 @@ export const Login = () => {
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
               <a
-                href="#"
+                href="/login"
                 className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
               >
                 <img className="w-12 h-12 mr-2" src={Logo} alt="logo" />
@@ -216,8 +217,9 @@ export const Login = () => {
                   {isLogin
                     ? "Don't have an account yet?"
                     : "Already have an account?"}
+                    
                   <a
-                    href="#"
+                    // href="#"
                     onClick={toggleForm}
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
