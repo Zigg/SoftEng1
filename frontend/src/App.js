@@ -1,9 +1,21 @@
-import React from 'react'
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 
+// TODO: Set defaults for routing and adding routes
+// TODO: Destructure routes to make adding addional routes easier
+import { Main } from "./containers/Main";
+import { Login } from "./containers/Login";
 const App = () => {
   return (
-    <div className='text-2xl text-rose-500'>This is the app</div>
-  )
-}
+    <div className="w-screen min-h-screen h-auto flex flex-col items-center justify-center">
+      <Routes>
+        <Route path="/*" element={<Main />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      <ToastContainer />
+    </div>
+  );
+};
 
-export default App
+export default App;
