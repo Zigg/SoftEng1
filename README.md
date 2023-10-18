@@ -1,5 +1,5 @@
 # Ordering System Setup
-
+Note: Deprecated as this does not include email verification
 ## Overview
 ...
 
