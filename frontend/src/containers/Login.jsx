@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from "react";
-// import { Logi} from "../assets";
+import React, { useState } from "react";
 import { LoginBG, Logo } from "../assets/images";
-// import axios from "axios";
 import { app } from "../config/firebase.config.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { setUserDetails } from "../context/actions/userActions";
 import {
   getAuth,
@@ -14,7 +11,6 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { set } from "react-hook-form";
 
 export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -36,7 +32,6 @@ export const Login = () => {
   const firebaseAuth = getAuth(app);
 
   const userState = useSelector((state) => state.user);
-  // FIXME: ifFormValid isnt properly working for the register functionality and is throwing false positives
   // TODO: Uncomment or not? | If the user is logged in then redirect them to the home page
   // useEffect(() => {
   //   if (userState) {
@@ -98,12 +93,6 @@ export const Login = () => {
           toast.success("Email verification sent");
         });
       }, 2000);
-
-      // TODO: This should be changing the state after registering but the session persists between refreshes not important for now
-      // this.setIsLogin((isLogin) => ({
-      //   check: !isLogin,
-      // }));
-
       navigate("/login", { replace: true });
       toast.success("Account created successfully");
     } catch (error) {
@@ -172,13 +161,13 @@ export const Login = () => {
       setUsername("");
       setConfirmPassword("");
       setIsPasswordVisible(false);
-      setRegisterPasswordRequirements(false); 
+      setRegisterPasswordRequirements(false);
       signUpWithEmailPass(event);
     }
   };
 
   const toggleForm = () => {
-    // To prevent the bug from when switching between states the form submits the form without the buton being clicked we need to set the states to null between state changes
+    // To prevent the bug from when switching between states the form submits the form without the button being clicked we need to set the states to null between state changes
     setEmail("");
     setLoginPassword("");
     setRegisterPassword("");
