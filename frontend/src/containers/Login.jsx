@@ -163,15 +163,17 @@ export const Login = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     if (isLogin) {
-      signInWithEmailPass(event);
       setEmail("");
       setLoginPassword("");
+      signInWithEmailPass(event);
     } else {
-      signUpWithEmailPass(event);
       setEmail("");
       setRegisterPassword("");
       setUsername("");
       setConfirmPassword("");
+      setIsPasswordVisible(false);
+      setRegisterPasswordRequirements(false); 
+      signUpWithEmailPass(event);
     }
   };
 
@@ -183,6 +185,7 @@ export const Login = () => {
     setUsername("");
     setConfirmPassword("");
     setRegisterPasswordRequirements(false);
+    setIsPasswordVisible(false);
     setIsLogin(!isLogin);
   };
 
