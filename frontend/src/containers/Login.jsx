@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import toast, { Toaster } from "react-hot-toast";
-
+import { setUserDetails } from "../context/actions/userActions";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -24,33 +24,25 @@ export const Login = () => {
   const [username, setUsername] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
-  const [showRequirements, setShowRequirements] = useState(false);
+  const [showRegisterPasswordRequirements, setRegisterPasswordRequirements] =
+    useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const firebaseAuth = getAuth(app);
 
-  const user = useSelector((state) => state.user);
+  const userState = useSelector((state) => state.user);
   // FIXME: ifFormValid isnt properly working for the register functionality and is throwing false positives
   // TODO: Uncomment or not? | If the user is logged in then redirect them to the home page
   // useEffect(() => {
-  //   if (user) {
+  //   if (userState) {
   //     navigate("/", { replace: true });
   //   }
-  // }, [navigate, user]);
-
-  // Test for the submit button
-  // const onSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (isLogin) {
-  //     console.log('Logging in with email:', email, 'and password:', password);
-  //   } else {
-  //     console.log('Signing up with email:', email, 'and username:', username, 'and password:', password);
-  //   }
-  // };
+  // }, [navigate, userState]);
 
   const handlePasswordRegisterChange = (event) => {
     const newPassword = event.target.value;
@@ -65,7 +57,10 @@ export const Login = () => {
     const newConfirmPassword = event.target.value;
     setConfirmPassword(newConfirmPassword);
 
-    const isValid = validatePasswordFields(registerPassword, newConfirmPassword);
+    const isValid = validatePasswordFields(
+      registerPassword,
+      newConfirmPassword
+    );
     setIsFormValid(isValid);
   };
 
@@ -91,10 +86,8 @@ export const Login = () => {
         email,
         registerPassword
       );
-      // For setting the user within the firestore database still checking this
-      // await this.firestore
-      // .doc(`users/${userCred.user.uid}`)
-      // .set({email, username});
+      const userDetails = userCred.user;
+      dispatch(setUserDetails(userDetails));
 
       // TODO: After confirming the email the user should be redirected to the login page
       // TODO: Create a verification page for the user to verify their email | maybe also setup a resend email verification?
@@ -141,8 +134,11 @@ export const Login = () => {
         email,
         loginPassword
       );
-      const user = userCred.user;
-      if (user.emailVerified) {
+
+      const userDetails = userCred.user;
+      dispatch(setUserDetails(userDetails));
+
+      if (userDetails.emailVerified) {
         navigate("/", { replace: true });
         toast.success("Signed in successfully");
       } else {
@@ -168,8 +164,14 @@ export const Login = () => {
     event.preventDefault();
     if (isLogin) {
       signInWithEmailPass(event);
+      setEmail("");
+      setLoginPassword("");
     } else {
       signUpWithEmailPass(event);
+      setEmail("");
+      setRegisterPassword("");
+      setUsername("");
+      setConfirmPassword("");
     }
   };
 
@@ -180,13 +182,14 @@ export const Login = () => {
     setRegisterPassword("");
     setUsername("");
     setConfirmPassword("");
+    setRegisterPasswordRequirements(false);
     setIsLogin(!isLogin);
   };
 
   // TODO: Setup routes
+  // TODO: Try and setup components here to be reusable components NOTE: since these components takes props and states it might be harder to implement these
   return (
     // TODO: Button isnt blurred when loading
-
     <div className="h-screen overflow-hidden flex">
       <img
         src={LoginBG}
@@ -194,10 +197,9 @@ export const Login = () => {
         className="w-full h-full object-cover absolute inset-0 z-0"
       />
       <section className="z-40 flex-shrink-0">
-      <div className="flex flex-col items-center justify-center px-4 py-8 mx-auto min-h-screen lg:py-0">
-      <div className="w-full bg-white p-6 rounded-lg shadow dark:border max-w-md dark:bg-gray-800 dark:border-gray-700 border-b-4 border-t-4  border-rose-500 hover:border-animate">
-        <div className="p-2 space-y-4">
-    
+        <div className="flex flex-col items-center justify-center px-4 py-8 mx-auto min-h-screen lg:py-0">
+          <div className="w-full bg-white p-6 rounded-lg shadow dark:border max-w-md dark:bg-gray-800 dark:border-gray-700 border-b-4 border-t-4  border-rose-500 hover:border-animate">
+            <div className="p-2 space-y-4">
               <a
                 href="/login"
                 className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
@@ -256,7 +258,11 @@ export const Login = () => {
                     type={isPasswordVisible ? "text" : "password"}
                     name="password"
                     id="password"
-                    onClick={() => setShowRequirements(true)}
+                    onKeyDown={() => {
+                      if (!isLogin) {
+                        setRegisterPasswordRequirements(true);
+                      }
+                    }}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10"
                     value={isLogin ? loginPassword : registerPassword}
                     onChange={(e) =>
@@ -293,7 +299,7 @@ export const Login = () => {
                       type={isConfirmPasswordVisible ? "text" : "password"}
                       name="confirmPassword"
                       id="confirmPassword"
-                      onClick={() => setShowRequirements(true)}
+                      onKeyDown={() => setRegisterPasswordRequirements(true)}
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10"
                       value={confirmPassword}
                       onChange={handleConfirmPasswordRegisterChange}
@@ -305,11 +311,11 @@ export const Login = () => {
                         ❌Passwords do not match
                       </p>
                     )}
-                    {showRequirements && (
+                    {showRegisterPasswordRequirements && (
                       <>
                         <div className="space-y-2">
                           <p
-                            className={`text-sm mt-1 transition-all duration-500 ease-out ${
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               registerPassword.length >= 6
                                 ? "text-green-500"
                                 : "text-red-500"
@@ -320,7 +326,7 @@ export const Login = () => {
                           </p>
 
                           <p
-                            className={`text-sm mt-1 transition-all duration-500 ease-out ${
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               /\d/.test(registerPassword)
                                 ? "text-green-500"
                                 : "text-red-500"
@@ -331,7 +337,7 @@ export const Login = () => {
                           </p>
 
                           <p
-                            className={`text-sm mt-1 transition-all duration-500 ease-out ${
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               /[A-Z]/.test(registerPassword)
                                 ? "text-green-500"
                                 : "text-red-500"
@@ -342,7 +348,7 @@ export const Login = () => {
                           </p>
 
                           <p
-                            className={`text-sm mt-1 transition-all duration-500 ease-out ${
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
                                 registerPassword
                               )
