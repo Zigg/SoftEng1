@@ -43,7 +43,6 @@ export const Login = () => {
     const newRegisterPassword = event.target.value;
     setRegisterPassword(newRegisterPassword);
 
-    // Check if the form is valid
     const isValid = validatePasswordFields(newRegisterPassword, confirmPassword);
     setIsFormValid(isValid);
   };
@@ -53,9 +52,7 @@ export const Login = () => {
     setConfirmPassword(newConfirmPassword);
 
     const isValid = validatePasswordFields(
-      registerPassword,
-      newConfirmPassword
-    );
+      registerPassword,newConfirmPassword);
     setIsFormValid(isValid);
   };
 
