@@ -40,11 +40,11 @@ export const Login = () => {
   // }, [navigate, userState]);
 
   const handlePasswordRegisterChange = (event) => {
-    const newPassword = event.target.value;
-    setRegisterPassword(newPassword);
+    const newRegisterPassword = event.target.value;
+    setRegisterPassword(newRegisterPassword);
 
     // Check if the form is valid
-    const isValid = validatePasswordFields(newPassword, confirmPassword);
+    const isValid = validatePasswordFields(newRegisterPassword, confirmPassword);
     setIsFormValid(isValid);
   };
 
@@ -149,7 +149,7 @@ export const Login = () => {
     }
   };
 
-  const onSubmit = (event) => {
+  const onSubmit = async (event) => {
     event.preventDefault();
     if (isLogin) {
       setEmail("");
