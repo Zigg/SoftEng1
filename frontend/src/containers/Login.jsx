@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
-// import { Logi} from "../assets";
-import { Logo } from "../assets";
-// import axios from "axios";
+import React, { useState } from "react";
+import { LoginBG, Logo } from "../assets/images";
 import { app } from "../config/firebase.config.js";
 import { useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-
-import toast, { Toaster } from "react-hot-toast";
-
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { setUserDetails } from "../context/actions/userActions";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -18,58 +15,81 @@ import {
 export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [showRegisterPasswordRequirements, setRegisterPasswordRequirements] =
+    useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
   const firebaseAuth = getAuth(app);
 
-  // TODO: Setup toast notifications for user feedback
-  // TODO: Setup the API endpoints and routes
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
+  const userState = useSelector((state) => state.user);
+  // TODO: Uncomment or not? | If the user is logged in then redirect them to the home page
+  // useEffect(() => {
+  //   if (userState) {
+  //     navigate("/", { replace: true });
+  //   }
+  // }, [navigate, userState]);
+
+  const handlePasswordRegisterChange = (event) => {
+    const newRegisterPassword = event.target.value;
+    setRegisterPassword(newRegisterPassword);
+
+    const isValid = validatePasswordFields(newRegisterPassword, confirmPassword);
+    setIsFormValid(isValid);
   };
 
-  // Test for the submit button
-  // const onSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (isLogin) {
-  //     console.log('Logging in with email:', email, 'and password:', password);
-  //   } else {
-  //     console.log('Signing up with email:', email, 'and username:', username, 'and password:', password);
-  //   }
-  // };
+  const handleConfirmPasswordRegisterChange = (event) => {
+    const newConfirmPassword = event.target.value;
+    setConfirmPassword(newConfirmPassword);
 
+    const isValid = validatePasswordFields(
+      registerPassword,newConfirmPassword);
+    setIsFormValid(isValid);
+  };
+
+  const validatePasswordFields = (password, confirmPassword) => {
+    return (
+      password.length >= 6 &&
+      /\d/.test(password) &&
+      /[A-Z]/.test(password) &&
+      /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password) &&
+      password === confirmPassword
+    );
+  };
 
   const signUpWithEmailPass = async () => {
     setEmail("");
-    setPassword("");
+    setRegisterPassword("");
     setUsername("");
+    setConfirmPassword("");
 
     try {
       const userCred = await createUserWithEmailAndPassword(
         firebaseAuth,
         email,
-        password
+        registerPassword
       );
-      // For setting the user within the firestore database still checking this
-      // await this.firestore
-      // .doc(`users/${userCred.user.uid}`)
-      // .set({email, username});
+      const userDetails = userCred.user;
+      dispatch(setUserDetails(userDetails));
 
-      // TODO: After confirming the email the user should be redirected to the login page 
+      // TODO: After confirming the email the user should be redirected to the login page
       // TODO: Create a verification page for the user to verify their email | maybe also setup a resend email verification?
-      
-      sendEmailVerification(firebaseAuth.currentUser).then(() => {
-        toast.success("Email verification sent");
-      });
 
-      // TODO: This should be changing the state after registering
-      // this.setIsLogin((isLogin) => ({
-      //   check: !isLogin,
-      // }));
-
+      // Added timeout so the toast notifications dont stack
+      setTimeout(() => {
+        sendEmailVerification(firebaseAuth.currentUser).then(() => {
+          toast.success("Email verification sent");
+        });
+      }, 2000);
       navigate("/login", { replace: true });
       toast.success("Account created successfully");
     } catch (error) {
@@ -91,19 +111,20 @@ export const Login = () => {
     }
   };
 
-
-  // Function for signing in with email and password
   const signInWithEmailPass = async () => {
     setEmail("");
-    setPassword("");
+    setLoginPassword("");
     try {
       const userCred = await signInWithEmailAndPassword(
         firebaseAuth,
         email,
-        password
+        loginPassword
       );
-      const user = userCred.user;
-      if (user.emailVerified) {
+
+      const userDetails = userCred.user;
+      dispatch(setUserDetails(userDetails));
+
+      if (userDetails.emailVerified) {
         navigate("/", { replace: true });
         toast.success("Signed in successfully");
       } else {
@@ -125,23 +146,49 @@ export const Login = () => {
     }
   };
 
-  // Function for signing up with email and password
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (event) => {
+    event.preventDefault();
     if (isLogin) {
-      signInWithEmailPass();
+      setEmail("");
+      setLoginPassword("");
+      signInWithEmailPass(event);
     } else {
-      signUpWithEmailPass();
+      setEmail("");
+      setRegisterPassword("");
+      setUsername("");
+      setConfirmPassword("");
+      setIsPasswordVisible(false);
+      setRegisterPasswordRequirements(false);
+      signUpWithEmailPass(event);
     }
   };
 
+  const toggleForm = () => {
+    // To prevent the bug from when switching between states the form submits the form without the button being clicked we need to set the states to null between state changes
+    setEmail("");
+    setLoginPassword("");
+    setRegisterPassword("");
+    setUsername("");
+    setConfirmPassword("");
+    setRegisterPasswordRequirements(false);
+    setIsPasswordVisible(false);
+    setIsLogin(!isLogin);
+  };
+
   // TODO: Setup routes
+  // TODO: Try and setup components here to be reusable components NOTE: since these components takes props and states it might be harder to implement these
   return (
-    <div>
-      <section>
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-          <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+    // TODO: Button isnt blurred when loading
+    <div className="h-screen overflow-hidden flex">
+      <img
+        src={LoginBG}
+        alt=""
+        className="w-full h-full object-cover absolute inset-0 z-0"
+      />
+      <section className="z-40 flex-shrink-0">
+        <div className="flex flex-col items-center justify-center px-4 py-8 mx-auto min-h-screen lg:py-0">
+          <div className="w-full bg-white p-6 rounded-lg shadow dark:border max-w-md dark:bg-gray-800 dark:border-gray-700 border-b-4 border-t-4  border-rose-500 hover:border-animate">
+            <div className="p-2 space-y-4">
               <a
                 href="/login"
                 className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
@@ -149,10 +196,10 @@ export const Login = () => {
                 <img className="w-12 h-12 mr-2" src={Logo} alt="logo" />
                 Ordering System
               </a>
-              <h1 className="text-md font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              <h1 className="text-md font-bold leading-tight tracking-tight text-gray-900 text-xl dark:text-white">
                 {isLogin ? "Sign in to your account" : "Create a new account"}
               </h1>
-              <form className="space-y-4 md:space-y-6" onSubmit={onSubmit}>
+              <form className="space-y-4" onSubmit={onSubmit}>
                 <div>
                   <label
                     htmlFor="email"
@@ -164,7 +211,7 @@ export const Login = () => {
                     type="email"
                     name="email"
                     id="email"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -182,14 +229,14 @@ export const Login = () => {
                       type="text"
                       name="username"
                       id="username"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
                     />
                   </div>
                 )}
-                <div>
+                <div className="relative">
                   <label
                     htmlFor="password"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -197,34 +244,157 @@ export const Login = () => {
                     Password
                   </label>
                   <input
-                    type="password"
+                    type={isPasswordVisible ? "text" : "password"}
                     name="password"
                     id="password"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={() => {
+                      if (!isLogin) {
+                        setRegisterPasswordRequirements(true);
+                      }
+                    }}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10"
+                    value={isLogin ? loginPassword : registerPassword}
+                    onChange={(e) =>
+                      isLogin
+                        ? setLoginPassword(e.target.value)
+                        : setRegisterPassword(e.target.value)
+                    }
                     required
                   />
+
+                  <label className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 transform translate-y-1/2 mt-1.5">
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={isPasswordVisible}
+                      onChange={() => {
+                        setIsPasswordVisible(!isPasswordVisible);
+                        setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+                      }}
+                    />
+                    <div className="w-11 h-6 mb-10 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  </label>
                 </div>
+
+                {!isLogin && (
+                  <div className="relative">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >
+                      Confirm Password
+                    </label>
+                    <input
+                      type={isConfirmPasswordVisible ? "text" : "password"}
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      onKeyDown={() => setRegisterPasswordRequirements(true)}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10"
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordRegisterChange}
+                      required
+                    />
+
+                    {registerPassword !== confirmPassword && (
+                      <p className="text-red-500 text-sm mt-1">
+                        ❌Passwords do not match
+                      </p>
+                    )}
+                    {showRegisterPasswordRequirements && (
+                      <>
+                        <div className="space-y-2">
+                          <p
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
+                              registerPassword.length >= 6
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {registerPassword.length >= 6 ? "✅" : "❌"}{" "}
+                            Password must be at least 6 characters
+                          </p>
+
+                          <p
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
+                              /\d/.test(registerPassword)
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {/\d/.test(registerPassword) ? "✅" : "❌"} Include
+                            at least one number
+                          </p>
+
+                          <p
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
+                              /[A-Z]/.test(registerPassword)
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {/[A-Z]/.test(registerPassword) ? "✅" : "❌"}{" "}
+                            Include at least one uppercase character
+                          </p>
+
+                          <p
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
+                              /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
+                                registerPassword
+                              )
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
+                              registerPassword
+                            )
+                              ? "✅"
+                              : "❌"}{" "}
+                            Include at least one special character
+                          </p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
 
                 <button
                   type="submit"
-                  className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover-bg-primary-700 dark:focus:ring-primary-800"
+                  className={`w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
+                    isLogin
+                      ? email && loginPassword
+                        ? "bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover-bg-primary-700 dark:focus:ring-primary-800"
+                        : "bg-primary-300 cursor-not-allowed opacity-50"
+                      : isFormValid
+                      ? "bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover-bg-primary-700 dark:focus:ring-primary-800"
+                      : "bg-primary-300 cursor-not-allowed opacity-50"
+                  }`}
+                  disabled={isLogin ? !(email && loginPassword) : !isFormValid}
+                  title={
+                    isLogin
+                      ? email && loginPassword
+                        ? ""
+                        : "Please enter your email and password"
+                      : isFormValid
+                      ? ""
+                      : "Please follow the registration requirements"
+                  }
                 >
                   {isLogin ? "Sign in" : "Create an account"}
                 </button>
-                <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+
+                <p className="text-sm font-light text-gray-500 dark:text-gray-400 items-center justify-center flex flex-col">
                   {isLogin
                     ? "Don't have an account yet?"
                     : "Already have an account?"}
-                    
-                  <a
+
+                  <button
                     // href="#"
                     onClick={toggleForm}
-                    className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                    className="font-medium text-primary-600 hover:underline dark:text-primary-500 p-2"
                   >
                     {isLogin ? " Sign up" : " Sign in"}
-                  </a>
+                  </button>
                 </p>
               </form>
             </div>
