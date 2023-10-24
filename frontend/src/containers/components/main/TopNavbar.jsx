@@ -2,14 +2,26 @@ import React, { useState } from "react";
 import { defaultUser, Logo } from "../../../assets/images/index.js";
 import { ShoppingBag } from "lucide-react";
 import CartBadge from "./CartBadge.jsx";
+import { PiSignOutBold } from "react-icons/pi";
+import {
+  TbArrowsTransferDown,
+  TbHistory,
+  TbPackage,
+  TbUser,
+} from "react-icons/tb";
+import { getAuth } from "firebase/auth";
+import { useNavigate } from "react-router";
+const auth = getAuth();
 const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   // TODO: Add badge to cart icon to show how many items are in the cart, based on user input of course
   // TODO: Update Routes
+  // TODO: Using the global state retire the session when the user logs out
   return (
     <div className="md:border-b-2 md:border-gray-300 lg:border-b-2 lg:border-gray-300">
       <nav className="bg-white dark:bg-gray-900 sticky top-0 z-10">
@@ -70,44 +82,60 @@ const TopNavbar = () => {
                 <ul className="py-2" aria-labelledby="user-menu-button">
                   <li>
                     <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                      href="profile"
+                      className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
+                      <TbUser className="mr-2" />
                       Profile
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                      href="order"
+                      className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
+                      <TbPackage className="mr-2" />
                       Orders
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                      href="order-history"
+                      className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
+                      <TbHistory className="mr-2" />
                       Order History
                     </a>
                   </li>
 
                   <li>
                     <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                      href="transactions"
+                      className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
+                      <TbArrowsTransferDown className="mr-2" />
                       Transactions
                     </a>
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-black font-medium hover:bg-rose-500 dark:hover:bg-rose-700 dark:text-gray-200 dark:hover:text-white"
+                    <button
+                      onClick={() => {
+                        auth
+                          .signOut()
+                          .then(() => {
+                            
+                            console.log("User signed out");
+                            navigate("/login", { replace: true }); 
+                          })
+                          .catch((error) => {
+                            console.error("Error signing out: ", error);
+                          });
+                      }}
+                      className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-rose-500 dark:hover:bg-rose-700 dark:text-gray-200 dark:hover:text-white focus:outline-none w-full" 
                     >
+                      <PiSignOutBold className="mr-2" />
                       Sign out
-                    </a>
+                    </button>
                   </li>
                 </ul>
               </div>
