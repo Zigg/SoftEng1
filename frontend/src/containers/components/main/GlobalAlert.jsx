@@ -2,27 +2,32 @@ import { Toast } from "flowbite-react";
 import { AiOutlineInfoCircle, AiOutlineWarning } from "react-icons/ai";
 import { MdOutlineDangerous } from "react-icons/md";
 import { BsCheck2Square, BsCartCheck, BsCartX } from "react-icons/bs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 export default function GlobalAlert({ type, message }) {
   // TODO: Try to limit toast popups to 1 do not allow toast notifications to stack
   // TODO: These are placeholders for now, Add or remove some of these later on
   //  TODO: Set timer to auto close toast notifications
 
   const [showToast, setShowToast] = useState(true);
+  const [progress, setProgress] = useState(100);
+  const timerRef = useRef(null);
 
   useEffect(() => {
     if (showToast) {
-      const timer = setTimeout(() => {
+      const timeout = setTimeout(() => {
         setShowToast(false);
+        clearInterval(timerRef.current);
       }, 3000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timeout);
+      };
     }
   }, [showToast]);
 
-  if (type === "danger" && showToast) {
+  if (type === "danger") {
     return (
-      <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
+      <div className="fixed right-0  left-0 bottom-5 flex justify-center z-10">
         <div className="p-3">
           <Toast className="">
             <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
@@ -40,7 +45,7 @@ export default function GlobalAlert({ type, message }) {
 
   if (type === "success") {
     return (
-      <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
+      <div className="fixed right-0  left-0 bottom-5 flex justify-center z-10">
         <div className="p-3">
           {" "}
           <Toast>
@@ -59,7 +64,7 @@ export default function GlobalAlert({ type, message }) {
   }
   if (type === "warning") {
     return (
-      <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
+      <div className="fixed right-0  left-0 bottom-5 flex justify-center z-10">
         <div className="p-3">
           {" "}
           <Toast>
@@ -79,7 +84,7 @@ export default function GlobalAlert({ type, message }) {
 
   if (type === "info") {
     return (
-      <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
+      <div className="fixed right-0  left-0 bottom-5 flex justify-center z-10">
         <div className="p-3">
           <Toast>
             <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-500 dark:bg-blue-700 dark:text-blue-200">
@@ -97,9 +102,9 @@ export default function GlobalAlert({ type, message }) {
   }
   // TODO: Fetch the item name or shortened item name from the database (just the first word to be spliced), this is then displayed for the {Item Name} below
   // TODO: Replace Messages with the appropriate actions
-  if (type === "cart-add") {
+  if (type === "cart-add" && showToast) {
     return (
-      <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
+      <div className="fixed right-0  left-0 bottom-5 flex justify-center z-10">
         {" "}
         <div className="p-3">
           <Toast>
@@ -110,16 +115,15 @@ export default function GlobalAlert({ type, message }) {
             <div className="ml-3 text-sm font-normal">
               {(message, "Item added to Cart")}
             </div>
-
-            <Toast.Toggle />
           </Toast>
         </div>
       </div>
     );
   }
-  if (type === "cart-remove") {
+
+  if (type === "cart-remove" && showToast) {
     return (
-      <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
+      <div className="fixed right-0  left-0 bottom-5 flex justify-center z-10">
         {" "}
         <div className="p-3">
           <Toast>
@@ -129,8 +133,6 @@ export default function GlobalAlert({ type, message }) {
             <div className="ml-3 text-sm font-normal">
               {(message, "Item removed from Cart")}
             </div>
-
-            <Toast.Toggle />
           </Toast>
         </div>
       </div>
