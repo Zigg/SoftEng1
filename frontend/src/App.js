@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { app } from "./config/firebase.config.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
 
 import { setUserDetails } from "./context/actions/userActions";
@@ -20,6 +20,9 @@ const App = () => {
   // TODO: checking if the user is logged in or not, then dispatching the user details to the redux store
   const dispatch = useDispatch();
   // TODO: This is for the loading screen for the app however this should only be used for loading contents from the redux store, or database, example would be searching, filtering, etc. Not for pages that dont require loading but I can set it to all pages for now
+
+  const alert = useSelector((state) => state.alert);
+
   useEffect(() => {
     setIsLoading(true);
     const user = firebaseAuth.currentUser;
@@ -43,7 +46,9 @@ const App = () => {
         <Route path="/login" element={<Login />} />
       </Routes>
 
-      {!isLoading && <GlobalAlert type={"cart-add"} message={""} />}
+      {!isLoading && alert?.type && (
+        <GlobalAlert type={alert.type} message={alert.type} />
+      )}
     </div>
   );
 };
