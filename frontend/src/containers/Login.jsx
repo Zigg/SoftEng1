@@ -87,7 +87,9 @@ export const Login = () => {
       // Added timeout so the toast notifications dont stack
       setTimeout(() => {
         sendEmailVerification(firebaseAuth.currentUser).then(() => {
-          toast.success("Email verification sent");
+          toast('Email Sent!', {
+            icon: '✉️',
+          });
         });
       }, 2000);
       navigate("/login", { replace: true });
@@ -100,9 +102,6 @@ export const Login = () => {
           break;
         case "auth/invalid-email":
           toast.error("Invalid email format");
-          break;
-        case "auth/weak-password":
-          toast.error("Password is too weak");
           break;
         default:
           toast.error("Something went wrong");
@@ -126,7 +125,6 @@ export const Login = () => {
 
       if (userDetails.emailVerified) {
         navigate("/", { replace: true });
-        toast.success("Signed in successfully");
       } else {
         toast.error("Email not verified");
       }
@@ -179,16 +177,16 @@ export const Login = () => {
   // TODO: Try and setup components here to be reusable components NOTE: since these components takes props and states it might be harder to implement these
   return (
     // TODO: Button isnt blurred when loading
-    <div className="h-screen overflow-hidden flex">
+    <div className="h-screen overflow-hidden flex flex-col items-center justify-center">
       <img
         src={LoginBG}
         alt=""
         className="w-full h-full object-cover absolute inset-0 z-0"
       />
-      <section className="z-40 flex-shrink-0">
+      <section className="z-10 items-center flex-shrink-0">
         <div className="flex flex-col items-center justify-center px-4 py-8 mx-auto min-h-screen lg:py-0">
           <div className="w-full bg-white p-6 rounded-lg shadow dark:border max-w-md dark:bg-gray-800 dark:border-gray-700 border-b-4 border-t-4  border-rose-500 hover:border-animate">
-            <div className="p-2 space-y-4">
+            <div className="flex flex-col items-center justify-center  p-2 space-y-4">
               <a
                 href="/login"
                 className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
@@ -196,7 +194,7 @@ export const Login = () => {
                 <img className="w-12 h-12 mr-2" src={Logo} alt="logo" />
                 Ordering System
               </a>
-              <h1 className="text-md font-bold leading-tight tracking-tight text-gray-900 text-xl dark:text-white">
+              <h1 className="font-bold leading-tight tracking-tight text-gray-900 text-xl dark:text-white">
                 {isLogin ? "Sign in to your account" : "Create a new account"}
               </h1>
               <form className="space-y-4" onSubmit={onSubmit}>
