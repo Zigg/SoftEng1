@@ -2,15 +2,27 @@ import { Toast } from "flowbite-react";
 import { AiOutlineInfoCircle, AiOutlineWarning } from "react-icons/ai";
 import { MdOutlineDangerous } from "react-icons/md";
 import { BsCheck2Square, BsCartCheck, BsCartX } from "react-icons/bs";
-
+import { useState, useEffect } from "react";
 export default function GlobalAlert({ type, message }) {
   // TODO: Try to limit toast popups to 1 do not allow toast notifications to stack
   // TODO: These are placeholders for now, Add or remove some of these later on
   //  TODO: Set timer to auto close toast notifications
-  if (type === "danger") {
+
+  const [showToast, setShowToast] = useState(true);
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
+  if (type === "danger" && showToast) {
     return (
       <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
-        {" "}
         <div className="p-3">
           <Toast className="">
             <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
@@ -19,12 +31,13 @@ export default function GlobalAlert({ type, message }) {
             <div className="ml-3 text-sm font-normal">
               {(message, "Are you sure?")}
             </div>
-            <Toast.Toggle />
+            <Toast.Toggle />{" "}
           </Toast>
         </div>
       </div>
     );
   }
+
   if (type === "success") {
     return (
       <div className="fixed right-0 lg:top-20 md:top-20 sm:top-0 xs:left-0 xs:bottom-0 flex justify-center z-10">
