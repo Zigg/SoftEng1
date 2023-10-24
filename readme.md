@@ -17,7 +17,7 @@ List of all the technologies, languages, frameworks, libraries etc. used in the 
 - **Framework**: React.js, express.js
 - **Database**:  Firebase
 - **Authentication**: Firebase Auth
-- **UI**: Tailwind CSS, Shadcn UI
+- **UI**: Tailwind CSS, Shadcn UI, Flowbite, LucideReact
 - **Email-Service**: Firebase Auth Email Service
 
 # Getting Started
