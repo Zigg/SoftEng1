@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { defaultUser, Logo } from "../../../assets/images/index.js";
 import { ShoppingBag } from "lucide-react";
 import CartBadge from "./navbar/CartBadge.jsx";
@@ -13,20 +13,27 @@ import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
 import SearchInput from "./navbar/SearchInput.jsx";
 import { NavLink } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUserNull } from "../../../context/actions/userActions";
 
 const auth = getAuth();
 
 const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    
   };
+
   // TODO: Add badge to cart icon to show how many items are in the cart, based on user input of course
   // TODO: Update Routes
   // TODO: Using the global state retire the session when the user logs out
+  // TODO: Make the menu a dropdown?
+  // TODO: Setting the signout button to redirect to the login page, and setting global state to SET_USER_NULL to remove the user details from the global state but still doesnt work? Redux even shows that the user is null but the session is still not retired
+  
   return (
     <div className="md:border-b-2 md:border-gray-300 lg:border-b-2 lg:border-gray-300">
       <nav className="bg-white dark:bg-gray-900 sticky top-0 z-10">
@@ -133,10 +140,15 @@ const TopNavbar = () => {
                           .signOut()
                           .then(() => {
                             console.log("User signed out");
+                            toast("Bye for now", {
+                              icon: "👋",
+                            });
+                            dispatch(setUserNull()); 
                             navigate("/login", { replace: true });
                           })
                           .catch((error) => {
                             console.error("Error signing out: ", error);
+                            toast.error("Something went wrong");
                           });
                       }}
                       className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-rose-500 dark:hover:bg-rose-700 dark:text-gray-200 dark:hover:text-white focus:outline-none w-full"
@@ -158,10 +170,10 @@ const TopNavbar = () => {
                 <NavLink
                   to="/"
                   className={({ isActive }) =>
-                  isActive 
-                    ? "font-bold text-rose-500 hover:text-blue-600" 
-                    : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                }
+                    isActive
+                      ? "font-bold text-rose-500 hover:text-blue-600"
+                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
+                  }
                 >
                   🏠Home
                 </NavLink>
@@ -170,10 +182,10 @@ const TopNavbar = () => {
                 <NavLink
                   to="/menu"
                   className={({ isActive }) =>
-                  isActive 
-                    ? "font-bold text-rose-500 hover:text-blue-600" 
-                    : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                }
+                    isActive
+                      ? "font-bold text-rose-500 hover:text-blue-600"
+                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
+                  }
                 >
                   🌶️Menu
                 </NavLink>
@@ -182,27 +194,26 @@ const TopNavbar = () => {
                 <NavLink
                   to="/featured"
                   className={({ isActive }) =>
-                  isActive 
-                    ? "font-bold text-rose-500 hover:text-blue-600" 
-                    : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                }
+                    isActive
+                      ? "font-bold text-rose-500 hover:text-blue-600"
+                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
+                  }
                 >
                   🔥Featured
                 </NavLink>
               </li>
               <li>
-              <NavLink
-                to="/contacts"
-                className={({ isActive }) =>
-                  isActive 
-                    ? "font-bold text-rose-500 hover:text-blue-600" 
-                    : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                }
-              >
-                ☎️Contacts
-              </NavLink>
-            </li>
-            
+                <NavLink
+                  to="/contacts"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "font-bold text-rose-500 hover:text-blue-600"
+                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
+                  }
+                >
+                  ☎️Contacts
+                </NavLink>
+              </li>
             </ul>
           </div>
         </div>
