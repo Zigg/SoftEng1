@@ -4,8 +4,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { app } from "./config/firebase.config.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
-
-import { setUserDetails } from "./context/actions/userActions";
+import { useNavigate } from "react-router-dom";
+import { setUserDetails, setUserNull } from "./context/actions/userActions";
 
 // TODO: Set defaults for routing and adding routes
 // TODO: Destructure routes to make adding additional routes easier
@@ -19,21 +19,26 @@ const App = () => {
   // TODO: Remove verylong css classes from .js and .jsx files, and should just create them as seperate components to make it easier to read and understand each components within the same folder to also allow for reusable components
   // TODO: checking if the user is logged in or not, then dispatching the user details to the redux store
   const dispatch = useDispatch();
-  // TODO: This is for the loading screen for the app however this should only be used for loading contents from the redux store, or database, example would be searching, filtering, etc. Not for pages that dont require loading but I can set it to all pages for now
-
+  const navigate = useNavigate();
   const alert = useSelector((state) => state.alert);
 
+  // TODO: Set the default route to the login page if the user is not logged in, when signing out the user should be redirected to the login page and the session should be retired
   useEffect(() => {
     setIsLoading(true);
-    const user = firebaseAuth.currentUser;
-    if (user) {
-      console.log(user);
-      dispatch(setUserDetails(user));
-    }
-    setInterval(() => {
+
+    const sessionExpire = firebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(setUserDetails(user));
+      } else {
+        dispatch(setUserNull());
+        navigate("/login");
+      }
+
       setIsLoading(false);
-    }, 2000);
-  }, [dispatch, firebaseAuth.currentUser]);
+    });
+
+    return () => sessionExpire();
+  }, [dispatch, firebaseAuth, navigate]);
 
   // TODO: Fix the loading screen styles
   return (
