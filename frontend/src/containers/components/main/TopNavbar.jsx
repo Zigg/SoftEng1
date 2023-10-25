@@ -15,12 +15,14 @@ import SearchInput from "./navbar/SearchInput.jsx";
 import { NavLink } from "react-router-dom";
 
 const auth = getAuth();
+
 const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+    
   };
   // TODO: Add badge to cart icon to show how many items are in the cart, based on user input of course
   // TODO: Update Routes
@@ -41,7 +43,7 @@ const TopNavbar = () => {
             <div className="ml-4">
               <button
                 type="button"
-                className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-rose-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500 hover:animate-pulse"
+                className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-rose-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
                 onClick={() => navigate("/cart")}
               >
                 <span className="font-semibold">
