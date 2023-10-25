@@ -14,15 +14,13 @@ import { useNavigate } from "react-router";
 import SearchInput from "./navbar/SearchInput.jsx";
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { setUserNull } from "../../../context/actions/userActions";
+
 
 const auth = getAuth();
 
 const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -30,10 +28,10 @@ const TopNavbar = () => {
 
   // TODO: Add badge to cart icon to show how many items are in the cart, based on user input of course
   // TODO: Update Routes
-  // TODO: Using the global state retire the session when the user logs out
+  // TODO: Change the topnavbar whether the user is logged in or not, and if the user is logged in the user should be able to see the cart and user profile and if the user is not logged in then the user should be able to see the login button
   // TODO: Make the menu a dropdown?
-  // TODO: Setting the signout button to redirect to the login page, and setting global state to SET_USER_NULL to remove the user details from the global state but still doesnt work? Redux even shows that the user is null but the session is still not retired
-  
+
+
   return (
     <div className="md:border-b-2 md:border-gray-300 lg:border-b-2 lg:border-gray-300">
       <nav className="bg-white dark:bg-gray-900 sticky top-0 z-10">
@@ -143,8 +141,6 @@ const TopNavbar = () => {
                             toast("Bye for now", {
                               icon: "👋",
                             });
-                            dispatch(setUserNull()); 
-                            navigate("/login", { replace: true });
                           })
                           .catch((error) => {
                             console.error("Error signing out: ", error);
