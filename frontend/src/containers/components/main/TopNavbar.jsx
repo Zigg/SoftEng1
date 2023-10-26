@@ -31,14 +31,16 @@ const TopNavbar = () => {
   // TODO: Change the topnavbar whether the user is logged in or not, and if the user is logged in the user should be able to see the cart and user profile and if the user is not logged in then the user should be able to see the login button
   // TODO: Make the menu a dropdown?
   // TODO: Maybe separate the components into their own files | menuitems, user profile, cart, etc
+  // TODO: Make more responsive
 
   return (
     <div className="md:border-b-2 md:border-gray-300 lg:border-b-2 lg:border-gray-300">
       <nav className="bg-white dark:bg-gray-900 sticky top-0 z-10">
-        <div className="flex flex-wrap items-center justify-between mx-auto p-4 ">
-          <NavLink to="/" className="flex items-center">
+      <div className="flex flex-wrap items-center justify-between mx-auto p-4 xs:items-center xs:justify-center ">
+
+          <NavLink to="/" className="flex items-center ">
             <img src={Logo} className="h-12 w-12 mr-2" alt="Logo" />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white ">
               Ordering System
             </span>
           </NavLink>
@@ -162,7 +164,7 @@ const TopNavbar = () => {
             )}
           </div>
           <div
-            className="w-full md:flex md:w-auto md:order-1 lg:ml-32"
+            className="w-full md:flex md:w-auto md:order-1"
             id="navbar-user"
           >
             <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
