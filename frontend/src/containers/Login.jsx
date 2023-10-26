@@ -4,12 +4,13 @@ import { app } from "../config/firebase.config.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setUserDetails } from "../context/actions/userActions";
+import { setUserDetails,setUserName } from "../context/actions/userActions";
 import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  updateProfile 
 } from "firebase/auth";
 
 export const Login = () => {
@@ -78,8 +79,12 @@ export const Login = () => {
         email,
         registerPassword
       );
-      const userDetails = userCred.user;
+      // TODO: Assign the username to the global store
+      await updateProfile(userCred.user, { displayName: username });
+      const userDetails = { ...userCred.user, displayName: username };
+      
       dispatch(setUserDetails(userDetails));
+      dispatch(setUserName(username));
 
       // TODO: After confirming the email the user should be redirected to the login page
       // TODO: Create a verification page for the user to verify their email | maybe also setup a resend email verification?
@@ -92,6 +97,7 @@ export const Login = () => {
           });
         });
       }, 2000);
+      
       navigate("/login", { replace: true });
       toast.success("Account created successfully");
     } catch (error) {
@@ -109,6 +115,7 @@ export const Login = () => {
       }
     }
   };
+
 
   const signInWithEmailPass = async () => {
     setEmail("");
