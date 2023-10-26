@@ -16,7 +16,7 @@ export default function SearchInput() {
       </div>
       <button
         type="submit"
-        className="p-2.5 ml-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="p-2.5 ml-2 text-sm font-medium text-white bg-rose-600 rounded-lg border border-rose-600 hover:bg-rose-700 focus:ring-4 focus:outline-none focus:ring-amber-300 dark:bg-rose-500 dark:hover:bg-rose-600 dark:focus:ring-amber-700"
       >
         <svg
           className="w-4 h-4"
