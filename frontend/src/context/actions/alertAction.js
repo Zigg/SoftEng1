@@ -59,7 +59,7 @@ export const alertCartRemove = (message) => {
   };
 };
 
-export const alertNull = (message) => {
+export const alertNull = () => {
   return {
     type: "SET_ALERT_NULL",
     alert: null,
