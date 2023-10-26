@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { LoginBG, Logo } from "../assets/images";
 import { app } from "../config/firebase.config.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { setUserDetails,setUserName } from "../context/actions/userActions";
+import { setUserDetails, setUserName } from "../context/actions/userActions";
 import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  updateProfile 
+  updateProfile,
 } from "firebase/auth";
 
 export const Login = () => {
@@ -34,17 +34,20 @@ export const Login = () => {
 
   const userState = useSelector((state) => state.user);
   // TODO: Uncomment or not? | If the user is logged in then redirect them to the home page
-  // useEffect(() => {
-  //   if (userState) {
-  //     navigate("/", { replace: true });
-  //   }
-  // }, [navigate, userState]);
+  useEffect(() => {
+    if (userState) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate, userState]);
 
   const handlePasswordRegisterChange = (event) => {
     const newRegisterPassword = event.target.value;
     setRegisterPassword(newRegisterPassword);
 
-    const isValid = validatePasswordFields(newRegisterPassword, confirmPassword);
+    const isValid = validatePasswordFields(
+      newRegisterPassword,
+      confirmPassword
+    );
     setIsFormValid(isValid);
   };
 
@@ -53,7 +56,9 @@ export const Login = () => {
     setConfirmPassword(newConfirmPassword);
 
     const isValid = validatePasswordFields(
-      registerPassword,newConfirmPassword);
+      registerPassword,
+      newConfirmPassword
+    );
     setIsFormValid(isValid);
   };
 
@@ -82,7 +87,7 @@ export const Login = () => {
       // TODO: Assign the username to the global store
       await updateProfile(userCred.user, { displayName: username });
       const userDetails = { ...userCred.user, displayName: username };
-      
+
       dispatch(setUserDetails(userDetails));
       dispatch(setUserName(username));
 
@@ -92,12 +97,12 @@ export const Login = () => {
       // Added timeout so the toast notifications dont stack
       setTimeout(() => {
         sendEmailVerification(firebaseAuth.currentUser).then(() => {
-          toast('Email Sent!', {
-            icon: '✉️',
+          toast("Email Sent!", {
+            icon: "✉️",
           });
         });
       }, 2000);
-      
+
       navigate("/login", { replace: true });
       toast.success("Account created successfully");
     } catch (error) {
@@ -115,7 +120,6 @@ export const Login = () => {
       }
     }
   };
-
 
   const signInWithEmailPass = async () => {
     setEmail("");
