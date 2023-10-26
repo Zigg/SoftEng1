@@ -16,7 +16,7 @@ import GlobalAlert from "./containers/components/main/GlobalAlert.jsx";
 const App = () => {
   const firebaseAuth = getAuth(app);
   const [isLoading, setIsLoading] = React.useState(false);
-  // TODO: Remove verylong css classes from .js and .jsx files, and should just create them as seperate components to make it easier to read and understand each components within the same folder to also allow for reusable components
+  // TODO: Remove abundant css classes from .js and .jsx files, components should be separate to make it easier to read and understand each components and to also allow for setting reusable components
   // TODO: checking if the user is logged in or not, then dispatching the user details to the redux store
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,7 +31,9 @@ const App = () => {
         dispatch(setUserDetails(user));
       } else {
         dispatch(setUserNull());
-        navigate("/login");
+        // Nevermind this we want it so that the user can still browse the page even if not signed in, however when ordering we need the user to sign in
+        // TODO: If the user is not logged when trying to order we need to prompt the user to login or signup
+        // navigate("/login");
       }
 
       setIsLoading(false);
