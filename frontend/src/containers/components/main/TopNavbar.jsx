@@ -22,9 +22,15 @@ const TopNavbar = () => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
 
-  const userEmail = useSelector(state => state.user && state.user.email ? state.user.email : '');
+  const userEmail = useSelector((state) =>
+    state.user && state.user.email ? state.user.email : ""
+  );
 
-  const userName = useSelector(state => state.user && state.user.providerData && state.user.providerData[0] ? state.user.providerData[0].displayName : '');
+  const userName = useSelector((state) =>
+    state.user && state.user.providerData && state.user.providerData[0]
+      ? state.user.providerData[0].displayName
+      : ""
+  );
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -86,24 +92,33 @@ const TopNavbar = () => {
             </button>
 
             {isMenuOpen && (
-              
-                <div
-                  className="absolute md:ml-52 md:mt-12  translate-y-1/2 xs:ml-52 xs:mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2  border-rose-500 dark:border-gray-600"
-                  id="user-dropdown"
-                >
+              <div
+                className="absolute md:ml-52 md:mt-12  translate-y-1/2 xs:ml-52 xs:mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2  border-rose-500 dark:border-gray-600"
+                id="user-dropdown"
+              >
                 <div>
                   <div className="px-4 py-3">
-                    <span className="block text-sm text-gray-900 dark:text-white font-medium">
-                      
-                      {userName}
+                    <span
+                      className="block text-sm text-gray-900 dark:text-white font-medium"
+                      title={userName}
+                    >
+                      {userName && userName.length > 12
+                        ? `${userName.substring(0, 12)}...`
+                        : userName}
                       {/* TODO: Replace this with the actual value  */}
                     </span>
-                    <span className="block text-sm text-gray-500 truncate dark:text-gray-400 mb-1 font-medium">
-                    {userEmail}
+                    <span
+                      className="block text-sm text-gray-500 truncate dark:text-gray-400 mb-1 font-medium"
+                      title={userEmail}
+                    >
+                      {userEmail && userEmail.length > 12
+                        ? `${userEmail.substring(0, 12)}...`
+                        : userEmail}
                       {/* TODO: Replace this with the actual value  */}
                     </span>
                     <span className="block text-sm text-black-500 truncate dark:text-white font-medium">
-                      Balance: ₱110.42
+                      123.32
+                      {/*{balance && balance.length > 12 ? `${balance.substring(0, 12)}...` : balance} */}
                       {/* TODO: Replace this with the actual value  */}
                     </span>
                   </div>
