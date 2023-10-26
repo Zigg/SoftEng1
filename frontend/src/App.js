@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import { app } from "./config/firebase.config.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { setUserDetails, setUserNull } from "./context/actions/userActions";
+import NotFoundPage from "./components/NotFoundPage.jsx";
 
 // TODO: Set defaults for routing and adding routes
 // TODO: Destructure routes to make adding additional routes easier
@@ -49,8 +50,9 @@ const App = () => {
 
       <Toaster />
       <Routes>
-        <Route path="/*" element={<Main />} />
+        <Route path="/" element={<Main />} />
         <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       {!isLoading && alert?.type && (
