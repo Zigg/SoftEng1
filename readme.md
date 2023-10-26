@@ -1,7 +1,7 @@
 # Ordering System
 
 ## Overview
-This will serve as the user authetication for the ordering system. 
+No overviews for now
 
 ## Key Features
 
@@ -15,9 +15,10 @@ List of all the technologies, languages, frameworks, libraries etc. used in the 
 
 - **Language**: Javascript
 - **Framework**: React.js, express.js
+- **State Management**: Redux
 - **Database**:  Firebase
 - **Authentication**: Firebase Auth
-- **UI**: Tailwind CSS, Shadcn UI, Flowbite, LucideReact
+- **UI**: Tailwind CSS, Shadcn UI, Flowbite, LucideReact, React Icons
 - **Email-Service**: Firebase Auth Email Service
 
 # Getting Started
@@ -65,7 +66,7 @@ Generate new private key
 Copy contents and paste into newly created serviceAccountKey.json
 ```
 
-## Install Dependencies
+## Install Dependencies for the backend and frontend folders
 
 ```
 yarn install
@@ -73,8 +74,8 @@ npm i
 ```
 
 ## Setup frontend development server 
-
 ```
+cd to frontend
 yarn start
 ```
 ## Setup backend development server
