@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { TbLogin2 } from "react-icons/tb";
-export default function CartBadge() {
+export default function OnboardButton() {
 
   const navigate = useNavigate();
   return (
