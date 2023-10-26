@@ -14,13 +14,13 @@ import { useNavigate } from "react-router";
 import SearchInput from "./navbar/SearchInput.jsx";
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
-
-
+import { useSelector } from "react-redux";
 const auth = getAuth();
 
 const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -30,18 +30,18 @@ const TopNavbar = () => {
   // TODO: Update Routes
   // TODO: Change the topnavbar whether the user is logged in or not, and if the user is logged in the user should be able to see the cart and user profile and if the user is not logged in then the user should be able to see the login button
   // TODO: Make the menu a dropdown?
-
+  // TODO: Maybe separate the components into their own files | menuitems, user profile, cart, etc
 
   return (
     <div className="md:border-b-2 md:border-gray-300 lg:border-b-2 lg:border-gray-300">
       <nav className="bg-white dark:bg-gray-900 sticky top-0 z-10">
         <div className="flex flex-wrap items-center justify-between mx-auto p-4 ">
-          <a href="/" className="flex items-center">
+          <NavLink to="/" className="flex items-center">
             <img src={Logo} className="h-12 w-12 mr-2" alt="Logo" />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               Ordering System
             </span>
-          </a>
+          </NavLink>
 
           <div className="relative flex items-center md:order-2 ">
             <SearchInput />
@@ -86,50 +86,54 @@ const TopNavbar = () => {
                 id="user-dropdown"
               >
                 <div className="px-4 py-3">
-                  <span className="block text-sm text-gray-900 dark:text-white">
+                  <span className="block text-sm text-gray-900 dark:text-white font-medium">
                     Test User
                   </span>
-                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
+                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400 mb-1 font-medium">
                     test@email.com
+                  </span>
+                  <span className="block text-sm text-black-500 truncate dark:text-white font-medium">
+                    Balance: ₱110.42
+                    {/* TODO: Replace this with the actual value  */}
                   </span>
                 </div>
                 <ul className="py-2" aria-labelledby="user-menu-button">
                   <li>
-                    <a
-                      href="profile"
+                    <NavLink
+                      to="profile"
                       className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
                       <TbUser className="mr-2" />
                       Profile
-                    </a>
+                    </NavLink>
                   </li>
                   <li>
-                    <a
-                      href="order"
+                    <NavLink
+                      to="order"
                       className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
                       <TbPackage className="mr-2" />
                       Orders
-                    </a>
+                    </NavLink>
                   </li>
                   <li>
-                    <a
-                      href="order-history"
+                    <NavLink
+                      to="order-history"
                       className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
                       <TbHistory className="mr-2" />
                       History
-                    </a>
+                    </NavLink>
                   </li>
 
                   <li>
-                    <a
-                      href="transactions"
+                    <NavLink
+                      to="transactions"
                       className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                     >
                       <TbArrowsTransferDown className="mr-2" />
                       Transactions
-                    </a>
+                    </NavLink>
                   </li>
                   <li>
                     <button
