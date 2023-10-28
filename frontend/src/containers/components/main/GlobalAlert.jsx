@@ -6,7 +6,6 @@ import { useState, useEffect, useRef } from "react";
 export default function GlobalAlert({ type, message }) {
   // TODO: Try to limit toast popups to 1 do not allow toast notifications to stack
   // TODO: These are placeholders for now, Add or remove some of these later on
-  //  TODO: Set timer to auto close toast notifications
 
   const [showToast, setShowToast] = useState(true);
   const [progress, setProgress] = useState(100);
