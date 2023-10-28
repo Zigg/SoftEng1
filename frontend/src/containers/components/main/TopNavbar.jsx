@@ -109,7 +109,10 @@ const TopNavbar = () => {
 
             {isMenuOpen && (
               <div
-                className="absolute md:ml-52 md:mt-12  translate-y-1/2 xs:ml-52 xs:mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2  border-rose-500 dark:border-gray-600"
+                onMouseLeave={() => {
+                  setIsMenuOpen(false);
+                }}
+                className="absolute md:ml-52 md:mt-12 translate-y-1/2 xs:ml-52 xs:mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2 border-rose-500 dark:border-gray-600"
                 id="user-dropdown"
               >
                 {user && (
