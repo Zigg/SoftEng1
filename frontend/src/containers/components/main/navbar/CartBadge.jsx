@@ -6,6 +6,7 @@ import Badge from "@mui/material/Badge";
 export default function CartBadge() {
   return (
     <Stack spacing={4} direction="row" sx={{ color: "action.active" }}>
+{/* Place holder for the cart item number data */}
       <Badge color="primary" badgeContent={24}
       
       className="">
