@@ -5,6 +5,7 @@ module.exports = {
     "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    
     extend: {
       colors: {
         primary: {
@@ -59,6 +60,9 @@ module.exports = {
       },
       // TODO:
       // Added some custom styling for the future elements, i.e cart, checkout, etc..
+      screens: {
+        'xs': {'max': '639px'},
+      },
     },
   },
   plugins: [require("flowbite/plugin")],

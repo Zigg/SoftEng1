@@ -11,6 +11,13 @@ export const getUserDetails = () => {
   };
 };
 
+export const setUserName = (username) => {
+  return {
+    type: "SET_USERNAME",
+    username: username,
+  };
+};
+
 export const setUserNull = () => {
   return {
     type: "SET_USER_NULL",
