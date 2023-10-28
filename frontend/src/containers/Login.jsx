@@ -33,7 +33,6 @@ export const Login = () => {
   const firebaseAuth = getAuth(app);
 
   const userState = useSelector((state) => state.user);
-  // TODO: Uncomment or not? | If the user is logged in then redirect them to the home page
   useEffect(() => {
     if (userState) {
       navigate("/", { replace: true });
@@ -84,7 +83,6 @@ export const Login = () => {
         email,
         registerPassword
       );
-      // TODO: Assign the username to the global store
       await updateProfile(userCred.user, { displayName: username });
       const userDetails = { ...userCred.user, displayName: username };
 
