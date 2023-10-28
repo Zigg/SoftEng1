@@ -1,7 +1,6 @@
 import React from "react";
 import "./index.css";
 import ReactDOM from "react-dom/client";
-// Apparently app doesnt work and has to be App
 import App from "./App";
 import rootReducer from "./context/reducers";
 // TODO: configureStore might use different functions but I will see if I can change the store to use configureStore
