@@ -13,8 +13,8 @@ const NotFoundPage = () => {
       <img src={NotFound} alt="" className="object-cover inset-0 py-6 z-0" />
 
       <span className="font-semibold text-2xl p-4">
-      We couldn't find the page you were looking for 😥{" "}
-    </span>
+      We couldn't find the page you were looking for 
+      </span>
       <div className="flex">
       <button 
         type="button" 
@@ -33,13 +33,8 @@ const NotFoundPage = () => {
         <AiOutlineHome className="w-5 h-5"/>
         <span className="px-0.5 pl-1.5">Home</span>
       </button>
-
+      </div>
     </div>
-
-    
-      
-    </div>
-    
   );
 };
 
