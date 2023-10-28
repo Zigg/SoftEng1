@@ -38,8 +38,6 @@ const TopNavbar = () => {
   };
 
   // TODO: Add badge to cart icon to show how many items are in the cart, based on user input of course
-  // TODO: Update Routes
-  // TODO: Change the topnavbar whether the user is logged in or not, and if the user is logged in the user should be able to see the cart and user profile and if the user is not logged in then the user should be able to see the login button
   // TODO: Make the menu a dropdown?
   // TODO: Maybe separate the components into their own files | menuitems, user profile, cart, etc
   // TODO: Make more responsive
