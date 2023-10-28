@@ -1,13 +1,17 @@
 # Ordering System
 
 ## Overview
-No overviews for now
+
 
 ## Key Features
 
 - **Feature 1**: Register Feature
 - **Feature 2**: Login Feature
 - **Feature 3**: Email Verification Feature
+- **Feature 4**: Dynamic User Navbar
+- **Feature 5**: User Profile
+- **Feature 6**: Signout Feature
+
 
 ## Technologies Used
 
@@ -32,6 +36,7 @@ Before you begin, make sure you have the following installed on your machine:
 ## Install yarn globally
 ```
 npm install --global yarn
+
 ```
 ## Setup .env.example file for frontend folder 
 ### These are availble within the firebase console. [link](https://console.firebase.google.com/u/0/)
@@ -45,8 +50,7 @@ REACT_APP_FIREBASE_PROJECT_ID=
 REACT_APP_FIREBASE_STORAGE_BUCKET=
 REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
 REACT_APP_FIREBASE_APP_ID= 
-# Below is for analytics not really needed for now but its setup
-REACT_APP_FIREBASE_MEASUREMENT_ID= 
+
 
 ```
 
