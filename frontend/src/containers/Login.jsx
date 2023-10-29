@@ -26,7 +26,6 @@ export const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,17 +37,6 @@ export const Login = () => {
       navigate("/", { replace: true });
     }
   }, [navigate, userState]);
-
-  const handlePasswordRegisterChange = (event) => {
-    const newRegisterPassword = event.target.value;
-    setRegisterPassword(newRegisterPassword);
-
-    const isValid = validatePasswordFields(
-      newRegisterPassword,
-      confirmPassword
-    );
-    setIsFormValid(isValid);
-  };
 
   const handleConfirmPasswordRegisterChange = (event) => {
     const newConfirmPassword = event.target.value;
