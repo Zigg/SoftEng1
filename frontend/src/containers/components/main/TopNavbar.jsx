@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { defaultUser, Logo } from "../../../assets/images/index.js";
+import React, { useState } from "react";
 import { ShoppingBag } from "lucide-react";
-import CartBadge from "./navbar/CartBadge.jsx";
 import { PiSignOutBold } from "react-icons/pi";
-import {
-  TbArrowsTransferDown,
-  TbHistory,
-  TbPackage,
-  TbUser,
-} from "react-icons/tb";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
 import SearchInput from "./navbar/SearchInput.jsx";
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import {
+  TbArrowsTransferDown,
+  TbHistory,
+  TbPackage,
+  TbUser,
+} from "react-icons/tb";
+
 import OnboardButton from "./navbar/OnboardButton.jsx";
+import { defaultUser, Logo } from "../../../assets/images/index.js";
+import CartBadge from "./navbar/CartBadge.jsx";
+
 const auth = getAuth();
 
 const TopNavbar = () => {
@@ -124,7 +126,6 @@ const TopNavbar = () => {
                         {userName && userName.length > 12
                           ? `${userName.substring(0, 12)}...`
                           : userName}
-                        {/* TODO: Replace this with the actual value  */}
                       </span>
                       <span
                         className="block text-sm text-gray-500 truncate dark:text-gray-400 mb-1 font-medium"
@@ -134,7 +135,6 @@ const TopNavbar = () => {
                         {userEmail && userEmail.length > 12
                           ? `${userEmail.substring(0, 12)}...`
                           : userEmail}
-                        {/* TODO: Replace this with the actual value  */}
                       </span>
                       <span className="block text-sm text-black-500 truncate dark:text-white font-medium">
                         123.32
