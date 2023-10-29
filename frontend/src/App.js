@@ -12,6 +12,11 @@ import { Login } from "./containers/Login";
 import Loader from "./components/Loader.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
 import GlobalAlert from "./containers/components/main/GlobalAlert.jsx";
+import Dashboard from "./containers/components/dashboard/MainDashboard.jsx";
+import Profile from "./containers/components/user-profile/user/pages/Profile.jsx";
+import Orders from "./containers/components/user-profile/user/pages/Orders.jsx";
+import OrderHistory from "./containers/components/user-profile/user/pages/OrderHistory.jsx";
+import Transactions from "./containers/components/user-profile/user/pages/Transactions.jsx";
 
 const App = () => {
   const firebaseAuth = getAuth(app);
@@ -46,6 +51,18 @@ const App = () => {
         <Route path="/" element={<Main />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        
+        <Route path="/profile/*" element={<Profile />} />
+        <Route path="/orders/*" element={<Orders />} />
+        <Route path="/order-history/*" element={<OrderHistory />} />
+        <Route path="/transactions/*" element={<Transactions />} />
+
+
+
+
+
+
       </Routes>
 
       {!isLoading && alert?.type && (
