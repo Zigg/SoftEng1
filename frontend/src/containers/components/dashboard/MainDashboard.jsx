@@ -3,32 +3,30 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import React, { useState, useEffect } from "react";
 import { PackageSearch, ShoppingBag, Store, Users } from "lucide-react";
-import DashboardHeader from "./DashboardHeader";
-import { PiSignOutBold } from "react-icons/pi";
-import { getAuth } from "firebase/auth";
-import { Route, useNavigate, Routes } from "react-router-dom";
-import toast from "react-hot-toast";
-import DashboardOrders from "./components/DashboardOrders";
-import DashboardUsers from "./components/DashboardUsers";
-import DashboardProducts from "./components/DashboardProducts";
-import DashboardRestaurants from "./components/DashboardRestaurants";
-import DashboardSettings from "./components/DashboardSettings";
+import DashboardHeader from "./components/DashboardHeader";
+import { Route, Routes } from "react-router-dom";
+import DashboardOrders from "./pages/DashboardOrders";
+import DashboardUsers from "./pages/DashboardUsers";
+import DashboardProducts from "./pages/DashboardProducts";
+import DashboardRestaurants from "./pages/DashboardRestaurants";
+import DashboardSettings from "./pages/DashboardSettings";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserCount } from "../../../api";
+import { setUserCount } from "../../../context/actions/userCountAction";
+
 const MainDashboard = () => {
   // TODO: Add check on whether the current user is an admin or not
 
   // Fetching user count from the backend
-  // FIXME: Not properly fetching the data from the backend
-  const [usersCount, setUsersCount] = useState(23);
-  const navigate = useNavigate();
-  const auth = getAuth();
+  const dispatch = useDispatch();
+  const userCount = useSelector((state) => state.userCount);
+
+  // Properly gets the count of users now
   useEffect(() => {
-    fetch(
-      `https://us-central1-${process.env.REACT_APP_FIREBASE_PROJECT_ID}.cloudfunctions.net/listAllUsers`
-    )
-      .then((response) => response.json())
-      .then((data) => setUsersCount(data.length))
-      .catch((error) => console.error("Error:", error));
-  }, []);
+    getUserCount().then((count) => {
+      dispatch(setUserCount(count));
+    });
+  }, [dispatch]);
 
   // Size of the screen when the hamburger menu should be toggled
   const screenSizeToggled = 639;
@@ -49,8 +47,6 @@ const MainDashboard = () => {
     };
   }, []);
 
-  console.log(usersCount);
-
   return (
     <div>
       <button
@@ -67,8 +63,8 @@ const MainDashboard = () => {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            clip-rule="evenodd"
-            fill-rule="evenodd"
+            clipRule="evenodd"
+            fillRule="evenodd"
             d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
           ></path>
         </svg>
@@ -133,7 +129,8 @@ const MainDashboard = () => {
                   <Users className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                    {usersCount}
+                  {/* Properly sets the usercount now */}
+                    {userCount}
                   </span>
                 </a>
               </li>
@@ -189,29 +186,6 @@ const MainDashboard = () => {
                   </span>
                 </a>
               </li>
-              <li>
-                <button
-                  onClick={() => {
-                    auth
-                      .signOut()
-                      .then(() => {
-                        console.log("User signed out");
-                        navigate("/login", { replace: true });
-                        toast("Bye for now", {
-                          icon: "👋",
-                        });
-                      })
-                      .catch((error) => {
-                        console.error("Error signing out: ", error);
-                        toast.error("Something went wrong");
-                      });
-                  }}
-                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 w-full"
-                >
-                  <PiSignOutBold className="w-6 h-6  " />
-                  <span className="ml-3 whitespace-nowrap">Sign Out</span>
-                </button>
-              </li>
             </ul>
           </div>
         </aside>
@@ -220,20 +194,15 @@ const MainDashboard = () => {
       {/* Grid Layout */}
       <div className="p-4 sm:ml-64">
         <DashboardHeader />
-        <div className="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700">
-        <Routes>
-        
-        <Route path="/orders" element={<DashboardOrders/>} />
-        <Route path="/users" element={<DashboardUsers/>} />
-        <Route path="/products" element={<DashboardProducts/>} />
-        <Route path="/restaurants" element={<DashboardRestaurants/>} />
-        <Route path="/settings" element={<DashboardSettings/>} />
-
-        </Routes>
-
-
+        <div className="p-4 rounded-lg ">
+          <Routes>
+            <Route path="/orders" element={<DashboardOrders />} />
+            <Route path="/users" element={<DashboardUsers />} />
+            <Route path="/products" element={<DashboardProducts />} />
+            <Route path="/restaurants" element={<DashboardRestaurants />} />
+            <Route path="/settings" element={<DashboardSettings />} />
+          </Routes>
         </div>
-        
       </div>
       {/* | above Grid Layout */}
     </div>
