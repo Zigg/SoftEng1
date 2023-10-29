@@ -3,11 +3,24 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import React, { useState, useEffect } from "react";
 import { PackageSearch, ShoppingBag, Store, Users } from "lucide-react";
+import DashboardHeader from "./DashboardHeader";
+import { PiSignOutBold } from "react-icons/pi";
+import { getAuth } from "firebase/auth";
+import { Route, useNavigate, Routes } from "react-router-dom";
+import toast from "react-hot-toast";
+import DashboardOrders from "./components/DashboardOrders";
+import DashboardUsers from "./components/DashboardUsers";
+import DashboardProducts from "./components/DashboardProducts";
+import DashboardRestaurants from "./components/DashboardRestaurants";
+import DashboardSettings from "./components/DashboardSettings";
 const MainDashboard = () => {
+  // TODO: Add check on whether the current user is an admin or not
+
   // Fetching user count from the backend
   // FIXME: Not properly fetching the data from the backend
-  const [usersCount, setUsersCount] = useState(0);
-
+  const [usersCount, setUsersCount] = useState(23);
+  const navigate = useNavigate();
+  const auth = getAuth();
   useEffect(() => {
     fetch(
       `https://us-central1-${process.env.REACT_APP_FIREBASE_PROJECT_ID}.cloudfunctions.net/listAllUsers`
@@ -78,9 +91,9 @@ const MainDashboard = () => {
             <ul className="space-y-2 font-medium">
               <li>
                 <a
-                  href="/dashboard/home"
+                  href="/dashboard"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard/home"
+                    window.location.pathname === "/dashboard"
                       ? "text-red-500 opacity-100"
                       : ""
                   }`}
@@ -95,7 +108,7 @@ const MainDashboard = () => {
                   href="/dashboard/orders"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
                     window.location.pathname === "/dashboard/orders"
-                      ? "text-red-500 opacity-100" 
+                      ? "text-red-500 opacity-100"
                       : ""
                   }`}
                 >
@@ -109,14 +122,14 @@ const MainDashboard = () => {
               </li>
 
               <li>
-              <a
-              href="/dashboard/users"
-              className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                window.location.pathname === "/dashboard/users"
-                  ? "text-red-500 opacity-100" 
-                  : ""
-              }`}
-            >
+                <a
+                  href="/dashboard/users"
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
+                    window.location.pathname === "/dashboard/users"
+                      ? "text-red-500 opacity-100"
+                      : ""
+                  }`}
+                >
                   <Users className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
@@ -126,14 +139,14 @@ const MainDashboard = () => {
               </li>
 
               <li>
-              <a
-              href="/dashboard/products"
-              className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                window.location.pathname === "/dashboard/products"
-                  ? "text-red-500 opacity-100" 
-                  : ""
-              }`}
-            >
+                <a
+                  href="/dashboard/products"
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
+                    window.location.pathname === "/dashboard/products"
+                      ? "text-red-500 opacity-100"
+                      : ""
+                  }`}
+                >
                   <ShoppingBag className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">
                     Products
@@ -144,14 +157,14 @@ const MainDashboard = () => {
                 </a>
               </li>
               <li>
-              <a
-              href="/dashboard/restaurants"
-              className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                window.location.pathname === "/dashboard/restaurants"
-                  ? "text-red-500 opacity-100" 
-                  : ""
-              }`}
-            >
+                <a
+                  href="/dashboard/restaurants"
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
+                    window.location.pathname === "/dashboard/restaurants"
+                      ? "text-red-500 opacity-100"
+                      : ""
+                  }`}
+                >
                   <Store className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">
                     Restaurants
@@ -162,19 +175,42 @@ const MainDashboard = () => {
                 </a>
               </li>
               <li>
-              <a
-              href="/dashboard/settings"
-              className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                window.location.pathname === "/dashboard/settings"
-                  ? "text-red-500 opacity-100" 
-                  : ""
-              }`}
-            >
+                <a
+                  href="/dashboard/settings"
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
+                    window.location.pathname === "/dashboard/settings"
+                      ? "text-red-500 opacity-100"
+                      : ""
+                  }`}
+                >
                   <IoSettingsOutline className="w-6 h-6  " />
                   <span className="flex-1 ml-3 whitespace-nowrap">
                     Settings
                   </span>
                 </a>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    auth
+                      .signOut()
+                      .then(() => {
+                        console.log("User signed out");
+                        navigate("/login", { replace: true });
+                        toast("Bye for now", {
+                          icon: "👋",
+                        });
+                      })
+                      .catch((error) => {
+                        console.error("Error signing out: ", error);
+                        toast.error("Something went wrong");
+                      });
+                  }}
+                  className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 w-full"
+                >
+                  <PiSignOutBold className="w-6 h-6  " />
+                  <span className="ml-3 whitespace-nowrap">Sign Out</span>
+                </button>
               </li>
             </ul>
           </div>
@@ -183,261 +219,21 @@ const MainDashboard = () => {
 
       {/* Grid Layout */}
       <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
-          <div className="grid grid-cols-3 gap-4 mb-4">
-            <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg
-                className="w-3.5 h-3.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 1v16M1 9h16"
-                />
-              </svg>
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center h-48 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-            <p className="text-2xl text-gray-400 dark:text-gray-500">
-              <svg
-                className="w-3.5 h-3.5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 18 18"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 1v16M1 9h16"
-                />
-              </svg>
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-            <div className="flex items-center justify-center rounded bg-gray-50 h-28 dark:bg-gray-800">
-              <p className="text-2xl text-gray-400 dark:text-gray-500">
-                <svg
-                  className="w-3.5 h-3.5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 18 18"
-                >
-                  <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 1v16M1 9h16"
-                  />
-                </svg>
-              </p>
-            </div>
-          </div>
+        <DashboardHeader />
+        <div className="p-4 border-2 border-gray-200  rounded-lg dark:border-gray-700">
+        <Routes>
+        
+        <Route path="/orders" element={<DashboardOrders/>} />
+        <Route path="/users" element={<DashboardUsers/>} />
+        <Route path="/products" element={<DashboardProducts/>} />
+        <Route path="/restaurants" element={<DashboardRestaurants/>} />
+        <Route path="/settings" element={<DashboardSettings/>} />
+
+        </Routes>
+
+
         </div>
+        
       </div>
       {/* | above Grid Layout */}
     </div>
