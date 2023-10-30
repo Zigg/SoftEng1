@@ -5,6 +5,7 @@
 /* eslint-disable linebreak-style */
 const router = require("express").Router();
 const admin = require("firebase-admin");
+let data = [];
 
 router.get("/", (req, res) => {
   return res.send("Inside the user router");
@@ -41,6 +42,35 @@ router.get("/count", async (req, res) => {
   }
 });
 
+const userList = (nextPageToken) => {
+  return admin
+    .auth()
+    .listUsers(1000, nextPageToken)
+    .then((userListResult) => {
+      userListResult.users.forEach((rec) => {
+        data.push(rec.toJSON());
+      });
+      if (userListResult.pageToken) {
+        return userList(userListResult.pageToken);
+      }
+    })
+    .catch((er) => console.log(er));
+};
+
+router.get("/list", async (req, res) => {
+  data = [];
+  await userList();
+  try {
+    return res
+      .status(200)
+      .send({ success: true, data: data, dataCount: data.length });
+  } catch (er) {
+    return res.send({
+      success: false,
+      msg: `Error in listing users :,${er}`,
+    });
+  }
+});
 
 // eslint-disable-next-line linebreak-style
 module.exports = router;

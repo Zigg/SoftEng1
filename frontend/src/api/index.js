@@ -12,3 +12,13 @@ export const getUserCount = async () => {
   }
 };
 
+export const getUserList = async () => {
+  try {
+    const res = await axios.get(`${baseURL}/api/users/list`);
+    return res.data.data;
+  } catch (err) {
+    return null;
+  }
+};
+
+
