@@ -2,7 +2,13 @@
 import { IoSettingsOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import React, { useState, useEffect } from "react";
-import { PackageSearch, ShoppingBag, Store, Users } from "lucide-react";
+import {
+  PackageSearch,
+  ShoppingBag,
+  Store,
+  Users,
+  AreaChart,
+} from "lucide-react";
 import DashboardHeader from "./components/DashboardHeader";
 import { Route, Routes } from "react-router-dom";
 import DashboardOrders from "./pages/DashboardOrders";
@@ -10,12 +16,16 @@ import DashboardUsers from "./pages/DashboardUsers";
 import DashboardProducts from "./pages/DashboardProducts";
 import DashboardRestaurants from "./pages/DashboardRestaurants";
 import DashboardSettings from "./pages/DashboardSettings";
+import DashboardReports from "./pages/DashboardReports";
+import DashboardOverview from "./pages/DashboardOverview";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserCount } from "../../../api";
 import { setUserCount } from "../../../context/actions/userCountAction";
+import { Logo } from "../../../assets/images";
 
 const MainDashboard = () => {
   // TODO: Add check on whether the current user is an admin or not
+  // TODO: Orders, Products, Restaurants, Reports, Settings Create the functionality for each of these pages
 
   // Fetching user count from the backend
   const dispatch = useDispatch();
@@ -85,6 +95,12 @@ const MainDashboard = () => {
           {/* Not using the Navlink because this must have a full reload*/}
           <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
             <ul className="space-y-2 font-medium">
+              <img
+                src={Logo}
+                alt="Logo"
+                className="w-12 h-12 flex flex-col mx-auto "
+              />
+
               <li>
                 <a
                   href="/dashboard"
@@ -112,7 +128,7 @@ const MainDashboard = () => {
                   <span className="flex-1 ml-3 whitespace-nowrap">Orders</span>
 
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                    23
+                    23 Fake
                   </span>
                 </a>
               </li>
@@ -129,7 +145,7 @@ const MainDashboard = () => {
                   <Users className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                  {/* Properly sets the usercount now */}
+                    {/* Properly sets the usercount now */}
                     {userCount}
                   </span>
                 </a>
@@ -149,7 +165,7 @@ const MainDashboard = () => {
                     Products
                   </span>
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                    34
+                    34 Fake
                   </span>
                 </a>
               </li>
@@ -167,8 +183,21 @@ const MainDashboard = () => {
                     Restaurants
                   </span>
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                    12
+                    12 Fake
                   </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/dashboard/reports"
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
+                    window.location.pathname === "/dashboard/reports"
+                      ? "text-red-500 opacity-100"
+                      : ""
+                  }`}
+                >
+                  <AreaChart className="w-6 h-6  " />
+                  <span className="flex-1 ml-3 whitespace-nowrap">Reports</span>
                 </a>
               </li>
               <li>
@@ -192,14 +221,17 @@ const MainDashboard = () => {
       )}
 
       {/* Grid Layout */}
-      <div className="p-4 sm:ml-64">
+      <div className="px-4 pt-4 sm:ml-64">
         <DashboardHeader />
         <div className="p-4 rounded-lg ">
           <Routes>
+            <Route path="/" element={<DashboardOverview />} />
             <Route path="/orders" element={<DashboardOrders />} />
             <Route path="/users" element={<DashboardUsers />} />
             <Route path="/products" element={<DashboardProducts />} />
             <Route path="/restaurants" element={<DashboardRestaurants />} />
+            <Route path="/reports" element={<DashboardReports />} />
+
             <Route path="/settings" element={<DashboardSettings />} />
           </Routes>
         </div>
