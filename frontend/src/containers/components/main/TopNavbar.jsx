@@ -43,6 +43,7 @@ const TopNavbar = () => {
   // TODO: Make the menu a dropdown?
   // TODO: Maybe separate the components into their own files | menuitems, user profile, cart, etc
   // TODO: Make more responsive
+  // TODO: On md devices put the search input in the middle w-full
   const screenSizeToggled = 767;
   const [isSidebarOpen, setIsSidebarOpen] = useState(
     window.innerWidth > screenSizeToggled
@@ -83,7 +84,7 @@ const TopNavbar = () => {
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               type="button"
-              className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             >
               <span className="sr-only">Open sidebar</span>
               <svg
@@ -102,15 +103,15 @@ const TopNavbar = () => {
             </button>
 
             {isSidebarOpen && (
-              <div className=" md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8">
-                <ul className="flex flex-col font-medium  md:p-0  rounded-lg  md:flex-row md:dark:bg-gray-900 dark:border-gray-700 gap-x-6">
+              <div className=" md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8 pr-5 mt-2">
+                <ul className="flex flex-col font-medium  md:p-0  rounded-lg  md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4 ">
                   <li>
                     <NavLink
                       to="/"
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded hover-bg-blue-400 md:hover-bg-transparent md:hover-text-blue-700 md:p-0 dark-text-white md:dark-hover-text-blue-500 dark-hover-bg-gray-700 dark-hover-text-white md:dark-hover-bg-transparent dark-border-gray-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Home
@@ -122,7 +123,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Menu
@@ -134,7 +135,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Featured
@@ -146,7 +147,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Contacts
