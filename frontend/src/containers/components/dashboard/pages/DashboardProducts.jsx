@@ -46,32 +46,37 @@ const DashboardProducts = () => {
   let filteredItems = currentItems;
 
   if (search) {
-    const searchQuery = search.trim();
-    filteredItems = productsMockData.filter(
-      (product) =>
+    const searchQuery = search.trim().toLowerCase();
+    filteredItems = productsMockData.filter((product) => {
+      return (
         (product.productName
-          ? product.productName
-              .toLowerCase()
-              .includes(searchQuery.toLowerCase())
+          ? product.productName.toLowerCase().includes(searchQuery)
           : false) ||
-        (product.email
-          ? product.email.toLowerCase().includes(searchQuery.toLowerCase())
+        (product.category
+          ? product.category.toLowerCase().includes(searchQuery)
           : false) ||
-        (product.emailVerified ? "Yes" : "No")
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        (product.disabled ? "Yes" : "No")
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        (product.metadata && product.metadata.lastSignInTime
-          ? product.metadata.lastSignInTime.includes(searchQuery)
+        (product.price
+          ? product.price.toString().includes(searchQuery)
           : false) ||
-        (product.metadata && product.metadata.creationTime
-          ? product.metadata.creationTime.includes(searchQuery)
+        (product.ingredients
+          ? product.ingredients.join(', ').toLowerCase().includes(searchQuery)
+          : false) ||
+        (product.sizes
+          ? product.sizes.join(', ').toLowerCase().includes(searchQuery)
+          : false) ||
+        (product.addons
+          ? product.addons.join(', ').toLowerCase().includes(searchQuery)
+          : false) ||
+        (product.dateAdded
+          ? product.dateAdded.toLowerCase().includes(searchQuery)
+          : false) ||
+        (product.status
+          ? product.status.toLowerCase().includes(searchQuery)
           : false)
-    );
+      );
+    });
   }
-
+  
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900"></div>
