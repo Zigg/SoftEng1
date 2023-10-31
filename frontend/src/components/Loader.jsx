@@ -1,7 +1,7 @@
 import React from "react";
 
 const Loader = () => (
-  <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center backdrop-filter backdrop-blur-lg z-40">
+  <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center backdrop-filter backdrop-blur-lg z-50">
     <div
       role="status"
       className="relative flex flex-col items-center justify-center"
