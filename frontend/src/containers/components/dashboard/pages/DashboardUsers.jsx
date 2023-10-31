@@ -10,17 +10,10 @@ import { setUserListDetails } from "../../../../context/actions/userListAction";
 // TODO: Add user role
 const DashboardUsers = () => {
   const userList = useSelector((state) => state.userList);
+  const [search, setSearch] = useState("");
+  const [activePage, setActivePage] = useState(1);
   const dispatch = useDispatch();
   const itemsPerPage = 20;
-  const [activePage, setActivePage] = useState(1);
-
-  useEffect(() => {
-    if (!userList) {
-      getUserList().then((data) => {
-        dispatch(setUserListDetails(data));
-      });
-    }
-  }, [dispatch, userList]);
 
   const handlePageChange = (pageNumber) => {
     if (
@@ -31,7 +24,14 @@ const DashboardUsers = () => {
     }
   };
 
-  // TODO: Maybe add a background image illustration if there are no users
+  useEffect(() => {
+    if (!userList) {
+      getUserList().then((data) => {
+        dispatch(setUserListDetails(data));
+      });
+    }
+  }, [dispatch, userList]);
+
   if (!userList) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -44,9 +44,71 @@ const DashboardUsers = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = userList.slice(indexOfFirstItem, indexOfLastItem);
 
+  let filteredItems = currentItems;
+
+  if (search) {
+    const searchQuery = search.trim();
+    filteredItems = userList.filter(
+      (user) =>
+        (user.displayName
+          ? user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
+          : false) ||
+        (user.email
+          ? user.email.toLowerCase().includes(searchQuery.toLowerCase())
+          : false) ||
+        (user.emailVerified ? "Yes" : "No")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        (user.disabled ? "Yes" : "No")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        (user.metadata && user.metadata.lastSignInTime
+          ? user.metadata.lastSignInTime.includes(searchQuery)
+          : false) ||
+        (user.metadata && user.metadata.creationTime
+          ? user.metadata.creationTime.includes(searchQuery)
+          : false)
+    );
+  }
+
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900"></div>
+      <div className="relative overflow-x-auto sm:rounded-lg px-4">
+        <div className="pb-4 bg-white dark:bg-gray-900">
+          <label htmlFor="table-search" className="sr-only">
+            Search
+          </label>
+          <div className="relative mt-1">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="table-search"
+              className="block p-2 pl-10 text-sm text-gray-900 rounded-lg w-60 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search for items"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+
       <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
           <tr>
@@ -74,7 +136,7 @@ const DashboardUsers = () => {
           </tr>
         </thead>
         <tbody>
-          {currentItems.map((user, index) => (
+          {filteredItems.map((user, index) => (
             <tr
               key={index}
               className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
