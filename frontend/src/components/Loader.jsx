@@ -10,6 +10,16 @@ const Loader = () => {
       "Getting things ready",
       "Almost there",
       "Just a little longer",
+      "Just a moment",
+      "Hang tight",
+      "Getting things ready for you",
+      "Hold on, we’re fetching the data",
+      "Your request is in progress",
+      "Almost there, just a few more seconds",
+      "We’re working on it, stay with us",
+      "Fetching the latest updates for you",
+      "Please wait while we load the information",
+      "Sit back and relax, we’re loading your content",
     ];
     const interval = setInterval(() => {
       setLoadingText(messages[Math.floor(Math.random() * messages.length)]);
