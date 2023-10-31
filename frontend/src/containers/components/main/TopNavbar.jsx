@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ShoppingBag } from "lucide-react";
 import { PiSignOutBold } from "react-icons/pi";
 import { getAuth } from "firebase/auth";
@@ -43,30 +43,130 @@ const TopNavbar = () => {
   // TODO: Make the menu a dropdown?
   // TODO: Maybe separate the components into their own files | menuitems, user profile, cart, etc
   // TODO: Make more responsive
+  // TODO: On md devices put the search input in the middle w-full
+  const screenSizeToggled = 767;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(
+    window.innerWidth > screenSizeToggled
+  );
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSidebarOpen(window.innerWidth > screenSizeToggled);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // TODO: Fix excessive spacing between the logo and its title with the navbar
+  // TODO: Hamburger menu is not absolute
+  // However this is more responsive for mobile and desktop
   return (
     <div className="md:border-b-2 md:border-gray-300 lg:border-b-2 lg:border-gray-300">
-      <nav className="bg-white dark:bg-gray-900 sticky top-0 z-10">
-        <div className="flex flex-wrap items-center justify-between mx-auto p-4 ">
-          <NavLink to="/" className="flex">
-            <img
-              src={Logo}
-              className="h-12 w-12 mr-2 object-contain"
-              alt="Logo"
-            />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white sm:block xs:block hidden">
-              Ordering System
-            </span>
-          </NavLink>
+      <div className="flex items-center justify-center mx-auto">
+        <NavLink to="/">
+          <img
+            src={Logo}
+            className="h-12 w-12 lg:z-20 lg:mt-3 relative"
+            alt="Logo"
+          />
+        </NavLink>
+        <span className="self-center text-2xl px-2 font-semibold whitespace-nowrap dark:text-white sm:block xs:block  lg:z-20 lg:mt-3">
+          Ordering System
+        </span>
+      </div>
+      <nav className="bg-white dark:bg-gray-900 sticky lg:-mt-10 z-10">
+        <div className="flex items-center justify-between mx-auto pb-4 pl-4 pr-4">
+          <div className="flex items-center">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              type="button"
+              className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            >
+              <span className="sr-only">Open sidebar</span>
+              <svg
+                className="w-6 h-6"
+                aria-hidden="true"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  fillRule="evenodd"
+                  d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
+                ></path>
+              </svg>
+            </button>
 
-          <div className="relative flex items-center md:order-2 ">
-            <SearchInput />
+            {isSidebarOpen && (
+              <div className=" md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8 pr-5 mt-2">
+                <ul className="flex flex-col font-medium  md:p-0  rounded-lg  md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4 ">
+                  <li>
+                    <NavLink
+                      to="/"
+                      className={({ isActive }) =>
+                        isActive
+                          ? " block font-bold  text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                      }
+                    >
+                      Home
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/menu"
+                      className={({ isActive }) =>
+                        isActive
+                          ? " block font-bold  text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                      }
+                    >
+                      Menu
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/featured"
+                      className={({ isActive }) =>
+                        isActive
+                          ? " block font-bold  text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                      }
+                    >
+                      Featured
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/contacts"
+                      className={({ isActive }) =>
+                        isActive
+                          ? " block font-bold  text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                      }
+                    >
+                      Contacts
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
 
+          <div className="flex items-center">
+            <div className="flex md:items-center md:justify-center md:mx-auto">
+              <SearchInput />
+            </div>
             {user && (
               <div className="ml-4">
                 <button
                   type="button"
-                  className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-rose-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                  className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover-bg-rose-600 bg-amber-400 hover-text-white focus:outline-none focus-ring-2 focus-ring-offset-2 focus-ring-rose-500"
                   onClick={() => navigate("/cart")}
                 >
                   <span className="font-semibold">
@@ -79,7 +179,6 @@ const TopNavbar = () => {
               </div>
             )}
 
-            {/* TODO: When using the user selector try to clean up and make the code below more manageable, remove or try to avoid multiple nested components */}
             {isMenuOpen && (
               <div className="fixed inset-0 bg-black opacity-50"></div>
             )}
@@ -95,9 +194,9 @@ const TopNavbar = () => {
               >
                 <span className="sr-only">Open user menu</span>
                 <img
-                  className="w-8 h-8 rounded-full object-center"
+                  className="w-8 h-8 rounded-full object-center flex-shrink-0"
                   src={defaultUser}
-                  alt="Menu"
+                  alt="User Profile"
                 />{" "}
               </button>
             )}
@@ -106,40 +205,35 @@ const TopNavbar = () => {
                 <OnboardButton />
               </div>
             )}
-
             {isMenuOpen && (
               <div
                 onMouseLeave={() => {
                   setIsMenuOpen(false);
                 }}
-                className="absolute md:ml-52 md:mt-12 translate-y-1/2 xs:ml-52 xs:mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2 border-rose-500 dark:border-gray-600"
+                className="absolute ml-56 mt-12 translate-y-1/2 xs-ml-52 xs-mt-12 sm-ml-60 sm-mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark-bg-gray-700 dark-divide-gray-600 border-t-2 border-rose-500 dark-border-gray-600"
                 id="user-dropdown"
               >
                 {user && (
                   <div>
                     <div className="px-4 py-3">
                       <span
-                        className="block text-sm text-gray-900 dark:text-white font-medium"
+                        className="block text-sm text-gray-900 dark-text-white font-medium"
                         title={userName}
                       >
-                        {/* TODO: Added this to avoid character overflow that messes up the containers  */}
                         {userName && userName.length > 12
                           ? `${userName.substring(0, 12)}...`
                           : userName}
                       </span>
                       <span
-                        className="block text-sm text-gray-500 truncate dark:text-gray-400 mb-1 font-medium"
+                        className="block text-sm text-gray-500 truncate dark-text-gray-400 mb-1 font-medium"
                         title={userEmail}
                       >
-                        {/* Added this to avoid character overflow that messes up the containers  */}
                         {userEmail && userEmail.length > 12
                           ? `${userEmail.substring(0, 12)}...`
                           : userEmail}
                       </span>
-                      <span className="block text-sm text-black-500 truncate dark:text-white font-medium">
+                      <span className="block text-sm text-black-500 truncate dark-text-white font-medium">
                         123.32
-                        {/*{balance && balance.length > 12 ? `${balance.substring(0, 12)}...` : balance} */}
-                        {/* TODO: Replace this with the actual value  */}
                       </span>
                     </div>
 
@@ -155,7 +249,7 @@ const TopNavbar = () => {
                       </li>
                       <li>
                         <NavLink
-                          to="order"
+                          to="orders"
                           className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                         >
                           <TbPackage className="mr-2" />
@@ -209,62 +303,6 @@ const TopNavbar = () => {
                 )}
               </div>
             )}
-          </div>
-
-          <div
-            className="w-full md:flex md:w-auto md:order-1 "
-            id="navbar-user"
-          >
-            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              <li>
-                <NavLink
-                  to="/"
-                  className={({ isActive }) =>
-                    isActive
-                      ? " block font-bold  text-rose-500 hover:text-blue-600"
-                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                  }
-                >
-                  🏠Home
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/menu"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "block font-bold  text-rose-500 hover:text-blue-600"
-                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                  }
-                >
-                  🌶️Menu
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/featured"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "block font-bold  text-rose-500 hover:text-blue-600"
-                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                  }
-                >
-                  🔥Featured
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to="/contacts"
-                  className={({ isActive }) =>
-                    isActive
-                      ? "block font-bold text-rose-500 hover:text-blue-600"
-                      : "block py-2 text-gray-900 rounded hover:bg-blue-400 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover-bg-transparent dark:border-gray-700"
-                  }
-                >
-                  ☎️Contacts
-                </NavLink>
-              </li>
-            </ul>
           </div>
         </div>
       </nav>
