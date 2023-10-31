@@ -136,7 +136,7 @@ const DashboardUsers = () => {
               onClick={() => handlePageChange(activePage - 1)}
               className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 ${
                 activePage === 1
-                  ? "hover:bg-gray-300 dark:hover:bg-gray-700 dark:hover-text-white"
+                  ? "hover:bg-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                   : ""
               }`}
             >
@@ -168,7 +168,7 @@ const DashboardUsers = () => {
                   className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 ${
                     i + 1 === activePage
                       ? "bg-blue-600 text-white"
-                      : " hover:text-gray-700 hover:bg-gray-300 dark:hover:bg-gray-700 dark:hover-text-white"
+                      : " hover:text-gray-700 hover:bg-gray-300 dark:hover:bg-gray-700 dark:hover:text-white"
                   }`}
                 >
                   {i + 1}
@@ -183,7 +183,7 @@ const DashboardUsers = () => {
               className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 rounded-r-lg bg-white border border-gray-300 ${
                 activePage === Math.ceil(userList.length / itemsPerPage)
                   ? "dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400"
-                  : "hover-bg-gray-100 hover:text-gray-700 dark-hover-bg-gray-700 dark-hover-text-white"
+                  : "hover:bg-gray-100 hover:text-gray-700 dark-hover:bg-gray-700 dark-hover:text-white"
               }`}
             >
               <span className="sr-only">Next</span>
