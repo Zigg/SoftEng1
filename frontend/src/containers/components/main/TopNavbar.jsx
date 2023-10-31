@@ -80,11 +80,11 @@ const TopNavbar = () => {
       </div>
       <nav className="bg-white dark:bg-gray-900 sticky lg:-mt-10 z-10">
         <div className="flex items-center justify-between mx-auto pb-4 pl-4 pr-4">
-          <div className="flex items-center ">
+          <div className="flex items-center">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               type="button"
-              className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 "
+              className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             >
               <span className="sr-only">Open sidebar</span>
               <svg
@@ -103,15 +103,15 @@ const TopNavbar = () => {
             </button>
 
             {isSidebarOpen && (
-              <div className=" animate-slide-in-from-left md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8 pr-5 mt-2">
-                <ul className="flex flex-col font-medium  md:p-0  rounded-lg  md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4 ">
+              <div className="animate-slide-in-from-left md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8 pr-5 mt-2">
+                <ul className="flex flex-col font-medium md:p-0 rounded-lg md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4">
                   <li>
                     <NavLink
                       to="/"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
                       Home
@@ -122,8 +122,8 @@ const TopNavbar = () => {
                       to="/menu"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover-text-blue-700"
                       }
                     >
                       Menu
@@ -134,8 +134,8 @@ const TopNavbar = () => {
                       to="/featured"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover-text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark-text-white hover-text-blue-600 dark-hover-text-blue-700"
                       }
                     >
                       Featured
@@ -146,8 +146,8 @@ const TopNavbar = () => {
                       to="/contacts"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover-text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark-text-white hover-text-blue-600 dark-hover-text-blue-700"
                       }
                     >
                       Contacts
