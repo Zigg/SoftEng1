@@ -3,11 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserList } from "../../../../api";
 import { setUserListDetails } from "../../../../context/actions/userListAction";
 
-// FIXME: Why is some users display multiple times???
 // TODO: Add the actions to the table, i.e. delete, edit, etc.
 // TODO: Add the ability to search for users
 // TODO: Add the ability to sort the table by column
-// TODO: Add an active state to which page is currently selected pagination
 // TODO: Make this a reusable component
 // TODO: Add user role
 const DashboardUsers = () => {
