@@ -7,6 +7,12 @@ module.exports = {
   theme: {
     
     extend: {
+      animation: {
+        'slide-in-from-left': 'slideInFromLeft 1s ease-in-out',
+        'slide-in-from-right': 'slideInFromRight 1s ease-in-out',
+        'slide-in-from-top': 'slideInFromTop 1s ease-in-out',
+        'slide-in-from-bottom': 'slideInFromBottom 1s ease-in-out',
+      },
       colors: {
         primary: {
           50: "#eff6ff",
