@@ -111,7 +111,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Home
@@ -123,7 +123,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Menu
@@ -135,7 +135,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Featured
@@ -147,7 +147,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
                       }
                     >
                       Contacts
@@ -166,7 +166,7 @@ const TopNavbar = () => {
               <div className="ml-4">
                 <button
                   type="button"
-                  className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover-bg-rose-600 bg-amber-400 hover-text-white focus:outline-none focus-ring-2 focus-ring-offset-2 focus-ring-rose-500"
+                  className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-rose-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
                   onClick={() => navigate("/cart")}
                 >
                   <span className="font-semibold">
@@ -210,14 +210,14 @@ const TopNavbar = () => {
                 onMouseLeave={() => {
                   setIsMenuOpen(false);
                 }}
-                className="absolute ml-56 mt-12 translate-y-1/2 xs-ml-52 xs-mt-12 sm-ml-60 sm-mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark-bg-gray-700 dark-divide-gray-600 border-t-2 border-rose-500 dark-border-gray-600"
+                className="absolute ml-56 mt-12 translate-y-1/2 xs-ml-52 xs-mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2 border-rose-500 dark:border-gray-600"
                 id="user-dropdown"
               >
                 {user && (
                   <div>
                     <div className="px-4 py-3">
                       <span
-                        className="block text-sm text-gray-900 dark-text-white font-medium"
+                        className="block text-sm text-gray-900 dark:text-white font-medium"
                         title={userName}
                       >
                         {userName && userName.length > 12
@@ -225,14 +225,14 @@ const TopNavbar = () => {
                           : userName}
                       </span>
                       <span
-                        className="block text-sm text-gray-500 truncate dark-text-gray-400 mb-1 font-medium"
+                        className="block text-sm text-gray-500 truncate dark:text-gray-400 mb-1 font-medium"
                         title={userEmail}
                       >
                         {userEmail && userEmail.length > 12
                           ? `${userEmail.substring(0, 12)}...`
                           : userEmail}
                       </span>
-                      <span className="block text-sm text-black-500 truncate dark-text-white font-medium">
+                      <span className="block text-sm text-black-500 truncate dark:text-white font-medium">
                         123.32
                       </span>
                     </div>
