@@ -7,42 +7,33 @@ import { Pagination } from "./components/Pagination";
 import SearchFilter from "./components/SearchFilter";
 
 // TODO: Add the actions to the table, i.e. delete, edit, etc.
-// TODO: Add the ability to search for users
 // TODO: Add the ability to sort the table by column
-// TODO: Make this a reusable component
+// TODO: Make this a reusable component (ish)
 // TODO: Add user role
 
-// FIXME: Fix the search filter not working, i think its a problem with the state handling as well
+// FIXME: Fix the pagination not working, i think its a problem with the state handling as well
+
 const DashboardUsers = () => {
-  const userList = useSelector((state) => state.userList);
-  // const [search, setSearch] = useState("");
-  const [activePage, setActivePage] = useState(1);
   const dispatch = useDispatch();
-  // const itemsPerPage = 20;
+  const itemsPerPage = 20;
 
-  const handlePageChange = (pageNumber) => {
-    setActivePage(pageNumber);
-  };
+  const userList = useSelector((state) => state.userList);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activePage, setActivePage] = useState(1);
 
-  // Hook for the userList
+  // Fetch user list data if it doesn't exist
   useEffect(() => {
     if (!userList) {
-      getUserList().then((data) => {
-        dispatch(setUserListDetails(data));
-      });
+      getUserList()
+        .then((data) => {
+          dispatch(setUserListDetails(data));
+        })
+        .catch((error) => {
+          console.error("Error fetching user list: ", error);
+        });
     }
   }, [dispatch, userList]);
 
-  // If there are no users, display a message
-  if (!userList) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <span className="text-2xl mb-60">No Users Found</span>
-      </div>
-    );
-  }
-
-  // Setting the header through this to not hard code in the table component
   const userListHeader = [
     { title: "User name" },
     { title: "Email" },
@@ -50,45 +41,87 @@ const DashboardUsers = () => {
     { title: "Disabled" },
     { title: "Last Sign In" },
     { title: "Creation Time" },
-    // Its not centered correctly when passed through this?
-    // { title: "Actions" },
   ];
 
-  // Setting the header through this to not hard code in the table component
-  const userListData = userList.map((user) => ({
-    "User name": user.displayName || "-",
-    Email: user.email || "-",
-    "Email Verified": user.emailVerified ? "Yes" : "No",
-    Disabled: user.disabled ? "Yes" : "No",
-    "Last Sign In": user.metadata.lastSignInTime
-      ? new Date(user.metadata.lastSignInTime).toLocaleDateString() +
-        " " +
-        new Date(user.metadata.lastSignInTime).toLocaleTimeString()
-      : "-",
-    "Creation Time": user.metadata.creationTime
-      ? new Date(user.metadata.creationTime).toLocaleDateString()
-      : "-",
-  }));
+  const userListData = userList
+    ? userList.map((user) => ({
+        "User name": user.displayName || "-",
+        Email: user.email || "-",
+        "Email Verified": user.emailVerified ? "Yes" : "No",
+        Disabled: user.disabled ? "Yes" : "No",
+        "Last Sign In": user.metadata.lastSignInTime
+          ? new Date(user.metadata.lastSignInTime).toLocaleDateString() +
+            " " +
+            new Date(user.metadata.lastSignInTime).toLocaleTimeString()
+          : "-",
+        "Creation Time": user.metadata.creationTime
+          ? new Date(user.metadata.creationTime).toLocaleDateString()
+          : "-",
+      }))
+    : [];
+  const [filteredData, setFilteredData] = useState(userListData);
 
-  const itemsPerPage = 20;
-  const indexOfLastItem = activePage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = userListData.slice(indexOfFirstItem, indexOfLastItem);
+  // Setting the search query component
+  const handleSearch = (searchQuery) => {
+    setSearchQuery(searchQuery);
+    const trimmedQuery = searchQuery.trim().toLowerCase();
+    const filteredData = userListData.filter((item) =>
+      [
+        "User name",
+        "Email",
+        "Email Verified",
+        "Disabled",
+        "Last Sign In",
+        "Creation Time",
+      ].some((field) =>
+        item[field] ? item[field].toLowerCase().includes(trimmedQuery) : false
+      )
+    );
+    setFilteredData(filteredData);
+  };
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+  };
+
+  const totalOriginalItems = userListData.length;
+
+  useEffect(() => {
+    setActivePage(1);
+  }, [searchQuery]);
+
+  const totalFilteredItems = filteredData.length;
+
+  useEffect(() => {
+    if (activePage > Math.ceil(totalFilteredItems / itemsPerPage)) {
+      setActivePage(1);
+    }
+  }, [totalFilteredItems, activePage]);
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900"></div>
-      {/*      <SearchFilter data={userListData} setData={userListData} fields={["displayName", "email", "emailVerified", "disabled", "metadata.lastSignInTime", "metadata.creationTime"]} />*/}
-
+      {userList && (
+        <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
+      )}
       {/* Add table here */}
-      <TableComponent header={userListHeader} data={currentItems} />
+      {/* Hotfix: Conditionaly rendering ... */}
+      <TableComponent
+        header={userListHeader}
+        data={searchQuery ? filteredData : userListData}
+      />
+      {filteredData.length === 0 && searchQuery && (
+        <div className="text-center text-gray-500 dark:text-gray-400 mt-4">
+          No results found
+        </div>
+      )}
+
       {/* Add table here */}
       {/*Pagintion */}
       <Pagination
-        totalItems={userList.length}
+        totalItems={searchQuery ? totalFilteredItems : totalOriginalItems}
         activePage={activePage}
         onPageChange={handlePageChange}
-        data={userListData}
+        data={searchQuery ? filteredData : userListData}
       />
     </div>
   );
