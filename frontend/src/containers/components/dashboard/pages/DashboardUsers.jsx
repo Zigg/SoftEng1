@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserList } from "../../../../api";
 import { setUserListDetails } from "../../../../context/actions/userListAction";
+import AddUserButton from "./components/AddUser";
+import TableComponent from "./components/Table";
 
 // TODO: Add the actions to the table, i.e. delete, edit, etc.
 // TODO: Add the ability to search for users
 // TODO: Add the ability to sort the table by column
 // TODO: Make this a reusable component
 // TODO: Add user role
+// FIXME: Fix pagination
 const DashboardUsers = () => {
   const userList = useSelector((state) => state.userList);
   const [search, setSearch] = useState("");
@@ -24,6 +27,7 @@ const DashboardUsers = () => {
     }
   };
 
+  // Hook for the userList
   useEffect(() => {
     if (!userList) {
       getUserList().then((data) => {
@@ -32,6 +36,7 @@ const DashboardUsers = () => {
     }
   }, [dispatch, userList]);
 
+  // If there are no users, display a message
   if (!userList) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -39,6 +44,33 @@ const DashboardUsers = () => {
       </div>
     );
   }
+
+  const userListHeader = [
+    { title: "User name" },
+    { title: "Email" },
+    { title: "Email Verified" },
+    { title: "Disabled" },
+    { title: "Last Sign In" },
+    { title: "Creation Time" },
+    // Its not centered correctly when passed through this?
+    // { title: "Actions" },
+  ];
+
+  const userListData = userList.map((user) => ({
+    "User name": user.displayName || "-",
+    Email: user.email || "-",
+
+    "Email Verified": user.emailVerified ? "Yes" : "No",
+    Disabled: user.disabled ? "Yes" : "No",
+    "Last Sign In": user.metadata.lastSignInTime
+      ? new Date(user.metadata.lastSignInTime).toLocaleDateString() +
+        " " +
+        new Date(user.metadata.lastSignInTime).toLocaleTimeString()
+      : "-",
+    "Creation Time": user.metadata.creationTime
+      ? new Date(user.metadata.creationTime).toLocaleDateString()
+      : "-",
+  }));
 
   const indexOfLastItem = activePage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -76,6 +108,7 @@ const DashboardUsers = () => {
       <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900"></div>
       <div className="relative overflow-x-auto sm:rounded-lg px-4">
         <div className="pb-4 bg-white dark:bg-gray-900">
+          {/*<AddUserButton /> */}
           <label htmlFor="table-search" className="sr-only">
             Search
           </label>
@@ -109,84 +142,10 @@ const DashboardUsers = () => {
         </div>
       </div>
 
-      <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" className="p-4">
-              <div className="flex items-center"></div>
-            </th>
-            <th scope="col" className="px-6 py-3">
-              User Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Email
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Email Verified
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Account Disabled
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Last Sign In
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Date Created
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredItems.map((user, index) => (
-            <tr
-              key={index}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
-            >
-              <td className="w-4 p-4"></td>
-              <td className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                <div className="px-6 py-4" title={user.displayName}>
-                  {user.displayName && user.displayName.length > 16
-                    ? `${user.displayName.substring(0, 16)}...`
-                    : user.displayName || "-"}
-                </div>
-              </td>
-              <td className="px-6 py-4 " title={user.email}>
-                {" "}
-                {user.email && user.email.length > 16
-                  ? `${user.email.substring(0, 16)}...`
-                  : user.email || "-"}
-              </td>
-              <td
-                className={`px-6 py-4 ${
-                  user.emailVerified ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                {user.emailVerified ? "Yes" : "No"}
-              </td>
-              <td
-                className={`px-6 py-4 ${
-                  user.disabled ? "text-green-500" : "text-red-500"
-                }`}
-              >
-                {user.disabled ? "Yes" : "No"}
-              </td>
-              <td className="px-6 py-4">
-                {user.metadata.lastSignInTime
-                  ? new Date(
-                      user.metadata.lastSignInTime
-                    ).toLocaleDateString() +
-                    " " +
-                    new Date(user.metadata.lastSignInTime).toLocaleTimeString()
-                  : "-"}
-              </td>
-              <td className="px-6 py-4">
-                {user.metadata.creationTime
-                  ? new Date(user.metadata.creationTime).toLocaleDateString()
-                  : "-"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Add table here */}
+      <TableComponent header={userListHeader} data={userListData} />
+
+      {/* Add table here */}
       {/*Pagintion */}
       <div className="mt-4 flex justify-end">
         <ul className="flex items-center justify-center -space-x-px h-8 text-sm">
