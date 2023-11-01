@@ -1,9 +1,7 @@
 import { Checkbox, Table } from "flowbite-react";
 import { Pencil, Trash2 } from "lucide-react";
-
 function TableComponent({ header, data }) {
   // TODO: Add the edit and delete functionality
-  // TODO: Data is being fetched correctly, but not being displayed correctly
   return (
     <div className="custom-scroll">
       <Table>
