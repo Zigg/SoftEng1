@@ -7,6 +7,10 @@ module.exports = {
   theme: {
     
     extend: {
+      maxHeight: {
+        '450': '450px',
+      },
+      
       colors: {
         primary: {
           50: "#eff6ff",

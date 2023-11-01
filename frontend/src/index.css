@@ -7,6 +7,12 @@
   font-family: 'Roboto', sans-serif;
 }
 
+.custom-scroll {
+  max-height: 450px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
