@@ -52,21 +52,24 @@ const App = () => {
         <Routes>
           <Route path="/*" element={<Main />} />
 
-          <Route path="*" element={<NotFoundPage />} />
+      <Toaster />
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/login" element={<Login />} />
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard/*" element={<Dashboard />} />
+        {/*<Route path="*" element={<NotFoundPage />} /> */}
+        
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        
+        <Route path="/profile/*" element={<Profile />} />
+        <Route path="/orders/*" element={<Orders />} />
+        <Route path="/order-history/*" element={<OrderHistory />} />
+        <Route path="/transactions/*" element={<Transactions />} />
+      </Routes>
 
-          <Route path="/profile/*" element={<Profile />} />
-          <Route path="/orders/*" element={<Orders />} />
-          <Route path="/order-history/*" element={<OrderHistory />} />
-          <Route path="/transactions/*" element={<Transactions />} />
-        </Routes>
-
-        {!isLoading && alert?.type && (
-          <GlobalAlert type={alert.type} message={alert.type} />
-        )}
-      </div>
+      {!isLoading && alert?.type && (
+        <GlobalAlert type={alert.type} message={alert.type} />
+      )}
     </div>
   );
 };

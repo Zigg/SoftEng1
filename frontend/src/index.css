@@ -59,6 +59,11 @@
   }
 }
 
+.custom-scroll {
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
