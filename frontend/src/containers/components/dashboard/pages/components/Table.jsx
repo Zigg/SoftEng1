@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 // This should be rendering image files correctly... but its not
 // FIXME:
 function renderCellContent(value, headerItem) {
-  console.log("value:", value); 
+  console.log("value:", value);
   if (headerItem.title === "productImage") {
     if (
       typeof value === "string" &&
@@ -63,11 +63,15 @@ function TableComponent({ header, data, activePage, itemsPerPage }) {
                 <Checkbox />
               </td>
               {header.map((headerItem, cellIndex) => (
-                <td key={cellIndex} title={dataItem[headerItem.title]}>
+                <td
+                  key={cellIndex}
+                  title={dataItem[headerItem.title]}
+                  className="px-4 py-2"
+                >
                   {renderCellContent(dataItem[headerItem.title], headerItem)}
                 </td>
               ))}
-              <td>
+              <td className="px-4 py-2">
                 <div className="flex items-center justify-center gap-x-2 border-2 px-4 py-2 rounded-lg w-24">
                   <a
                     href="#"
