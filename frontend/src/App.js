@@ -45,7 +45,7 @@ const App = () => {
   // FIXME: Properly setup the 404 route since putting subroutes might mess with it
   return (
     // To make the animations pause if the page is still loading but excluding the loader from the animation pause
-    <>
+    <div className={isLoading ? "animation-paused" : "animation-running"}>
       {isLoading && <Loader />}
       <div className="animate-children">
         <Toaster />
@@ -63,7 +63,7 @@ const App = () => {
           <GlobalAlert type={alert.type} message={alert.type} />
         )}
       </div>
-    </>
+    </div>
   );
 };
 
