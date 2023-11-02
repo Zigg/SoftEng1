@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import productsMockData from "./mock/productsMockData.json";
+import {productsMockData} from "./mock/productsMockData";
 import SearchFilter from "./components/SearchFilter";
 import TableComponent from "./components/Table";
 import { Pagination } from "./components/Pagination";
@@ -44,7 +44,9 @@ const DashboardUsers = () => {
 
   const productsMockDataList = productsMockData
     ? productsMockData.map((product) => ({
-        "Product Image": product.productImage,
+        // "Product Image": product.productImage,
+        // Set this to blank for now because image isnt properly rendering
+        "Product Image": "-",
         "Product Name": product.productName || "-",
         Category: product.category || "-",
         Price: product.price || "-",
