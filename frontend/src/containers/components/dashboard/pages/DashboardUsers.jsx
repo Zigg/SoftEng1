@@ -61,11 +61,26 @@ const DashboardUsers = () => {
   const handleSearch = (searchQuery) => {
     setSearchQuery(searchQuery);
     const trimmedQuery = searchQuery.trim().toLowerCase();
+
     const filteredData = userListData.filter((item) =>
-      userListHeader.some((header) =>
-        item[header.title].toLowerCase().includes(trimmedQuery)
-      )
+      userListHeader.some((header) => {
+        const itemValue = item[header.title];
+        if (typeof itemValue === "string") {
+          return itemValue.toLowerCase().includes(trimmedQuery);
+        } else if (Array.isArray(itemValue)) {
+          return itemValue.some(
+            (value) =>
+              typeof value === "string" &&
+              value.toLowerCase().includes(trimmedQuery)
+          );
+        } else if (typeof itemValue === "number") {
+          return itemValue.toString().toLowerCase().includes(trimmedQuery);
+        } else {
+          return false;
+        }
+      })
     );
+
     setFilteredData(filteredData);
     setActivePage(1);
     console.log("trimmedQuery:", trimmedQuery);
