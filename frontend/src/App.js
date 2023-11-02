@@ -45,32 +45,25 @@ const App = () => {
   // FIXME: Properly setup the 404 route since putting subroutes might mess with it
   return (
     // To make the animations pause if the page is still loading but excluding the loader from the animation pause
-    <div className={isLoading ? "animation-paused" : "animation-running"}>
+    <>
       {isLoading && <Loader />}
       <div className="animate-children">
         <Toaster />
         <Routes>
           <Route path="/*" element={<Main />} />
-
-      <Toaster />
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/login" element={<Login />} />
-
-        {/*<Route path="*" element={<NotFoundPage />} /> */}
-        
-        <Route path="/dashboard/*" element={<Dashboard />} />
-        
-        <Route path="/profile/*" element={<Profile />} />
-        <Route path="/orders/*" element={<Orders />} />
-        <Route path="/order-history/*" element={<OrderHistory />} />
-        <Route path="/transactions/*" element={<Transactions />} />
-      </Routes>
-
-      {!isLoading && alert?.type && (
-        <GlobalAlert type={alert.type} message={alert.type} />
-      )}
-    </div>
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard/*" element={<Dashboard />} />
+          <Route path="/profile/*" element={<Profile />} />
+          <Route path="/orders/*" element={<Orders />} />
+          <Route path="/order-history/*" element={<OrderHistory />} />
+          <Route path="/transactions/*" element={<Transactions />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        {!isLoading && alert?.type && (
+          <GlobalAlert type={alert.type} message={alert.type} />
+        )}
+      </div>
+    </>
   );
 };
 
