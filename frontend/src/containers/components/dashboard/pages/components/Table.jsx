@@ -2,18 +2,38 @@ import { Checkbox, Table } from "flowbite-react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+// This should be rendering image files correctly... but its not
+// FIXME:
+function renderCellContent(value, headerItem) {
+  console.log("value:", value); 
+  if (headerItem.title === "productImage") {
+    if (
+      typeof value === "string" &&
+      (value.startsWith("http") || value.startsWith("data:image"))
+    ) {
+      return (
+        <img
+          src={value}
+          alt="Product Image"
+          className="w-16 h-16 object-contain"
+        />
+      );
+    } else if (value === "N/A") {
+      return "No Image Available";
+    }
+  } else if (Array.isArray(value)) {
+    return (
+      <ul>
+        {value.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    );
+  }
+  return value;
+}
+
 function TableComponent({ header, data, activePage, itemsPerPage }) {
-  // Calculate the start and end indices for the current page
-  const startIndex = (activePage - 1) * itemsPerPage;
-  const endIndex = Math.min(startIndex + itemsPerPage, data.length);
-
-  console.log("table data:", data);
-  console.log("table activePage:", activePage);
-  console.log("table startIndex:", startIndex);
-  console.log("table endIndex:", endIndex);
-  // console.log("table currentItems:", currentItems);
-  
-
   return (
     <div className="custom-scroll">
       <Table>
@@ -44,7 +64,7 @@ function TableComponent({ header, data, activePage, itemsPerPage }) {
               </td>
               {header.map((headerItem, cellIndex) => (
                 <td key={cellIndex} title={dataItem[headerItem.title]}>
-                  {dataItem[headerItem.title]}
+                  {renderCellContent(dataItem[headerItem.title], headerItem)}
                 </td>
               ))}
               <td>
