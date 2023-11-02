@@ -2,45 +2,16 @@ import { Checkbox, Table } from "flowbite-react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-// This should be rendering image files correctly... but its not
-// FIXME:
-function renderCellContent(value, headerItem) {
-  console.log("value:", value);
-  if (headerItem.title === "productImage") {
-    if (
-      typeof value === "string" &&
-      (value.startsWith("http") || value.startsWith("data:image"))
-    ) {
-      return (
-        <img
-          src={value}
-          alt="Product Image"
-          className="w-16 h-16 object-contain"
-        />
-      );
-    } else if (value === "N/A") {
-      return "No Image Available";
-    }
-  } else if (Array.isArray(value)) {
-    return (
-      <ul>
-        {value.map((item, index) => (
-          <li key={index}>{item}</li>
-        ))}
-      </ul>
-    );
-  }
-  return value;
-}
-
-function TableComponent({ header, data, activePage, itemsPerPage }) {
+function TableComponent({ header, data, activePage, itemsPerPage, }) {
   return (
     <div className="custom-scroll">
       <Table>
         <thead className="flex-none overflow-x-auto">
           <tr>
             <th className="p-4">
-              <Checkbox />
+            </th>
+            <th className="p-4">
+              <span>#</span>
             </th>
             {header.map((headerItem, index) => (
               <th key={index} className="whitespace-nowrap p-4">
@@ -59,16 +30,25 @@ function TableComponent({ header, data, activePage, itemsPerPage }) {
               key={index}
               className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-100"
             >
-              <td className="p-4">
+              <th className="p-4">
                 <Checkbox />
-              </td>
+              </th>
+              <td className="px-4 py-2">{index + 1}</td> {/* Add row number */}
               {header.map((headerItem, cellIndex) => (
                 <td
                   key={cellIndex}
                   title={dataItem[headerItem.title]}
                   className="px-4 py-2"
                 >
-                  {renderCellContent(dataItem[headerItem.title], headerItem)}
+                  {Array.isArray(dataItem[headerItem.title]) ? (
+                    <ul>
+                      {dataItem[headerItem.title].map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    dataItem[headerItem.title]
+                  )}
                 </td>
               ))}
               <td className="px-4 py-2">
