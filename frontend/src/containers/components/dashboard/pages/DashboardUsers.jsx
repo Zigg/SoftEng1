@@ -5,6 +5,7 @@ import { setUserListDetails } from "../../../../context/actions/userListAction";
 import TableComponent from "./components/Table";
 import { Pagination } from "./components/Pagination";
 import SearchFilter from "./components/SearchFilter";
+import { AddButton } from "./components/AddButton";
 // TODO: Optimize this component, and make it more readable
 // FIXME: There are lots of data props being passed around, try to optimize data handling, props and state passing between child and parent components and have a single source of truth between parent and child components, props and states,etc
 const DashboardUsers = () => {
@@ -143,10 +144,12 @@ const DashboardUsers = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900"></div>
-      {userList && (
-        <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
-      )}
+      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-2">
+        <AddButton message={"User"} />
+        {userList && (
+          <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
+        )}
+      </div>
 
       <TableComponent
         header={userListHeader}
