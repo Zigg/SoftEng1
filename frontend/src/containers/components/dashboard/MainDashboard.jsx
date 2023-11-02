@@ -39,7 +39,7 @@ const MainDashboard = () => {
   }, [dispatch]);
 
   // Size of the screen when the hamburger menu should be toggled
-  const screenSizeToggled = 639;
+  const screenSizeToggled = 769;
   const [isSidebarOpen, setIsSidebarOpen] = useState(
     window.innerWidth > screenSizeToggled
   );
@@ -62,7 +62,7 @@ const MainDashboard = () => {
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         type="button"
-        className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+        className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
       >
         <span className="sr-only">Open sidebar</span>
         <svg
@@ -221,7 +221,7 @@ const MainDashboard = () => {
       )}
 
       {/* Grid Layout */}
-      <div className="px-4 pt-4 sm:ml-64">
+      <div className="px-4 pt-4 md:ml-64">
         <DashboardHeader />
         <div className="p-4 rounded-lg ">
           <Routes>
