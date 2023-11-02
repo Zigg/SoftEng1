@@ -1,7 +1,19 @@
 import { Checkbox, Table } from "flowbite-react";
 import { Pencil, Trash2 } from "lucide-react";
-function TableComponent({ header, data }) {
-  // TODO: Add the edit and delete functionality
+import { useEffect, useState } from "react";
+
+function TableComponent({ header, data, activePage, itemsPerPage }) {
+  // Calculate the start and end indices for the current page
+  const startIndex = (activePage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, data.length);
+
+  console.log("table data:", data);
+  console.log("table activePage:", activePage);
+  console.log("table startIndex:", startIndex);
+  console.log("table endIndex:", endIndex);
+  // console.log("table currentItems:", currentItems);
+  
+
   return (
     <div className="custom-scroll">
       <Table>
@@ -48,7 +60,7 @@ function TableComponent({ header, data }) {
                   <a
                     href="#"
                     title="Delete"
-                    className=" font-medium text-cyan-600 hover:underline dark:text-cyan-500 "
+                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                   >
                     <Trash2 className="w-4 h-4 transform transition-transform duration-200 hover:scale-125 text-rose-500 dark:text-rose-700 hover:text-rose-700 dark:hover:text-rose-800" />
                   </a>
@@ -61,8 +73,5 @@ function TableComponent({ header, data }) {
     </div>
   );
 }
+
 export default TableComponent;
-
-
-
-

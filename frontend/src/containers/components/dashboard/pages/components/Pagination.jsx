@@ -1,14 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-export const Pagination = ({ totalList, activePage, onPageChange, data }) => {
-  const itemsPerPage = 20;
-
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-
+export const Pagination = ({
+  totalItems,
+  activePage,
+  onPageChange,
+  totalPages,
+  itemsPerPage,
+  data,
+}) => {
   const handlePageChange = (pageNumber) => {
     if (pageNumber > 0 && pageNumber <= totalPages) {
-      onPageChange(pageNumber);
+      const startIndex = (pageNumber - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+      const pageItems = data.slice(startIndex, endIndex);
+      onPageChange(pageNumber, pageItems);
     }
+    console.log("pagination pageNumber:", pageNumber);
+    console.log("pagination totalPages:", totalPages);
+    console.log("pagination data:", data);
   };
 
   return (
@@ -24,7 +33,7 @@ export const Pagination = ({ totalList, activePage, onPageChange, data }) => {
             }}
             className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-700 bg-white border border-gray-300 rounded-l-lg ${
               activePage === 1
-                ? " bg-blue-600  dark:text-white"
+                ? "bg-blue-600 dark:text-white"
                 : "hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white"
             }`}
           >
@@ -51,7 +60,7 @@ export const Pagination = ({ totalList, activePage, onPageChange, data }) => {
             <a
               href={`#page-${i + 1}`}
               onClick={() => handlePageChange(i + 1)}
-              className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border  border-gray-300 ${
+              className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 ${
                 i + 1 === activePage
                   ? "text-rose-700 font-semibold dark:text-white"
                   : "hover:text-gray-700 hover:bg-blue-300 dark:hover:bg-blue-700 dark:hover:text-white"
