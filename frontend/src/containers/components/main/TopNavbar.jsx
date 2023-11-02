@@ -123,7 +123,7 @@ const TopNavbar = () => {
                       className={({ isActive }) =>
                         isActive
                           ? "block font-bold text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover-text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
                       Menu
@@ -134,8 +134,8 @@ const TopNavbar = () => {
                       to="/featured"
                       className={({ isActive }) =>
                         isActive
-                          ? "block font-bold text-rose-500 hover-text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark-text-white hover-text-blue-600 dark-hover-text-blue-700"
+                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
                       Featured
@@ -146,8 +146,8 @@ const TopNavbar = () => {
                       to="/contacts"
                       className={({ isActive }) =>
                         isActive
-                          ? "block font-bold text-rose-500 hover-text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark-text-white hover-text-blue-600 dark-hover-text-blue-700"
+                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
                       Contacts
