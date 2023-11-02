@@ -8,7 +8,6 @@ export default function GlobalAlert({ type, message }) {
   // TODO: These are placeholders for now, Add or remove some of these later on
 
   const [showToast, setShowToast] = useState(true);
-  const [progress, setProgress] = useState(100);
   const timerRef = useRef(null);
 
   useEffect(() => {

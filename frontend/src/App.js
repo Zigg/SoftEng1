@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     setIsLoading(true);
-  // Checking the global store for the user details, if none setting user details to null
+    // Checking the global store for the user details, if none setting user details to null
     const sessionExpire = firebaseAuth.onAuthStateChanged((user) => {
       if (user) {
         dispatch(setUserDetails(user));
@@ -42,9 +42,15 @@ const App = () => {
     return () => sessionExpire();
   }, [dispatch, firebaseAuth, navigate]);
 
+  // FIXME: Properly setup the 404 route since putting subroutes might mess with it
   return (
-    <div className="">
+    // To make the animations pause if the page is still loading but excluding the loader from the animation pause
+    <div className={isLoading ? "animation-paused" : "animation-running"}>
       {isLoading && <Loader />}
+      <div className="animate-children">
+        <Toaster />
+        <Routes>
+          <Route path="/*" element={<Main />} />
 
       <Toaster />
       <Routes>

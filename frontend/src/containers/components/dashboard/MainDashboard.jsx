@@ -88,13 +88,13 @@ const MainDashboard = () => {
             }
           }}
           className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } sm:translate-x-0`}
+            isSidebarOpen ? "translate-x-0 " : "-translate-x-full"
+          } sm:translate-x-0 `}
           aria-label="Sidebar"
         >
           {/* Not using the Navlink because this must have a full reload*/}
-          <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-            <ul className="space-y-2 font-medium">
+          <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 ">
+            <ul className="space-y-2 font-medium ">
               <img
                 src={Logo}
                 alt="Logo"

@@ -70,11 +70,11 @@ const TopNavbar = () => {
         <NavLink to="/">
           <img
             src={Logo}
-            className="h-12 w-12 lg:z-20 lg:mt-3 relative"
+            className="h-12 w-12 lg:z-20 lg:mt-3 relative animate-slide-in-from-top"
             alt="Logo"
           />
         </NavLink>
-        <span className="self-center text-2xl px-2 font-semibold whitespace-nowrap dark:text-white sm:block xs:block  lg:z-20 lg:mt-3">
+        <span className="self-center text-2xl px-2 font-semibold whitespace-nowrap dark:text-white sm:block xs:block  lg:z-20 lg:mt-3 animate-slide-in-from-top">
           Ordering System
         </span>
       </div>
@@ -103,15 +103,15 @@ const TopNavbar = () => {
             </button>
 
             {isSidebarOpen && (
-              <div className=" md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8 pr-5 mt-2">
-                <ul className="flex flex-col font-medium  md:p-0  rounded-lg  md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4 ">
+              <div className="animate-slide-in-from-left md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8 pr-5 mt-2">
+                <ul className="flex flex-col font-medium md:p-0 rounded-lg md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4">
                   <li>
                     <NavLink
                       to="/"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
                       Home
@@ -122,8 +122,8 @@ const TopNavbar = () => {
                       to="/menu"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover-text-blue-700"
                       }
                     >
                       Menu
@@ -134,8 +134,8 @@ const TopNavbar = () => {
                       to="/featured"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover-text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark-text-white hover-text-blue-600 dark-hover-text-blue-700"
                       }
                     >
                       Featured
@@ -146,8 +146,8 @@ const TopNavbar = () => {
                       to="/contacts"
                       className={({ isActive }) =>
                         isActive
-                          ? " block font-bold  text-rose-500 hover:text-blue-700"
-                          : "block py-2 text-gray-900 rounded md:hover:bg-transparent  md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700 "
+                          ? "block font-bold text-rose-500 hover-text-blue-700"
+                          : "block py-2 text-gray-900 rounded md:hover-bg-transparent md:p-0 dark-text-white hover-text-blue-600 dark-hover-text-blue-700"
                       }
                     >
                       Contacts
@@ -158,7 +158,7 @@ const TopNavbar = () => {
             )}
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center sticky">
             <div className="flex md:items-center md:justify-center md:mx-auto">
               <SearchInput />
             </div>
@@ -186,7 +186,7 @@ const TopNavbar = () => {
               <button
                 type="button"
                 onClick={toggleMenu}
-                className="relative ml-4 flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-blue-400 dark:focus:ring-blue-900 z-50"
+                className="relative ml-4 flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 hover:ring-4  focus:ring-rose-400 dark:focus:ring-rose-700 z-50 flex-shrink-0"
                 id="user-menu-button"
                 aria-expanded={isMenuOpen}
                 data-dropdown-toggle="user-dropdown"
