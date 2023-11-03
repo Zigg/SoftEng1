@@ -1,5 +1,5 @@
 import React from "react";
-
+import { NavLink } from "react-router-dom";
 const Pagination = ({
   totalItems,
   activePage,
@@ -77,8 +77,7 @@ const Pagination = ({
 
       <ul className="flex items-center justify-center -space-x-px h-8 text-sm">
         <li>
-          <a
-            href="#"
+          <NavLink
             onClick={() => {
               if (activePage > 1) {
                 handlePageChange(activePage - 1);
@@ -107,12 +106,12 @@ const Pagination = ({
                 d="M5 1 1 5l4 4"
               />
             </svg>
-          </a>
+          </NavLink>
         </li>
         {getPageRange().map((pageNumber) => (
           <li key={pageNumber}>
-            <a
-              href={`#page-${pageNumber}`}
+            <NavLink
+              to={`#page-${pageNumber}`}
               onClick={() => handlePageChange(pageNumber)}
               className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 ${
                 pageNumber === activePage
@@ -121,12 +120,11 @@ const Pagination = ({
               }`}
             >
               {pageNumber}
-            </a>
+            </NavLink>
           </li>
         ))}
         <li>
-          <a
-            href="#"
+          <NavLink
             onClick={() => {
               if (activePage < totalPages) {
                 handlePageChange(activePage + 1);
@@ -155,7 +153,7 @@ const Pagination = ({
                 d="m1 9 4-4-4-4"
               />
             </svg>
-          </a>
+          </NavLink>
         </li>
       </ul>
     </div>
