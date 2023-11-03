@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserCount } from "../../../api";
 import { setUserCount } from "../../../context/actions/userCountAction";
 import { Logo } from "../../../assets/images";
-
+import { NavLink } from "react-router-dom";
 const MainDashboard = () => {
   // TODO: Add check on whether the current user is an admin or not
   // TODO: Orders, Products, Restaurants, Reports, Settings Create the functionality for each of these pages
@@ -102,8 +102,8 @@ const MainDashboard = () => {
               />
 
               <li>
-                <a
-                  href="/dashboard"
+                <NavLink
+                  to="/dashboard"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
                     window.location.pathname === "/dashboard"
                       ? "text-red-500 opacity-100"
@@ -112,14 +112,14 @@ const MainDashboard = () => {
                 >
                   <RxDashboard className="w-6 h-6" />
                   <span className="ml-3">Dashboard</span>
-                </a>
+                </NavLink>
               </li>
 
               <li>
-                <a
-                  href="/dashboard/orders"
+                <NavLink
+                  to="/dashboard/orders"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard/orders"
+                    window.location.pathname.startsWith("/dashboard/orders")
                       ? "text-red-500 opacity-100"
                       : ""
                   }`}
@@ -130,14 +130,14 @@ const MainDashboard = () => {
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
                     23 Fake
                   </span>
-                </a>
+                </NavLink>
               </li>
 
               <li>
-                <a
-                  href="/dashboard/users"
+                <NavLink
+                  to="/dashboard/users"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard/users"
+                    window.location.pathname.startsWith("/dashboard/users")
                       ? "text-red-500 opacity-100"
                       : ""
                   }`}
@@ -148,14 +148,14 @@ const MainDashboard = () => {
                     {/* Properly sets the usercount now */}
                     {userCount}
                   </span>
-                </a>
+                </NavLink>
               </li>
-
+              {/* FIXME: Why isnt the product link not being set as active */}
               <li>
-                <a
-                  href="/dashboard/products"
+                <NavLink
+                  to="/dashboard/products"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard/products"
+                    window.location.pathname.startsWith("/dashboard/products")
                       ? "text-red-500 opacity-100"
                       : ""
                   }`}
@@ -167,13 +167,15 @@ const MainDashboard = () => {
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
                     34 Fake
                   </span>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a
-                  href="/dashboard/restaurants"
+                <NavLink
+                  to="/dashboard/restaurants"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard/restaurants"
+                    window.location.pathname.startsWith(
+                      "/dashboard/restaurants"
+                    )
                       ? "text-red-500 opacity-100"
                       : ""
                   }`}
@@ -185,26 +187,26 @@ const MainDashboard = () => {
                   <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
                     12 Fake
                   </span>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a
-                  href="/dashboard/reports"
+                <NavLink
+                  to="/dashboard/reports"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard/reports"
+                    window.location.pathname.startsWith("/dashboard/reports")
                       ? "text-red-500 opacity-100"
                       : ""
                   }`}
                 >
                   <AreaChart className="w-6 h-6  " />
                   <span className="flex-1 ml-3 whitespace-nowrap">Reports</span>
-                </a>
+                </NavLink>
               </li>
               <li>
-                <a
-                  href="/dashboard/settings"
+                <NavLink
+                  to="/dashboard/settings"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard/settings"
+                    window.location.pathname.startsWith("/dashboard/settings")
                       ? "text-red-500 opacity-100"
                       : ""
                   }`}
@@ -213,7 +215,7 @@ const MainDashboard = () => {
                   <span className="flex-1 ml-3 whitespace-nowrap">
                     Settings
                   </span>
-                </a>
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -221,6 +223,9 @@ const MainDashboard = () => {
       )}
 
       {/* Grid Layout */}
+      {/* TODO: Add these route to the routes.js */}
+      {/* FIXME: Multiple components do not share the same route namely the pagination, table, searchbar, add button when using the routes.js ... */}
+      {/* FIXME: Not properly sharing components when routing in the routes.js */}
       <div className="px-4 pt-4 md:ml-64">
         <DashboardHeader />
         <div className="p-4 rounded-lg ">
@@ -231,7 +236,6 @@ const MainDashboard = () => {
             <Route path="/products" element={<DashboardProducts />} />
             <Route path="/restaurants" element={<DashboardRestaurants />} />
             <Route path="/reports" element={<DashboardReports />} />
-
             <Route path="/settings" element={<DashboardSettings />} />
           </Routes>
         </div>
