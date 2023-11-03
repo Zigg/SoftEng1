@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {productsMockData} from "./mock/productsMockData";
+import { productsMockData } from "./mock/productsMockData";
 import SearchFilter from "./components/SearchFilter";
 import TableComponent from "./components/Table";
-import { Pagination } from "./components/Pagination";
+import Pagination from "./components/Pagination";
+import { AddButton } from "./components/AddButton";
 // FIXME: THIS IS JUST MOCK DATA, TABLE HEADERS ARE NOT FINAL
 
 const DashboardUsers = () => {
@@ -149,10 +150,12 @@ const DashboardUsers = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900"></div>
-      {productsMockData && (
-        <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
-      )}
+      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-2">
+        <AddButton message={"Product"} />
+        {productsMockData && (
+          <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
+        )}
+      </div>
 
       <TableComponent
         header={productHeader}

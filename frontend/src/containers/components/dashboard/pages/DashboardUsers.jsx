@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserList } from "../../../../api";
 import { setUserListDetails } from "../../../../context/actions/userListAction";
 import TableComponent from "./components/Table";
-import { Pagination } from "./components/Pagination";
+import Pagination from "./components/Pagination";
 import SearchFilter from "./components/SearchFilter";
 import { AddButton } from "./components/AddButton";
 // TODO: Optimize this component, and make it more readable
