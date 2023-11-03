@@ -1,13 +1,16 @@
+import { Link } from "react-router-dom";
+
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { productsMockData } from "./mock/productsMockData";
 import SearchFilter from "./components/SearchFilter";
-import TableComponent from "./components/Table";
+import DataTable from "./components/DataTable";
 import Pagination from "./components/Pagination";
 import { AddButton } from "./components/AddButton";
+
 // FIXME: THIS IS JUST MOCK DATA, TABLE HEADERS ARE NOT FINAL
 
-const DashboardUsers = () => {
+const DashboardProducts = () => {
   const dispatch = useDispatch();
   const itemsPerPage = 20;
 
@@ -151,13 +154,14 @@ const DashboardUsers = () => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-2">
-        <AddButton message={"Product"} />
+        <AddButton message="Product" path="/dashboard/products/add" />
+
         {productsMockData && (
           <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
         )}
       </div>
 
-      <TableComponent
+      <DataTable
         header={productHeader}
         data={currentItems}
         activePage={activePage}
@@ -181,5 +185,4 @@ const DashboardUsers = () => {
     </div>
   );
 };
-
-export default DashboardUsers;
+export default DashboardProducts;
