@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const Loader = () => {
   const [loadingText, setLoadingText] = useState("Loading");
+  const [showLoader, setShowLoader] = useState(true);
 
   useEffect(() => {
     const messages = [
@@ -21,11 +22,24 @@ const Loader = () => {
       "Please wait while we load the information",
       "Sit back and relax, we're loading your content",
     ];
+
     const interval = setInterval(() => {
       setLoadingText(messages[Math.floor(Math.random() * messages.length)]);
-    }, 500);
-    return () => clearInterval(interval);
+    }, 2000);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      setShowLoader(false);
+    }, 2000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
+
+  if (!showLoader) {
+    return null;
+  }
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center backdrop-filter backdrop-blur-lg z-50">

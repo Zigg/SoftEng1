@@ -12,7 +12,7 @@ import {
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-
+import { NavLink } from "react-router-dom";
 export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -184,13 +184,13 @@ export const Login = () => {
         <div className="flex flex-col items-center justify-center px-4 py-8 mx-auto min-h-screen lg:py-0">
           <div className="w-full bg-white p-6 rounded-lg shadow dark:border max-w-md dark:bg-gray-800 dark:border-gray-700 border-b-4 border-t-4  border-rose-500 hover:border-animate">
             <div className="flex flex-col items-center justify-center  p-2 space-y-4">
-              <a
-                href="/login"
+              <NavLink
+                to="/login"
                 className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
               >
                 <img className="w-12 h-12 mr-2" src={Logo} alt="logo" />
                 Ordering System
-              </a>
+              </NavLink>
               <h1 className="font-bold leading-tight tracking-tight text-gray-900 text-xl dark:text-white">
                 {isLogin ? "Sign in to your account" : "Create a new account"}
               </h1>
