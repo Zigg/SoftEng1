@@ -1,4 +1,4 @@
-export default function SearchInput() {
+export default function SearchInputMainPage() {
   return (
     <form className="flex items-center">
       <label htmlFor="simple-search" className="sr-only">
