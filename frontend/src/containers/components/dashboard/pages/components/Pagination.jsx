@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Pagination = ({
+const Pagination = ({
   totalItems,
   activePage,
   onPageChange,
@@ -161,3 +161,4 @@ export const Pagination = ({
     </div>
   );
 };
+export default Pagination;

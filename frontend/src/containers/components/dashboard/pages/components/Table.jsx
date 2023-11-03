@@ -1,15 +1,13 @@
 import { Checkbox, Table } from "flowbite-react";
 import { Pencil, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
 
-function TableComponent({ header, data, activePage, itemsPerPage, }) {
+const TableComponent = ({ header, data, activePage, itemsPerPage }) => {
   return (
     <div className="custom-scroll">
       <Table>
         <thead className="flex-none overflow-x-auto">
           <tr>
-            <th className="p-4">
-            </th>
+            <th className="p-4"></th>
             <th className="p-4">
               <span>#</span>
             </th>
@@ -18,8 +16,8 @@ function TableComponent({ header, data, activePage, itemsPerPage, }) {
                 {headerItem.title}
               </th>
             ))}
-            <th className="whitespace-nowrap p-4">
-              <span className="">Actions</span>
+            <th className="whitespace-nowrap p-4 ">
+              <span className="flex justify-center items-center">Actions</span>
             </th>
           </tr>
         </thead>
@@ -33,7 +31,7 @@ function TableComponent({ header, data, activePage, itemsPerPage, }) {
               <th className="p-4">
                 <Checkbox />
               </th>
-              <td className="px-4 py-2">{index + 1}</td> {/* Add row number */}
+              <td className="px-4 py-2">{index + 1}</td>
               {header.map((headerItem, cellIndex) => (
                 <td
                   key={cellIndex}
@@ -76,6 +74,6 @@ function TableComponent({ header, data, activePage, itemsPerPage, }) {
       </Table>
     </div>
   );
-}
+};
 
 export default TableComponent;
