@@ -1,7 +1,7 @@
 import { Checkbox, Table } from "flowbite-react";
 import { Pencil, Trash2 } from "lucide-react";
 
-const TableComponent = ({ header, data, activePage, itemsPerPage }) => {
+const DataTable = ({ header, data, activePage, itemsPerPage }) => {
   return (
     <div className="custom-scroll">
       <Table>
@@ -76,4 +76,4 @@ const TableComponent = ({ header, data, activePage, itemsPerPage }) => {
   );
 };
 
-export default TableComponent;
+export default DataTable;
