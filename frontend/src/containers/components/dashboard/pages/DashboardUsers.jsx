@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserList } from "../../../../api";
 import { setUserListDetails } from "../../../../context/actions/userListAction";
-import TableComponent from "./components/Table";
+import DataTable from "./components/DataTable";
 import Pagination from "./components/Pagination";
 import SearchFilter from "./components/SearchFilter";
 import { AddButton } from "./components/AddButton";
+
 // TODO: Optimize this component, and make it more readable
 // FIXME: There are lots of data props being passed around, try to optimize data handling, props and state passing between child and parent components and have a single source of truth between parent and child components, props and states,etc
 const DashboardUsers = () => {
@@ -16,17 +17,21 @@ const DashboardUsers = () => {
   const [tableData, setTableData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activePage, setActivePage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   console.log("searchQuery:", searchQuery);
   console.log("activePage:", activePage);
   useEffect(() => {
+    setIsLoading(true);
     if (!userList) {
       getUserList()
         .then((data) => {
           dispatch(setUserListDetails(data));
+          setIsLoading(false);
         })
         .catch((error) => {
           console.error("Error fetching user list: ", error);
+          setIsLoading(false);
         });
     }
   }, [dispatch, userList]);
@@ -145,13 +150,13 @@ const DashboardUsers = () => {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-2">
-        <AddButton message={"User"} />
+        <AddButton message="User" path="/dashboard/users/add" />
         {userList && (
           <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
         )}
       </div>
 
-      <TableComponent
+      <DataTable
         header={userListHeader}
         data={currentItems}
         activePage={activePage}
