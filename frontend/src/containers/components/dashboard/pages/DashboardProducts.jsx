@@ -7,6 +7,7 @@ import SearchFilter from "./components/SearchFilter";
 import DataTable from "./components/DataTable";
 import Pagination from "./components/Pagination";
 import { AddButton } from "./components/AddButton";
+import { ImageOff } from "lucide-react";
 
 // FIXME: THIS IS JUST MOCK DATA, TABLE HEADERS ARE NOT FINAL
 
@@ -42,23 +43,34 @@ const DashboardProducts = () => {
     { title: "Ingredients" },
     { title: "Sizes" },
     { title: "Addons" },
+    { title: "Addon Price" },
     { title: "Date Added" },
-    { title: "Status" },
+    { title: "Published" },
   ];
 
   const productsMockDataList = productsMockData
     ? productsMockData.map((product) => ({
         // "Product Image": product.productImage,
         // Set this to blank for now because image isnt properly rendering
-        "Product Image": "-",
+        "Product Image": (
+          <div className="border-2 border-gray-400 p-7 items-center justify-center flex">
+            <ImageOff className="w-5 h-5" />
+          </div>
+        ),
         "Product Name": product.productName || "-",
         Category: product.category || "-",
         Price: product.price || "-",
         Ingredients: product.ingredients.join(", ") || "-",
         Sizes: product.sizes.join(", ") || "-",
-        Addons: product.addons.join(", ") || "-",
+        Addons: product.addons.join(", ") || (
+          <span className="text-red-600">No Addons</span>
+        ),
+        "Addon Price": product.addonPrices.join(", ") || (
+          <span className="text-red-600">No Addons</span>
+        ),
+
         "Date Added": product.dateAdded || "-",
-        Status: product.status || "-",
+        Published: product.isPublished || "-",
       }))
     : [];
 
@@ -153,7 +165,7 @@ const DashboardProducts = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-2">
+      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-4">
         <AddButton message="Product" path="/dashboard/products/add" />
 
         {productsMockData && (
