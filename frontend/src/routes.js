@@ -18,7 +18,7 @@ import DashboardProducts from "./containers/components/dashboard/pages/Dashboard
 import DashboardRestaurants from "./containers/components/dashboard/pages/DashboardRestaurants";
 import DashboardReports from "./containers/components/dashboard/pages/DashboardReports";
 import DashboardSettings from "./containers/components/dashboard/pages/DashboardSettings";
-import { DashboardAddProducts } from "./containers/components/dashboard/pages/DashboardAddProducts";
+import DashboardAddProducts from "./containers/components/dashboard/pages/DashboardAddProducts";
 import { DashboardAddRestaurants } from "./containers/components/dashboard/pages/DashboardAddRestaurants";
 import DashboardAddUsers from "./containers/components/dashboard/pages/DashboardAddUsers";
 import MainDashboard from "./containers/components/dashboard/MainDashboard";
