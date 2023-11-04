@@ -9,10 +9,10 @@ const DataTable = ({ header, data, activePage, itemsPerPage }) => {
           <tr>
             <th className="p-4"></th>
             <th className="p-4">
-              <span>#</span>
+              <span className="text-gray-800">#</span>
             </th>
             {header.map((headerItem, index) => (
-              <th key={index} className="whitespace-nowrap p-4">
+              <th key={index} className="whitespace-nowrap p-4 text-gray-800">
                 {headerItem.title}
               </th>
             ))}
@@ -31,7 +31,7 @@ const DataTable = ({ header, data, activePage, itemsPerPage }) => {
               <th className="p-4">
                 <Checkbox />
               </th>
-              <td className="px-4 py-2">{index + 1}</td>
+              <td className="px-4 py-2 text-gray-900">{index + 1}</td>
               {header.map((headerItem, cellIndex) => (
                 <td
                   key={cellIndex}
