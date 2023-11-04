@@ -11,7 +11,14 @@ import {
   TextInput,
   ToggleSwitch,
 } from "flowbite-react";
-import { ChefHat, CircleDollarSign, DollarSign, Plus } from "lucide-react";
+import {
+  ChefHat,
+  CircleDollarSign,
+  DollarSign,
+  Plus,
+  Utensils,
+  UtensilsCrossed,
+} from "lucide-react";
 
 // TODO: Add validation for the form, and add onSubmit handler
 // TODO: Add a form reset button
@@ -32,25 +39,40 @@ const DashboardAddProducts = (data, fields, labels) => {
   const [isCustomSizesOpen, setIsCustomSizesOpen] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
 
-  const handleChange = (e) => {
+  const [ingredients, setIngredients] = useState([""]); // Initialize with an empty ingredient
+
+  const handleAddIngredient = () => {
+    setIngredients([...ingredients, ""]); // Add an empty ingredient when the plus button is clicked
+  };
+
+  const handleIngredientChange = (index, newValue) => {
+    const newIngredients = [...ingredients];
+    newIngredients[index] = newValue;
+    setIngredients(newIngredients);
+  };
+
+  const handleNumberCheck = (e) => {
     const value = e.target.value;
     setInputValue(value);
     setIsNumeric(!isNaN(value));
   };
   return (
-    <div className="border-2">
-      <div className="flex items-center justify-center">
-        <form className="flex max-w-md flex-col gap-4">
-          <div id="fileUpload" className="max-w-md">
+    <div className="p-4 bg-slate-100">
+      <div className="flex flex-col items-center p-12  ">
+        <h1 className="mb-4 text-3xl">Add a new product</h1>
+
+        <form className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12 border-4 border-gray-300 bg-blue-100 p-8 flex-shrink-0">
+          <div id="fileUpload" className="">
             <div className="mb-2 block">
               <Label htmlFor="file" value="Upload product image" />
               <span className="ml-0.5 text-red-600 font-semibold text-md">
                 *
               </span>
             </div>
-            <FileInput id="file" required colors="failure" />
+            <FileInput id="file" className="" required colors="failure" />
           </div>
-          <div className="max-w-md">
+
+          <div>
             <div className="mb-2 block">
               <Label htmlFor="product-name" value="Product Name" />
               <span className="ml-0.5 text-red-600 font-semibold text-md">
@@ -60,11 +82,12 @@ const DashboardAddProducts = (data, fields, labels) => {
             <TextInput
               id="product-name"
               placeholder="Product Name"
-              addon=<ChefHat className="w-4 h-4" />
+              addon={<ChefHat className="w-4 h-4" />}
               required
             />
           </div>
-          <div className="max-w-md">
+
+          <div>
             <div className="mb-2 block">
               <Label htmlFor="product-category" value="Select your category" />
               <span className="ml-0.5 text-red-600 font-semibold text-md">
@@ -88,7 +111,7 @@ const DashboardAddProducts = (data, fields, labels) => {
               <option>Seafood</option>
               <option>Appetizers</option>
               <option>Fast Food</option>
-              <option>Others</option>
+              <option>Others</option>{" "}
             </Select>
           </div>
 
@@ -102,10 +125,10 @@ const DashboardAddProducts = (data, fields, labels) => {
             <TextInput
               id="username"
               type="text"
-              addon=<CircleDollarSign className="w-4 h-4" />
+              addon={<CircleDollarSign className="w-4 h-4" />}
               required
               value={inputValue}
-              onChange={handleChange}
+              onChange={handleNumberCheck}
             />
             {isNumeric ? (
               <span className="text-success"></span>
@@ -115,7 +138,7 @@ const DashboardAddProducts = (data, fields, labels) => {
               </span>
             )}
           </div>
-          {/* TODO: Ingredients */}
+
           <div>
             <div className="mb-2 block">
               <Label htmlFor="username3" value="Sizes" />
@@ -123,46 +146,75 @@ const DashboardAddProducts = (data, fields, labels) => {
                 *
               </span>
             </div>
-
             <div className="flex items-center gap-2">
-              <Checkbox id="accept" />
-              <Label htmlFor="accept" className="flex">
+              <Checkbox id="small" />
+              <Label htmlFor="small" className="flex">
                 Small
               </Label>
-              <Checkbox id="accept" defaultChecked />
-              <Label htmlFor="accept" className="flex">
-                Regular (Default)
+              <Checkbox id="regular" defaultChecked />
+              <Label htmlFor="regular" className="flex">
+                Regular
               </Label>
-              <Checkbox id="accept" />
-              <Label htmlFor="accept" className="flex">
+              <Checkbox id="large" />
+              <Label htmlFor="large" className="flex">
                 Large
               </Label>
             </div>
-            {/* Add onClick that will bring up a text input for this, the text input must be single text input wherein it holds multiple values */}
             <div className="flex items-center gap-2 py-4">
-              <Checkbox id="accept" />
-              <Label htmlFor="accept" className="flex">
+              <Checkbox id="custom" />
+              <Label htmlFor="custom" className="flex">
                 Custom
               </Label>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Checkbox id="accept" defaultChecked />
-            <Label htmlFor="accept" className="flex">
-              Add Addons?
-            </Label>
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="product-category" value="Create Addons" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox id="add-addons" defaultChecked />
+              <Label htmlFor="add-addons" className="flex">
+                No Addons?
+              </Label>
+            </div>
           </div>
 
-          <div className="flex max-w-md flex-col gap-4">
-            <ToggleSwitch
-              checked={isPublished}
-              label="Make Visible"
-              onChange={setIsPublished}
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="product-name" value="Ingredients" />
+              <span className="ml-0.5 text-red-600 font-semibold text-md">
+                *
+              </span>
+            </div>
+            <TextInput
+              id="product-name"
+              placeholder="List of ingredients"
+              addon={<UtensilsCrossed className="w-4 h-4" />}
+              required
             />
-
           </div>
-          <Button type="submit">Add</Button>
+
+          <div>
+            <div className="mb-2 block">
+              <Label htmlFor="product-category" value="Set Visibility" />
+            </div>
+            <div className="flex max-w-md flex-col gap-4">
+              <ToggleSwitch
+                checked={isPublished}
+                label="Make Visible"
+                onChange={setIsPublished}
+              />
+            </div>
+          </div>
+          <div className="col-span-2 flex  justify-end">
+            <div>
+              <Button type="submit">
+                <Plus className="w-4 h-4 " />
+                Add
+              </Button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
