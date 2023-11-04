@@ -149,7 +149,7 @@ const DashboardUsers = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-2">
+      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-4">
         <AddButton message="User" path="/dashboard/users/add" />
         {userList && (
           <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
