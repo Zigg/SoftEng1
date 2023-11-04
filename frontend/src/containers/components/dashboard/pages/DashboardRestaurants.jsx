@@ -7,6 +7,7 @@ import SearchFilter from "./components/SearchFilter";
 import DataTable from "./components/DataTable";
 import Pagination from "./components/Pagination";
 import { AddButton } from "./components/AddButton";
+import { ImageOff } from "lucide-react";
 
 // FIXME: THIS IS JUST MOCK DATA, TABLE HEADERS ARE NOT FINAL
 
@@ -46,7 +47,11 @@ const DashboardRestaurants = () => {
 
   const restaurantsMockDataList = restaurantsMockData
     ? restaurantsMockData.map((restaurant) => ({
-        "Restaurant Logo": "-",
+        "Restaurant Logo": (
+          <div className="border-2 border-gray-400 p-7 items-center justify-center flex">
+            <ImageOff className="w-5 h-5" />
+          </div>
+        ),
         "Restaurant Name": restaurant.restaurantName || "-",
         Cuisine: restaurant.cuisine || "-",
         Location: restaurant.location || "-",
@@ -147,7 +152,7 @@ const DashboardRestaurants = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-2">
+      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-4">
         <AddButton message="Restaurant" path="/dashboard/restaurants/add" />
 
         {restaurantsMockData && (
