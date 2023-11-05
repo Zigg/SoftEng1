@@ -70,11 +70,10 @@ function MainPageTopNavbarRoutes() {
 }
 
 // TODO: Add the outlet child routes for the dashboard routes
-// FIXME: This doesnt properly render the shared components ... need to fix this
 function AdminDashboardRoutes() {
   return (
     <Routes>
-      <Route path="/dashboard" element={<MainDashboard />}>
+      <Route path="/dashboard/*" element={<MainDashboard />}>
         <Route path="orders" element={<DashboardOrders />} />
         <Route path="users" element={<DashboardUsers />} />
         <Route path="products" element={<DashboardProducts />} />
