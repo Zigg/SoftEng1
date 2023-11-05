@@ -6,17 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { setUserDetails, setUserNull } from "./context/actions/userActions";
-
-import { Main } from "./containers/Main";
-import { Login } from "./containers/Login";
-import Loader from "./components/Loader.jsx";
-import NotFoundPage from "./components/NotFoundPage.jsx";
 import GlobalAlert from "./containers/components/main/GlobalAlert.jsx";
-import Dashboard from "./containers/components/dashboard/MainDashboard.jsx";
-import Profile from "./containers/components/user-profile/user/pages/Profile.jsx";
-import Orders from "./containers/components/user-profile/user/pages/Orders.jsx";
-import OrderHistory from "./containers/components/user-profile/user/pages/OrderHistory.jsx";
-import Transactions from "./containers/components/user-profile/user/pages/Transactions.jsx";
+import Loader from "./components/Loader.jsx";
+import AllRoutes from "./routes.js";
+import NotFoundPage from "./components/NotFoundPage.jsx";
 
 const App = () => {
   const firebaseAuth = getAuth(app);
@@ -50,14 +43,9 @@ const App = () => {
       <div className="animate-children">
         <Toaster />
         <Routes>
-          <Route path="/*" element={<Main />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard/*" element={<Dashboard />} />
-          <Route path="/profile/*" element={<Profile />} />
-          <Route path="/orders/*" element={<Orders />} />
-          <Route path="/order-history/*" element={<OrderHistory />} />
-          <Route path="/transactions/*" element={<Transactions />} />
-          <Route path="*" element={<NotFoundPage />} />
+          {/* TODO: This is set to use a wildcard in order to make sub routes work but this makes the 404 page not work correctly */}
+          <Route path="/*" element={<AllRoutes />} />
+          {/* <Route path="*" element={<NotFoundPage />} /> */}
         </Routes>
         {!isLoading && alert?.type && (
           <GlobalAlert type={alert.type} message={alert.type} />

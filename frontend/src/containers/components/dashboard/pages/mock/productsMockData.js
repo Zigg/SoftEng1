@@ -8,7 +8,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Cheese", "Bacon"],
     dateAdded: "2022-01-01",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -25,7 +25,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Extra Cheese", "Olives"],
     dateAdded: "2022-02-01",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -42,7 +42,7 @@ export const productsMockData = [
     sizes: ["Small", "Large"],
     addons: ["Garlic Bread", "Salad"],
     dateAdded: "2022-03-15",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -53,7 +53,7 @@ export const productsMockData = [
     sizes: ["Regular", "Large"],
     addons: ["Soy Sauce", "Wasabi"],
     dateAdded: "2022-04-20",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -64,7 +64,7 @@ export const productsMockData = [
     sizes: ["Medium", "Large"],
     addons: ["Garlic Butter", "Mushrooms"],
     dateAdded: "2022-05-10",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -75,7 +75,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Salsa", "Guacamole"],
     dateAdded: "2022-06-18",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -91,7 +91,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Sprinkles", "Nuts"],
     dateAdded: "2022-07-30",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -102,7 +102,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Extra Cheese", "Olives"],
     dateAdded: "2022-08-25",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -113,7 +113,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Coleslaw", "Biscuits"],
     dateAdded: "2022-09-12",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -129,7 +129,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Garlic Bread", "Salad"],
     dateAdded: "2022-10-20",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -145,7 +145,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Green Peppers", "Olives"],
     dateAdded: "2022-02-15",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -161,7 +161,7 @@ export const productsMockData = [
     sizes: ["Small", "Regular", "Large"],
     addons: [],
     dateAdded: "2022-03-10",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -177,7 +177,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: ["Garlic Bread", "Salad"],
     dateAdded: "2022-04-20",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -188,7 +188,7 @@ export const productsMockData = [
     sizes: ["Small", "Medium", "Large"],
     addons: [],
     dateAdded: "2022-05-12",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -199,7 +199,7 @@ export const productsMockData = [
     sizes: ["Small", "Regular", "Large"],
     addons: [],
     dateAdded: "2022-06-30",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -215,7 +215,7 @@ export const productsMockData = [
     sizes: ["8 oz", "12 oz", "16 oz"],
     addons: ["Garlic Butter", "Mushroom Sauce"],
     dateAdded: "2022-07-18",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -226,7 +226,7 @@ export const productsMockData = [
     sizes: ["Small", "Regular", "Large"],
     addons: [],
     dateAdded: "2022-08-05",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -237,7 +237,7 @@ export const productsMockData = [
     sizes: ["Regular", "Large"],
     addons: [],
     dateAdded: "2022-09-14",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -248,7 +248,7 @@ export const productsMockData = [
     sizes: ["Small", "Regular", "Large"],
     addons: [],
     dateAdded: "2022-10-25",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -259,7 +259,7 @@ export const productsMockData = [
     sizes: ["Regular", "Large"],
     addons: ["Avocado", "Egg"],
     dateAdded: "2022-11-08",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -270,7 +270,7 @@ export const productsMockData = [
     sizes: ["Regular"],
     addons: ["Cheese", "Sour Cream"],
     dateAdded: "2022-12-12",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -281,7 +281,7 @@ export const productsMockData = [
     sizes: ["Regular"],
     addons: [],
     dateAdded: "2023-01-05",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -292,7 +292,7 @@ export const productsMockData = [
     sizes: ["Whole Lobster"],
     addons: [],
     dateAdded: "2023-02-20",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -303,7 +303,7 @@ export const productsMockData = [
     sizes: ["Small", "Regular", "Large"],
     addons: ["Chipotle Mayo", "Ketchup"],
     dateAdded: "2023-03-15",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -314,7 +314,7 @@ export const productsMockData = [
     sizes: ["Regular"],
     addons: [],
     dateAdded: "2023-04-10",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -325,7 +325,7 @@ export const productsMockData = [
     sizes: ["Regular"],
     addons: [],
     dateAdded: "2023-05-25",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -336,7 +336,7 @@ export const productsMockData = [
     sizes: ["Small", "Regular", "Large"],
     addons: [],
     dateAdded: "2023-06-10",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -347,7 +347,7 @@ export const productsMockData = [
     sizes: ["Regular"],
     addons: [],
     dateAdded: "2023-07-12",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -358,7 +358,7 @@ export const productsMockData = [
     sizes: ["Regular"],
     addons: [],
     dateAdded: "2023-08-18",
-    status: "Available",
+    isPublished: "Available",
   },
   {
     productImage: require("./img/chickenburger.jpg"),
@@ -374,6 +374,6 @@ export const productsMockData = [
     sizes: ["Regular"],
     addons: ["Garlic Bread", "Caesar Salad"],
     dateAdded: "2023-09-22",
-    status: "Available",
+    isPublished: "Available",
   },
 ];

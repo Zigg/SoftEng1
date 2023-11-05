@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {productsMockData} from "./mock/productsMockData";
-import SearchFilter from "./components/SearchFilter";
-import TableComponent from "./components/Table";
-import { Pagination } from "./components/Pagination";
+import { Link } from 'react-router-dom';
+
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { productsMockData } from './mock/productsMockData';
+import SearchFilter from './components/SearchFilter';
+import DataTable from './components/DataTable';
+import Pagination from './components/Pagination';
+import { AddButton } from './components/AddButton';
+import { ImageOff } from 'lucide-react';
+
 // FIXME: THIS IS JUST MOCK DATA, TABLE HEADERS ARE NOT FINAL
 
-const DashboardUsers = () => {
+const DashboardProducts = () => {
   const dispatch = useDispatch();
   const itemsPerPage = 20;
 
   const [tableData, setTableData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [activePage, setActivePage] = useState(1);
 
-  console.log("searchQuery:", searchQuery);
-  console.log("activePage:", activePage);
+  console.log('searchQuery:', searchQuery);
+  console.log('activePage:', activePage);
 
   // TODO: Replace this with actual API call for the products list
   // useEffect(() => {
@@ -31,36 +36,44 @@ const DashboardUsers = () => {
   // }, [dispatch, userList]);
 
   const productHeader = [
-    { title: "Product Image" },
-    { title: "Product Name" },
-    { title: "Category" },
-    { title: "Price" },
-    { title: "Ingredients" },
-    { title: "Sizes" },
-    { title: "Addons" },
-    { title: "Date Added" },
-    { title: "Status" },
+    { title: 'Product Image' },
+    { title: 'Product Name' },
+    { title: 'Category' },
+    { title: 'Price' },
+    { title: 'Ingredients' },
+    { title: 'Sizes' },
+    { title: 'Addons' },
+    { title: 'Addon Price' },
+    { title: 'Date Added' },
+    { title: 'Published' },
   ];
 
   const productsMockDataList = productsMockData
     ? productsMockData.map((product) => ({
-        // "Product Image": product.productImage,
-        // Set this to blank for now because image isnt properly rendering
-        "Product Image": "-",
-        "Product Name": product.productName || "-",
-        Category: product.category || "-",
-        Price: product.price || "-",
-        Ingredients: product.ingredients.join(", ") || "-",
-        Sizes: product.sizes.join(", ") || "-",
-        Addons: product.addons.join(", ") || "-",
-        "Date Added": product.dateAdded || "-",
-        Status: product.status || "-",
+        'Product Image': (
+          <div className="p-7 items-center justify-center flex">
+            <ImageOff className="w-5 h-5" />
+          </div>
+        ),
+        'Product Name': product.productName || '-',
+        Category: product.category || '-',
+        Price: product.price || '-',
+        Ingredients: product.ingredients?.join(', ') || '-',
+        Sizes: product.sizes?.join(', ') || '-',
+        Addons: product.addons?.join(', ') || (
+          <span className="text-red-600">No Addons</span>
+        ),
+        'Addon Price': product.addonPrices?.join(', ') || (
+          <span className="text-red-600">No Addons</span>
+        ),
+        'Date Added': product.dateAdded || '-',
+        Published: product.isPublished || '-',
       }))
     : [];
 
   const [filteredData, setFilteredData] = useState(productsMockDataList);
 
-  console.log("filteredData:", filteredData);
+  console.log('filteredData:', filteredData);
 
   const handleSearch = (searchQuery) => {
     setSearchQuery(searchQuery);
@@ -69,26 +82,26 @@ const DashboardUsers = () => {
     const filteredData = productsMockDataList.filter((item) =>
       productHeader.some((header) => {
         const itemValue = item[header.title];
-        if (typeof itemValue === "string") {
+        if (typeof itemValue === 'string') {
           return itemValue.toLowerCase().includes(trimmedQuery);
         } else if (Array.isArray(itemValue)) {
           return itemValue.some(
             (value) =>
-              typeof value === "string" &&
-              value.toLowerCase().includes(trimmedQuery)
+              typeof value === 'string' &&
+              value.toLowerCase().includes(trimmedQuery),
           );
-        } else if (typeof itemValue === "number") {
+        } else if (typeof itemValue === 'number') {
           return itemValue.toString().toLowerCase().includes(trimmedQuery);
         } else {
           return false;
         }
-      })
+      }),
     );
 
     setFilteredData(filteredData);
     setActivePage(1);
-    console.log("trimmedQuery:", trimmedQuery);
-    console.log("handleSearch filteredData:", filteredData);
+    console.log('trimmedQuery:', trimmedQuery);
+    console.log('handleSearch filteredData:', filteredData);
   };
 
   const totalItems = searchQuery
@@ -102,12 +115,12 @@ const DashboardUsers = () => {
   const totalPagesOriginal = Math.ceil(totalOriginalItems / itemsPerPage);
   const totalPagesFiltered = Math.ceil(totalFilteredItems / itemsPerPage);
 
-  console.log("totalItems:", totalItems);
-  console.log("totalPages:", totalPages);
-  console.log("totalOriginalItems:", totalOriginalItems);
-  console.log("totalFilteredItems:", totalFilteredItems);
-  console.log("totalPagesOriginal:", totalPagesOriginal);
-  console.log("totalPagesFiltered:", totalPagesFiltered);
+  console.log('totalItems:', totalItems);
+  console.log('totalPages:', totalPages);
+  console.log('totalOriginalItems:', totalOriginalItems);
+  console.log('totalFilteredItems:', totalFilteredItems);
+  console.log('totalPagesOriginal:', totalPagesOriginal);
+  console.log('totalPagesFiltered:', totalPagesFiltered);
 
   const handlePageChange = (pageNumber) => {
     // Ensure that pageNumber stays within valid bounds
@@ -134,8 +147,8 @@ const DashboardUsers = () => {
 
     setTableData(dataForPage);
     setActivePage(pageNumber);
-    console.log("dataForPage:", dataForPage);
-    console.log("pageNumber:", pageNumber);
+    console.log('dataForPage:', dataForPage);
+    console.log('pageNumber:', pageNumber);
   };
 
   // Calculate the start and end indices for the current page
@@ -149,12 +162,15 @@ const DashboardUsers = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex items-center justify-between pb-4 bg-white dark:bg-gray-900"></div>
-      {productsMockData && (
-        <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
-      )}
+      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-4">
+        <AddButton message="Product" path="/dashboard/products/add" />
 
-      <TableComponent
+        {productsMockData && (
+          <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
+        )}
+      </div>
+
+      <DataTable
         header={productHeader}
         data={currentItems}
         activePage={activePage}
@@ -178,5 +194,4 @@ const DashboardUsers = () => {
     </div>
   );
 };
-
-export default DashboardUsers;
+export default DashboardProducts;

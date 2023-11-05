@@ -5,17 +5,20 @@ module.exports = {
     "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    
     extend: {
       maxHeight: {
-        '450': '450px',
+        450: "450px",
       },
-      
+
       animation: {
-        'slide-in-from-left': 'slideInFromLeft 1s ease-in-out',
-        'slide-in-from-right': 'slideInFromRight 1s ease-in-out',
-        'slide-in-from-top': 'slideInFromTop 1s ease-in-out',
-        'slide-in-from-bottom': 'slideInFromBottom 1s ease-in-out',
+        "slide-in-from-left": "slideInFromLeft 1s ease-in-out",
+        "slide-in-from-right": "slideInFromRight 1s ease-in-out",
+        "slide-in-from-top": "slideInFromTop 1s ease-in-out",
+        "slide-in-from-bottom": "slideInFromBottom 1s ease-in-out",
+        "slide-out-to-left": "slideOutToLeft 1s ease both",
+        "slide-out-to-right": "slideOutToRight 1s ease both",
+        "slide-out-to-top": "slideOutToTop 1s ease both",
+        "slide-out-to-bottom": "slideOutToBottom 1s ease both",
       },
 
       colors: {
@@ -72,7 +75,7 @@ module.exports = {
       // TODO:
       // Added some custom styling for the future elements, i.e cart, checkout, etc..
       screens: {
-        'xs': {'max': '639px'},
+        xs: { max: "639px" },
       },
     },
   },

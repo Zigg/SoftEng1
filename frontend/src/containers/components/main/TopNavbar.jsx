@@ -3,7 +3,7 @@ import { ShoppingBag } from "lucide-react";
 import { PiSignOutBold } from "react-icons/pi";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
-import SearchInput from "./navbar/SearchInput.jsx";
+import SearchInputMainPage from "./navbar/SearchInputMainPage.jsx";
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -160,7 +160,7 @@ const TopNavbar = () => {
 
           <div className="flex items-center sticky">
             <div className="flex md:items-center md:justify-center md:mx-auto">
-              <SearchInput />
+              <SearchInputMainPage />
             </div>
             {user && (
               <div className="ml-4">
@@ -210,7 +210,7 @@ const TopNavbar = () => {
                 onMouseLeave={() => {
                   setIsMenuOpen(false);
                 }}
-                className="absolute ml-56 mt-12 translate-y-1/2 xs-ml-52 xs-mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2 border-rose-500 dark:border-gray-600"
+                className="absolute ml-64 mt-12 translate-y-1/2 xs-ml-52 xs-mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2 border-rose-500 dark:border-gray-600"
                 id="user-dropdown"
               >
                 {user && (
