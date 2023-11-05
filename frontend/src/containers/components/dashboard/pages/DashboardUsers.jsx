@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserList } from "../../../../api";
-import { setUserListDetails } from "../../../../context/actions/userListAction";
-import DataTable from "./components/DataTable";
-import Pagination from "./components/Pagination";
-import SearchFilter from "./components/SearchFilter";
-import { AddButton } from "./components/AddButton";
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserList } from '../../../../api';
+import { setUserListDetails } from '../../../../context/actions/userListAction';
+import DataTable from './components/DataTable';
+import Pagination from './components/Pagination';
+import SearchFilter from './components/SearchFilter';
+import { AddButton } from './components/AddButton';
 
 // TODO: Optimize this component, and make it more readable
 // FIXME: There are lots of data props being passed around, try to optimize data handling, props and state passing between child and parent components and have a single source of truth between parent and child components, props and states,etc
@@ -15,12 +15,12 @@ const DashboardUsers = () => {
 
   const userList = useSelector((state) => state.userList);
   const [tableData, setTableData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [activePage, setActivePage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("searchQuery:", searchQuery);
-  console.log("activePage:", activePage);
+  console.log('searchQuery:', searchQuery);
+  console.log('activePage:', activePage);
   useEffect(() => {
     setIsLoading(true);
     if (!userList) {
@@ -30,39 +30,39 @@ const DashboardUsers = () => {
           setIsLoading(false);
         })
         .catch((error) => {
-          console.error("Error fetching user list: ", error);
+          console.error('Error fetching user list: ', error);
           setIsLoading(false);
         });
     }
   }, [dispatch, userList]);
 
   const userListHeader = [
-    { title: "User name" },
-    { title: "Email" },
-    { title: "Email Verified" },
-    { title: "Disabled" },
-    { title: "Last Sign In" },
-    { title: "Creation Time" },
+    { title: 'User name' },
+    { title: 'Email' },
+    { title: 'Email Verified' },
+    { title: 'Disabled' },
+    { title: 'Last Sign In' },
+    { title: 'Creation Time' },
   ];
 
   const userListData = userList
     ? userList.map((user) => ({
-        "User name": user.displayName || "-",
-        Email: user.email || "-",
-        "Email Verified": user.emailVerified ? "Yes" : "No",
-        Disabled: user.disabled ? "Yes" : "No",
-        "Last Sign In": user.metadata.lastSignInTime
+        'User name': user.displayName || '-',
+        Email: user.email || '-',
+        'Email Verified': user.emailVerified ? 'Yes' : 'No',
+        Disabled: user.disabled ? 'Yes' : 'No',
+        'Last Sign In': user.metadata.lastSignInTime
           ? new Date(user.metadata.lastSignInTime).toLocaleString()
-          : "-",
-        "Creation Time": user.metadata.creationTime
+          : '-',
+        'Creation Time': user.metadata.creationTime
           ? new Date(user.metadata.creationTime).toLocaleDateString()
-          : "-",
+          : '-',
       }))
     : [];
 
   const [filteredData, setFilteredData] = useState(userListData);
 
-  console.log("filteredData:", filteredData);
+  console.log('filteredData:', filteredData);
 
   const handleSearch = (searchQuery) => {
     setSearchQuery(searchQuery);
@@ -71,26 +71,26 @@ const DashboardUsers = () => {
     const filteredData = userListData.filter((item) =>
       userListHeader.some((header) => {
         const itemValue = item[header.title];
-        if (typeof itemValue === "string") {
+        if (typeof itemValue === 'string') {
           return itemValue.toLowerCase().includes(trimmedQuery);
         } else if (Array.isArray(itemValue)) {
           return itemValue.some(
             (value) =>
-              typeof value === "string" &&
-              value.toLowerCase().includes(trimmedQuery)
+              typeof value === 'string' &&
+              value.toLowerCase().includes(trimmedQuery),
           );
-        } else if (typeof itemValue === "number") {
+        } else if (typeof itemValue === 'number') {
           return itemValue.toString().toLowerCase().includes(trimmedQuery);
         } else {
           return false;
         }
-      })
+      }),
     );
 
     setFilteredData(filteredData);
     setActivePage(1);
-    console.log("trimmedQuery:", trimmedQuery);
-    console.log("handleSearch filteredData:", filteredData);
+    console.log('trimmedQuery:', trimmedQuery);
+    console.log('handleSearch filteredData:', filteredData);
   };
 
   const totalItems = searchQuery ? filteredData.length : userListData.length;
@@ -102,12 +102,12 @@ const DashboardUsers = () => {
   const totalPagesOriginal = Math.ceil(totalOriginalItems / itemsPerPage);
   const totalPagesFiltered = Math.ceil(totalFilteredItems / itemsPerPage);
 
-  console.log("totalItems:", totalItems);
-  console.log("totalPages:", totalPages);
-  console.log("totalOriginalItems:", totalOriginalItems);
-  console.log("totalFilteredItems:", totalFilteredItems);
-  console.log("totalPagesOriginal:", totalPagesOriginal);
-  console.log("totalPagesFiltered:", totalPagesFiltered);
+  console.log('totalItems:', totalItems);
+  console.log('totalPages:', totalPages);
+  console.log('totalOriginalItems:', totalOriginalItems);
+  console.log('totalFilteredItems:', totalFilteredItems);
+  console.log('totalPagesOriginal:', totalPagesOriginal);
+  console.log('totalPagesFiltered:', totalPagesFiltered);
 
   const handlePageChange = (pageNumber) => {
     // Ensure that pageNumber stays within valid bounds
@@ -134,8 +134,8 @@ const DashboardUsers = () => {
 
     setTableData(dataForPage);
     setActivePage(pageNumber);
-    console.log("dataForPage:", dataForPage);
-    console.log("pageNumber:", pageNumber);
+    console.log('dataForPage:', dataForPage);
+    console.log('pageNumber:', pageNumber);
   };
 
   // Calculate the start and end indices for the current page
@@ -149,7 +149,7 @@ const DashboardUsers = () => {
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      <div className="flex justify-between pb-4 bg-white dark:bg-gray-900 pt-4">
+      <div className="flex justify-between pt-4 pb-4 bg-white dark:bg-gray-900">
         <AddButton message="User" path="/dashboard/users/add" />
         {userList && (
           <SearchFilter searchQuery={searchQuery} onSearch={handleSearch} />
@@ -164,7 +164,7 @@ const DashboardUsers = () => {
       />
 
       {filteredData.length === 0 && searchQuery && (
-        <div className="text-center text-gray-500 dark:text-gray-400 mt-4">
+        <div className="mt-4 text-center text-gray-500 dark:text-gray-400">
           No results found
         </div>
       )}
