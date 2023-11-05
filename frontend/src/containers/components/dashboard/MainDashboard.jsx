@@ -1,35 +1,69 @@
 // TODO:
-import { IoSettingsOutline } from "react-icons/io5";
-import { RxDashboard } from "react-icons/rx";
-import React, { useState, useEffect } from "react";
+import { IoSettingsOutline } from 'react-icons/io5';
+import { RxDashboard } from 'react-icons/rx';
+import React, { useState, useEffect } from 'react';
 import {
   PackageSearch,
   ShoppingBag,
   Store,
   Users,
   AreaChart,
-} from "lucide-react";
-import DashboardHeader from "./components/DashboardHeader";
-import { Route, Routes } from "react-router-dom";
-import DashboardOrders from "./pages/DashboardOrders";
-import DashboardUsers from "./pages/DashboardUsers";
-import DashboardProducts from "./pages/DashboardProducts";
-import DashboardRestaurants from "./pages/DashboardRestaurants";
-import DashboardSettings from "./pages/DashboardSettings";
-import DashboardReports from "./pages/DashboardReports";
-import DashboardOverview from "./pages/DashboardOverview";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserCount } from "../../../api";
-import { setUserCount } from "../../../context/actions/userCountAction";
-import { Logo } from "../../../assets/images";
-import { NavLink } from "react-router-dom";
+  Home,
+  ArrowBigLeft,
+  LogIn,
+  ShieldX,
+} from 'lucide-react';
+import DashboardHeader from './components/DashboardHeader';
+import { Route, Routes } from 'react-router-dom';
+import DashboardOrders from './pages/DashboardOrders';
+import DashboardUsers from './pages/DashboardUsers';
+import DashboardProducts from './pages/DashboardProducts';
+import DashboardRestaurants from './pages/DashboardRestaurants';
+import DashboardSettings from './pages/DashboardSettings';
+import DashboardReports from './pages/DashboardReports';
+import DashboardOverview from './pages/DashboardOverview';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserCount } from '../../../api';
+import { setUserCount } from '../../../context/actions/userCountAction';
+import { Logo } from '../../../assets/images';
+import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
+import { app } from '../../../config/firebase.config';
+import {
+  setUserDetails,
+  setUserNull,
+} from '../../../context/actions/userActions';
+import { useNavigate } from 'react-router-dom';
+import { Button, Modal } from 'flowbite-react';
+
 const MainDashboard = () => {
   // TODO: Add check on whether the current user is an admin or not
   // TODO: Orders, Products, Restaurants, Reports, Settings Create the functionality for each of these pages
+  const firebaseAuth = getAuth(app);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   // Fetching user count from the backend
   const dispatch = useDispatch();
   const userCount = useSelector((state) => state.userCount);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const sessionExpire = firebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(setUserDetails(user));
+      } else {
+        setIsLoading(true);
+        dispatch(setUserNull());
+        setOpenModal(true);
+      }
+      setIsLoading(false);
+    });
+
+    return () => sessionExpire();
+  }, [dispatch, firebaseAuth]);
 
   // Properly gets the count of users now
   useEffect(() => {
@@ -41,7 +75,7 @@ const MainDashboard = () => {
   // Size of the screen when the hamburger menu should be toggled
   const screenSizeToggled = 769;
   const [isSidebarOpen, setIsSidebarOpen] = useState(
-    window.innerWidth > screenSizeToggled
+    window.innerWidth > screenSizeToggled,
   );
 
   // FIXME: Weird visual bug when clicking on a link while the page is loading
@@ -50,15 +84,63 @@ const MainDashboard = () => {
       setIsSidebarOpen(window.innerWidth > screenSizeToggled);
     };
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
     <div>
+      {openModal && (
+        <>
+          <Modal
+            show={openModal}
+            className="backdrop-blur backdrop-filter-blur-sm"
+          >
+            <Modal.Body>
+              <div className="space-y-6">
+                <ShieldX className="w-24 h-24 mx-auto text-red-600" />
+                <h1 className="flex items-center justify-center font-semibold text-red-600 text-3xl">
+                  Unauthorized Access
+                </h1>
+                <p className="flex items-center justify-center font-semibold">
+                  You must be logged in to access the dashboard
+                </p>
+              </div>
+            </Modal.Body>
+            <div className="flex flex-col items-center justify-center w-full">
+              <Modal.Footer>
+                <Button
+                  onClick={() => {
+                    setOpenModal(false);
+                    const currentRoute = window.location.pathname;
+                    navigate(`/login?redirectTo=${currentRoute}`, {
+                      replace: true,
+                    });
+                  }}
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login
+                </Button>
+
+                <Button
+                  color="gray"
+                  className="hover:bg-blue-400"
+                  onClick={() => {
+                    setOpenModal(false);
+                    navigate('/', { replace: true });
+                  }}
+                >
+                  <ArrowBigLeft className="w-6 h-6" />
+                  Home
+                </Button>
+              </Modal.Footer>
+            </div>
+          </Modal>
+        </>
+      )}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         type="button"
@@ -87,13 +169,13 @@ const MainDashboard = () => {
               setIsSidebarOpen(false);
             }
           }}
-          className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
-            isSidebarOpen ? "translate-x-0 " : "-translate-x-full"
+          className={`fixed top-0 left-0 z-40 w-64 h-screen  transition-transform ${
+            isSidebarOpen ? 'translate-x-0 ' : '-translate-x-full'
           } sm:translate-x-0 `}
           aria-label="Sidebar"
         >
           {/* Not using the Navlink because this must have a full reload*/}
-          <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 ">
+          <div className="h-full  bg-slate-50 px-3 py-4 overflow-y-auto  dark:bg-gray-800 ">
             <ul className="space-y-2 font-medium ">
               <img
                 src={Logo}
@@ -105,9 +187,9 @@ const MainDashboard = () => {
                 <NavLink
                   to="/dashboard"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === "/dashboard"
-                      ? "text-red-500 opacity-100"
-                      : ""
+                    window.location.pathname === '/dashboard'
+                      ? 'text-red-500 opacity-100'
+                      : ''
                   }`}
                 >
                   <RxDashboard className="w-6 h-6" />
@@ -119,9 +201,9 @@ const MainDashboard = () => {
                 <NavLink
                   to="/dashboard/orders"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith("/dashboard/orders")
-                      ? "text-red-500 opacity-100"
-                      : ""
+                    window.location.pathname.startsWith('/dashboard/orders')
+                      ? 'text-red-500 opacity-100'
+                      : ''
                   }`}
                 >
                   <PackageSearch className="w-6 h-6" />
@@ -137,9 +219,9 @@ const MainDashboard = () => {
                 <NavLink
                   to="/dashboard/users"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith("/dashboard/users")
-                      ? "text-red-500 opacity-100"
-                      : ""
+                    window.location.pathname.startsWith('/dashboard/users')
+                      ? 'text-red-500 opacity-100'
+                      : ''
                   }`}
                 >
                   <Users className="w-6 h-6" />
@@ -155,9 +237,9 @@ const MainDashboard = () => {
                 <NavLink
                   to="/dashboard/products"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith("/dashboard/products")
-                      ? "text-red-500 opacity-100"
-                      : ""
+                    window.location.pathname.startsWith('/dashboard/products')
+                      ? 'text-red-500 opacity-100'
+                      : ''
                   }`}
                 >
                   <ShoppingBag className="w-6 h-6" />
@@ -174,10 +256,10 @@ const MainDashboard = () => {
                   to="/dashboard/restaurants"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
                     window.location.pathname.startsWith(
-                      "/dashboard/restaurants"
+                      '/dashboard/restaurants',
                     )
-                      ? "text-red-500 opacity-100"
-                      : ""
+                      ? 'text-red-500 opacity-100'
+                      : ''
                   }`}
                 >
                   <Store className="w-6 h-6" />
@@ -193,9 +275,9 @@ const MainDashboard = () => {
                 <NavLink
                   to="/dashboard/reports"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith("/dashboard/reports")
-                      ? "text-red-500 opacity-100"
-                      : ""
+                    window.location.pathname.startsWith('/dashboard/reports')
+                      ? 'text-red-500 opacity-100'
+                      : ''
                   }`}
                 >
                   <AreaChart className="w-6 h-6  " />
@@ -206,9 +288,9 @@ const MainDashboard = () => {
                 <NavLink
                   to="/dashboard/settings"
                   className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith("/dashboard/settings")
-                      ? "text-red-500 opacity-100"
-                      : ""
+                    window.location.pathname.startsWith('/dashboard/settings')
+                      ? 'text-red-500 opacity-100'
+                      : ''
                   }`}
                 >
                   <IoSettingsOutline className="w-6 h-6  " />
@@ -226,18 +308,20 @@ const MainDashboard = () => {
       {/* TODO: Add these route to the routes.js */}
       {/* FIXME: Multiple components do not share the same route namely the pagination, table, searchbar, add button when using the routes.js ... */}
       {/* FIXME: Not properly sharing components when routing in the routes.js */}
-      <div className="px-4 pt-4 md:ml-64">
+      <div className="px-4 pt-4 md:ml-64 ">
         <DashboardHeader />
         <div className="p-4 rounded-lg ">
-          <Routes>
-            <Route path="/" element={<DashboardOverview />} />
-            <Route path="/orders" element={<DashboardOrders />} />
-            <Route path="/users" element={<DashboardUsers />} />
-            <Route path="/products" element={<DashboardProducts />} />
-            <Route path="/restaurants" element={<DashboardRestaurants />} />
-            <Route path="/reports" element={<DashboardReports />} />
-            <Route path="/settings" element={<DashboardSettings />} />
-          </Routes>
+          <div className="bg-slate-100">
+            <Routes>
+              <Route path="/" element={<DashboardOverview />} />
+              <Route path="/orders" element={<DashboardOrders />} />
+              <Route path="/users" element={<DashboardUsers />} />
+              <Route path="/products" element={<DashboardProducts />} />
+              <Route path="/restaurants" element={<DashboardRestaurants />} />
+              <Route path="/reports" element={<DashboardReports />} />
+              <Route path="/settings" element={<DashboardSettings />} />
+            </Routes>
+          </div>
         </div>
       </div>
       {/* | above Grid Layout */}
