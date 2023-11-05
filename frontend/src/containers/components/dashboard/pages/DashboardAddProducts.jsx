@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Badge,
   Button,
@@ -99,18 +99,6 @@ const DashboardAddProducts = (data, fields, labels) => {
     console.log('add action: ingredients:', ingredients);
   };
 
-  const handleAddCustomSize = () => {
-    if (!currentCustomSizes.trim()) {
-      setCustomSizesError(`Don't add empty sizes!`);
-    } else {
-      setCustomSizesError('');
-      const newCustomSizes = [...customSizes, currentCustomSizes];
-      setCustomSizes(newCustomSizes);
-      setCurrentCustomSizes('');
-      console.log('newCustomSizes:', newCustomSizes);
-    }
-  };
-
   const handleIngredientChange = (e) => {
     setCurrentIngredients(e.target.value);
   };
@@ -148,7 +136,17 @@ const DashboardAddProducts = (data, fields, labels) => {
   };
 
   // TODO: Adding form validation
-
+  const handleAddCustomSize = () => {
+    if (!currentCustomSizes.trim()) {
+      setCustomSizesError(`Don't add empty sizes!`);
+    } else {
+      setCustomSizesError('');
+      const newCustomSizes = [...customSizes, currentCustomSizes];
+      setCustomSizes(newCustomSizes);
+      setCurrentCustomSizes('');
+      console.log('newCustomSizes:', newCustomSizes);
+    }
+  };
   const handleRemoveCustomSize = (index) => {
     const updatedCustomSizes = [...customSizes];
     updatedCustomSizes.splice(index, 1);
@@ -183,8 +181,10 @@ const DashboardAddProducts = (data, fields, labels) => {
       const imageArray = Array.from(files);
       setSelectedImages([...selectedImages, ...imageArray]);
     }
-    console.log('handleImageChange: selectedImages:', selectedImages);
   };
+  useEffect(() => {
+    console.log('handleImageChange: selectedImages:', selectedImages);
+  }, [selectedImages]);
 
   const removeImage = (index) => {
     const updatedImages = [...selectedImages];
@@ -194,9 +194,9 @@ const DashboardAddProducts = (data, fields, labels) => {
   };
 
   return (
-    <div className="p-4 bg-slate-100">
-      <div className="flex flex-col items-center p-12 ">
-        <h1 className="mb-4 text-3xl">Add a new product</h1>
+    <div>
+      <div className="flex flex-col items-center justify-center ">
+        {/* <h1 className="mb-4 text-3xl">Add a new product</h1> */}
 
         <form className="grid flex-shrink-0 grid-cols-2 p-8 bg-blue-100 border-4 border-gray-300 sm:grid-cols-1 gap-x-6 gap-y-8">
           <div>
