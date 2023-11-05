@@ -48,7 +48,7 @@ const DashboardRestaurants = () => {
   const restaurantsMockDataList = restaurantsMockData
     ? restaurantsMockData.map((restaurant) => ({
         "Restaurant Logo": (
-          <div className="border-2 border-gray-400 p-7 items-center justify-center flex">
+          <div className="p-7 items-center justify-center flex">
             <ImageOff className="w-5 h-5" />
           </div>
         ),
