@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { LoginBG, Logo } from "../assets/images";
-import { app } from "../config/firebase.config.js";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import toast from "react-hot-toast";
-import { setUserDetails, setUserName } from "../context/actions/userActions";
+import React, { useState, useEffect } from 'react';
+import { LoginBG, Logo } from '../assets/images';
+import { app } from '../config/firebase.config.js';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import { setUserDetails, setUserName } from '../context/actions/userActions';
 import {
   getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
-} from "firebase/auth";
-import { NavLink } from "react-router-dom";
+} from 'firebase/auth';
+import { NavLink } from 'react-router-dom';
 export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [registerPassword, setRegisterPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
   const [showRegisterPasswordRequirements, setRegisterPasswordRequirements] =
     useState(false);
@@ -31,12 +31,12 @@ export const Login = () => {
   const navigate = useNavigate();
   const firebaseAuth = getAuth(app);
 
-  const userState = useSelector((state) => state.user);
-  useEffect(() => {
-    if (userState) {
-      navigate("/", { replace: true });
-    }
-  }, [navigate, userState]);
+  // const userState = useSelector((state) => state.user);
+  // useEffect(() => {
+  //   if (userState) {
+  //     navigate("/", { replace: true });
+  //   }
+  // }, [navigate, userState]);
 
   const handleConfirmPasswordRegisterChange = (event) => {
     const newConfirmPassword = event.target.value;
@@ -44,7 +44,7 @@ export const Login = () => {
 
     const isValid = validatePasswordFields(
       registerPassword,
-      newConfirmPassword
+      newConfirmPassword,
     );
     setIsFormValid(isValid);
   };
@@ -60,16 +60,16 @@ export const Login = () => {
   };
 
   const signUpWithEmailPass = async () => {
-    setEmail("");
-    setRegisterPassword("");
-    setUsername("");
-    setConfirmPassword("");
+    setEmail('');
+    setRegisterPassword('');
+    setUsername('');
+    setConfirmPassword('');
 
     try {
       const userCred = await createUserWithEmailAndPassword(
         firebaseAuth,
         email,
-        registerPassword
+        registerPassword,
       );
       await updateProfile(userCred.user, { displayName: username });
       const userDetails = { ...userCred.user, displayName: username };
@@ -83,59 +83,67 @@ export const Login = () => {
       // Added timeout so the toast notifications dont stack
       setTimeout(() => {
         sendEmailVerification(firebaseAuth.currentUser).then(() => {
-          toast("Email Sent!", {
-            icon: "✉️",
+          toast('Email Sent!', {
+            icon: '✉️',
           });
         });
       }, 2000);
 
-      navigate("/login", { replace: true });
-      toast.success("Account created successfully");
+      navigate('/login', { replace: true });
+      toast.success('Account created successfully');
     } catch (error) {
       console.error(error);
       switch (error.code) {
-        case "auth/email-already-in-use":
-          toast.error("Email already exists");
+        case 'auth/email-already-in-use':
+          toast.error('Email already exists');
           break;
-        case "auth/invalid-email":
-          toast.error("Invalid email format");
+        case 'auth/invalid-email':
+          toast.error('Invalid email format');
           break;
         default:
-          toast.error("Something went wrong");
+          toast.error('Something went wrong');
           break;
       }
     }
   };
 
+  // TODO: Add a redirect, checking what the previous path was then redirecting the user after succesful login
   const signInWithEmailPass = async () => {
-    setEmail("");
-    setLoginPassword("");
+    setEmail('');
+    setLoginPassword('');
     try {
       const userCred = await signInWithEmailAndPassword(
         firebaseAuth,
         email,
-        loginPassword
+        loginPassword,
       );
 
       const userDetails = userCred.user;
       dispatch(setUserDetails(userDetails));
 
       if (userDetails.emailVerified) {
-        navigate("/", { replace: true });
+        const searchParams = new URLSearchParams(window.location.search);
+        const redirectTo = searchParams.get('redirectTo');
+
+        if (redirectTo) {
+          navigate(redirectTo, { replace: true });
+        } else {
+          navigate('/', { replace: true });
+        }
       } else {
-        toast.error("Email not verified");
+        toast.error('Email not verified');
       }
     } catch (error) {
       console.error(error);
       switch (error.code) {
-        case "auth/invalid-login-credentials":
-          toast.error("Invalid credentials");
+        case 'auth/invalid-login-credentials':
+          toast.error('Invalid credentials');
           break;
-        case "auth/user-disabled":
-          toast.error("User disabled");
+        case 'auth/user-disabled':
+          toast.error('User disabled');
           break;
         default:
-          toast.error("Something went wrong");
+          toast.error('Something went wrong');
           break;
       }
     }
@@ -144,14 +152,14 @@ export const Login = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     if (isLogin) {
-      setEmail("");
-      setLoginPassword("");
+      setEmail('');
+      setLoginPassword('');
       signInWithEmailPass(event);
     } else {
-      setEmail("");
-      setRegisterPassword("");
-      setUsername("");
-      setConfirmPassword("");
+      setEmail('');
+      setRegisterPassword('');
+      setUsername('');
+      setConfirmPassword('');
       setIsPasswordVisible(false);
       setRegisterPasswordRequirements(false);
       signUpWithEmailPass(event);
@@ -160,11 +168,11 @@ export const Login = () => {
 
   const toggleForm = () => {
     // To prevent the bug from when switching between states the form submits the form without the button being clicked we need to set the states to null between state changes
-    setEmail("");
-    setLoginPassword("");
-    setRegisterPassword("");
-    setUsername("");
-    setConfirmPassword("");
+    setEmail('');
+    setLoginPassword('');
+    setRegisterPassword('');
+    setUsername('');
+    setConfirmPassword('');
     setRegisterPasswordRequirements(false);
     setIsPasswordVisible(false);
     setIsLogin(!isLogin);
@@ -192,7 +200,7 @@ export const Login = () => {
                 Ordering System
               </NavLink>
               <h1 className="font-bold leading-tight tracking-tight text-gray-900 text-xl dark:text-white">
-                {isLogin ? "Sign in to your account" : "Create a new account"}
+                {isLogin ? 'Sign in to your account' : 'Create a new account'}
               </h1>
               <form className="space-y-4" onSubmit={onSubmit}>
                 <div>
@@ -239,7 +247,7 @@ export const Login = () => {
                     Password
                   </label>
                   <input
-                    type={isPasswordVisible ? "text" : "password"}
+                    type={isPasswordVisible ? 'text' : 'password'}
                     name="password"
                     id="password"
                     onKeyDown={() => {
@@ -280,7 +288,7 @@ export const Login = () => {
                       Confirm Password
                     </label>
                     <input
-                      type={isConfirmPasswordVisible ? "text" : "password"}
+                      type={isConfirmPasswordVisible ? 'text' : 'password'}
                       name="confirmPassword"
                       id="confirmPassword"
                       onKeyDown={() => setRegisterPasswordRequirements(true)}
@@ -301,50 +309,50 @@ export const Login = () => {
                           <p
                             className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               registerPassword.length >= 6
-                                ? "text-green-500"
-                                : "text-red-500"
+                                ? 'text-green-500'
+                                : 'text-red-500'
                             }`}
                           >
-                            {registerPassword.length >= 6 ? "✅" : "❌"}{" "}
+                            {registerPassword.length >= 6 ? '✅' : '❌'}{' '}
                             Password must be at least 6 characters
                           </p>
 
                           <p
                             className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               /\d/.test(registerPassword)
-                                ? "text-green-500"
-                                : "text-red-500"
+                                ? 'text-green-500'
+                                : 'text-red-500'
                             }`}
                           >
-                            {/\d/.test(registerPassword) ? "✅" : "❌"} Include
+                            {/\d/.test(registerPassword) ? '✅' : '❌'} Include
                             at least one number
                           </p>
 
                           <p
                             className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               /[A-Z]/.test(registerPassword)
-                                ? "text-green-500"
-                                : "text-red-500"
+                                ? 'text-green-500'
+                                : 'text-red-500'
                             }`}
                           >
-                            {/[A-Z]/.test(registerPassword) ? "✅" : "❌"}{" "}
+                            {/[A-Z]/.test(registerPassword) ? '✅' : '❌'}{' '}
                             Include at least one uppercase character
                           </p>
 
                           <p
                             className={`text-sm mt-1 transition-all duration-1000 ease-out ${
                               /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
-                                registerPassword
+                                registerPassword,
                               )
-                                ? "text-green-500"
-                                : "text-red-500"
+                                ? 'text-green-500'
+                                : 'text-red-500'
                             }`}
                           >
                             {/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
-                              registerPassword
+                              registerPassword,
                             )
-                              ? "✅"
-                              : "❌"}{" "}
+                              ? '✅'
+                              : '❌'}{' '}
                             Include at least one special character
                           </p>
                         </div>
@@ -358,37 +366,37 @@ export const Login = () => {
                   className={`w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
                     isLogin
                       ? email && loginPassword
-                        ? "bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                        : "bg-primary-300 cursor-not-allowed opacity-50"
+                        ? 'bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
+                        : 'bg-primary-300 cursor-not-allowed opacity-50'
                       : isFormValid
-                      ? "bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                      : "bg-primary-300 cursor-not-allowed opacity-50"
+                      ? 'bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
+                      : 'bg-primary-300 cursor-not-allowed opacity-50'
                   }`}
                   disabled={isLogin ? !(email && loginPassword) : !isFormValid}
                   title={
                     isLogin
                       ? email && loginPassword
-                        ? ""
-                        : "Please enter your email and password"
+                        ? ''
+                        : 'Please enter your email and password'
                       : isFormValid
-                      ? ""
-                      : "Please follow the registration requirements"
+                      ? ''
+                      : 'Please follow the registration requirements'
                   }
                 >
-                  {isLogin ? "Sign in" : "Create an account"}
+                  {isLogin ? 'Sign in' : 'Create an account'}
                 </button>
 
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400 items-center justify-center flex flex-col">
                   {isLogin
                     ? "Don't have an account yet?"
-                    : "Already have an account?"}
+                    : 'Already have an account?'}
 
                   <button
                     // href="#"
                     onClick={toggleForm}
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500 p-2"
                   >
-                    {isLogin ? " Sign up" : " Sign in"}
+                    {isLogin ? ' Sign up' : ' Sign in'}
                   </button>
                 </p>
               </form>
