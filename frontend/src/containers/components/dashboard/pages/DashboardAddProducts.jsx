@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Badge,
   Button,
@@ -11,7 +11,7 @@ import {
   Textarea,
   TextInput,
   ToggleSwitch,
-} from "flowbite-react";
+} from 'flowbite-react';
 import {
   ChefHat,
   CircleDollarSign,
@@ -22,7 +22,7 @@ import {
   Utensils,
   UtensilsCrossed,
   X,
-} from "lucide-react";
+} from 'lucide-react';
 
 // TODO: Add validation for the form, and add onSubmit handler
 // TODO: Add a form reset button
@@ -33,6 +33,7 @@ import {
 // TODO: Disable button until all required fields are filled out and valid
 // TODO: Add form item validation
 // TODO: Add functionalities for all
+// TODO: Add helper text that states the ingredients, sizes, and addons multi input values can be added by pressing "Enter" key
 // const onSubmit = (e) => {
 //   e.preventDefault();
 //   console.log("Form submitted!");
@@ -41,118 +42,139 @@ import {
 const DashboardAddProducts = (data, fields, labels) => {
   const [addons, setAddons] = useState([]);
   const [currentAddon, setCurrentAddon] = useState({
-    name: "",
-    addonPrice: "",
+    addonName: '',
+    addonPrice: '',
   });
-  const [isNoAddons, setIsNoAddons] = useState(true);
-  const [productName, setProductName] = useState(""); // Initialize with an empty string
+  const [addonPrice, setAddonPrice] = useState('');
+  const [isNoAddons, setIsNoAddons] = useState(false);
+  const [addonList, setAddonList] = useState([]);
+  const [isAddonPriceNumeric, setIsAddonPriceNumeric] = useState(true);
+
+  const [productName, setProductName] = useState('');
 
   const [isPublished, setIsPublished] = useState(false);
+
   const [ingredients, setIngredients] = useState([]);
-  const [currentIngredient, setCurrentIngredient] = useState("");
+  const [currentIngredients, setCurrentIngredients] = useState('');
+  const [ingredientsError, setIngredientsError] = useState('');
+
   const [isCustomSize, setIsCustomSize] = useState(false);
+  const [currentCustomSizes, setCurrentCustomSizes] = useState('');
   const [customSizes, setCustomSizes] = useState([]);
-  const [customSize, setCustomSize] = useState("");
+  const [customSizesError, setCustomSizesError] = useState('');
 
-  const [ingredientError, setIngredientError] = useState("");
-
-  const [addonPrice, setAddonPrice] = useState("");
-  const [price, setPrice] = useState("");
-  const [isAddonPriceNumeric, setIsAddonPriceNumeric] = useState(true);
+  const [price, setPrice] = useState('');
   const [isPriceNumeric, setIsPriceNumeric] = useState(true);
+
   const [selectedImages, setSelectedImages] = useState([]);
   const [currentImage, setCurrentImage] = useState(null);
+
   const handleAddAddon = () => {
     if (
-      currentAddon.addonName.trim() !== "" &&
-      currentAddon.addonPrice.trim() !== ""
+      currentAddon.addonName.trim() !== '' &&
+      currentAddon.addonPrice.trim() !== ''
     ) {
       setAddons([...addons, currentAddon]);
-      setCurrentAddon({ addonName: "", addonPrice: "" });
+      setCurrentAddon({ addonName: '', addonPrice: '' });
     }
+    console.log('add action: addons:', addons);
   };
 
   const handleRemoveAddon = (index) => {
     const newAddons = [...addons];
     newAddons.splice(index, 1);
     setAddons(newAddons);
+    console.log('remove action: newAddons:', newAddons);
   };
 
   const handleAddIngredient = () => {
-    if (!currentIngredient.trim()) {
-      setIngredientError(`Don't add empty ingredients!`);
+    if (!currentIngredients.trim()) {
+      setIngredientsError(`Don't add empty ingredients!`);
     } else {
-      setIngredientError("");
-      const newIngredients = [...ingredients, currentIngredient];
+      setIngredientsError('');
+      const newIngredients = [...ingredients, currentIngredients];
       setIngredients(newIngredients);
-      setCurrentIngredient("");
+      setCurrentIngredients('');
+    }
+    console.log('add action: ingredients:', ingredients);
+  };
+
+  const handleAddCustomSize = () => {
+    if (!currentCustomSizes.trim()) {
+      setCustomSizesError(`Don't add empty sizes!`);
+    } else {
+      setCustomSizesError('');
+      const newCustomSizes = [...customSizes, currentCustomSizes];
+      setCustomSizes(newCustomSizes);
+      setCurrentCustomSizes('');
+      console.log('newCustomSizes:', newCustomSizes);
     }
   };
 
   const handleIngredientChange = (e) => {
-    setCurrentIngredient(e.target.value);
+    setCurrentIngredients(e.target.value);
   };
 
   const handleIngredientKeyPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
       handleAddIngredient();
     }
+    console.log('handleIngredientKeyPress: ingredients:', e.key === 'Enter');
   };
 
   const handleRemoveIngredient = (index) => {
     const newIngredients = [...ingredients];
     newIngredients.splice(index, 1);
     setIngredients(newIngredients);
+    console.log('remove action: newIngredients:', newIngredients);
   };
 
+  // TODO: Debating on whether to empty the array if the checkbox is toggled off, there might be errors or unexpected behaviors for the on submit if this is not empty while submitted which may cause the product to be added with the custom size even toggled off
   const toggleCustomSize = () => {
     setIsCustomSize(!isCustomSize);
     if (!isCustomSize) {
-      setCustomSize("");
+      setCustomSizes([]);
     }
+    console.log('toggleCustomSize: customSizes:', customSizes);
   };
 
-  const handleAddCustomSize = () => {
-    if (customSize.trim()) return;
-    setCustomSizes([...customSizes, customSize]);
-    setCustomSize("");
+  const toggleAddonList = () => {
+    setIsNoAddons(!isNoAddons);
+    if (!isNoAddons) {
+      setAddonList([]);
+    }
+    console.log('toggleAddonList: addonList:', isNoAddons);
   };
-// TODO: Adding form validation
-//   const handleAddCustomSize = () => {
-//     if (!customSize.trim()) {
-//       setCustomSizeError(`Don't add empty sizes!`);
-// }else{
-//       setCustomSizeError("");
-//       const newCustomSizes = [...customSizes, customSize];
-//       setCustomSizes(newCustomSizes);
-//       setCustomSize("");
-//     }
-//   };
-// }
+
+  // TODO: Adding form validation
 
   const handleRemoveCustomSize = (index) => {
     const updatedCustomSizes = [...customSizes];
     updatedCustomSizes.splice(index, 1);
     setCustomSizes(updatedCustomSizes);
+    console.log('remove action: updatedCustomSizes:', updatedCustomSizes);
   };
 
   const handleCustomSizeKeyPress = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
       handleAddCustomSize();
     }
+    console.log('handleCustomSizeKeyPress: customSizes:', customSizes);
   };
 
   const handlePriceNumberCheck = (e) => {
     const priceValue = e.target.value;
     setPrice(priceValue);
     setIsPriceNumeric(!isNaN(priceValue));
+    console.log('handlePriceNumberCheck: price:', !isNaN(priceValue));
   };
   const handleAddonPriceNumberCheck = (e) => {
     const addonPriceValue = e.target.value;
     setAddonPrice(addonPriceValue);
     setIsAddonPriceNumeric(!isNaN(addonPriceValue));
+    console.log('handleAddonPriceNumberCheck: addonPrice:', addonPrice);
   };
 
   const handleImageChange = (e) => {
@@ -161,12 +183,14 @@ const DashboardAddProducts = (data, fields, labels) => {
       const imageArray = Array.from(files);
       setSelectedImages([...selectedImages, ...imageArray]);
     }
+    console.log('handleImageChange: selectedImages:', selectedImages);
   };
 
   const removeImage = (index) => {
     const updatedImages = [...selectedImages];
     updatedImages.splice(index, 1);
     setSelectedImages(updatedImages);
+    console.log('remove action: updatedImages:', updatedImages);
   };
 
   return (
@@ -187,8 +211,8 @@ const DashboardAddProducts = (data, fields, labels) => {
               placeholder="Product Name"
               addon={<ChefHat className="w-4 h-4" />}
               required
-              value={productName} 
-              onChange={(e) => setProductName(e.target.value)} 
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
             />
           </div>
           <div>
@@ -215,7 +239,7 @@ const DashboardAddProducts = (data, fields, labels) => {
               <option>Seafood</option>
               <option>Appetizers</option>
               <option>Fast Food</option>
-              <option>Others</option>{" "}
+              <option>Others</option>{' '}
             </Select>
           </div>
           <div>
@@ -255,17 +279,17 @@ const DashboardAddProducts = (data, fields, labels) => {
               placeholder="List of ingredients"
               addon={<UtensilsCrossed className="w-4 h-4" />}
               required
-              value={currentIngredient}
+              value={currentIngredients}
               onChange={(e) => {
-                setCurrentIngredient(e.target.value);
-                setIngredientError("");
+                setCurrentIngredients(e.target.value);
+                setIngredientsError('');
               }}
               onKeyPress={handleIngredientKeyPress}
-              className={ingredientError ? "border-rose-500" : ""}
+              className={ingredientsError ? 'border-rose-500' : ''}
             />
-            {ingredientError && (
+            {ingredientsError && (
               <p className="text-sm font-semibold text-red-600">
-                {ingredientError}
+                {ingredientsError}
               </p>
             )}
             <div className="flex justify-end mr-2">
@@ -297,7 +321,7 @@ const DashboardAddProducts = (data, fields, labels) => {
                 ))}
               </div>
             </div>
-          </div>{" "}
+          </div>{' '}
           <div>
             <div className="block mb-2">
               <Label htmlFor="username3" value="Sizes" />
@@ -341,9 +365,12 @@ const DashboardAddProducts = (data, fields, labels) => {
                   </div>
                   <TextInput
                     id="custom-size"
-                    placeholder="8 ounce"
-                    value={customSize}
-                    onChange={(e) => setCustomSize(e.target.value)}
+                    placeholder="ounces, grams, pieces, etc"
+                    value={currentCustomSizes}
+                    onChange={(e) => {
+                      setCurrentCustomSizes(e.target.value);
+                      setCustomSizesError('');
+                    }}
                     onKeyPress={handleCustomSizeKeyPress}
                   />
                 </div>
@@ -357,26 +384,26 @@ const DashboardAddProducts = (data, fields, labels) => {
                     Add Custom Size
                   </button>
                 </div>
+                <div className="overflow-x-auto whitespace-nowrap">
+                  <div className="flex flex-nowrap max-w-[30px]">
+                    {customSizes.map((size, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300"
+                      >
+                        {size}
+                        <span
+                          className="ml-2 cursor-pointer"
+                          onClick={() => handleRemoveCustomSize(index)}
+                        >
+                          <X className="w-3 h-3 rounded-full text-rose-500 hover:bg-red-600 hover-text-white" />
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
-            <div className="overflow-x-auto whitespace-nowrap">
-              <div className="flex flex-nowrap max-w-[30px]">
-                {customSizes.map((size, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300"
-                  >
-                    {size}
-                    <span
-                      className="ml-2 cursor-pointer"
-                      onClick={() => handleRemoveCustomSize(index)}
-                    >
-                      <X className="w-3 h-3 rounded-full text-rose-500 hover:bg-red-600 hover:text-white" />
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
           <div>
             <div className="block mb-2">
@@ -387,12 +414,13 @@ const DashboardAddProducts = (data, fields, labels) => {
                 id="add-addons"
                 defaultChecked
                 onChange={() => setIsNoAddons(!isNoAddons)}
+                onClick={toggleAddonList}
               />
               <Label htmlFor="add-addons" className="flex">
                 No Addons?
               </Label>
             </div>
-            {!isNoAddons && (
+            {isNoAddons && (
               <div className="pt-4">
                 <div>
                   <div className="block mt-6 mb-2">
