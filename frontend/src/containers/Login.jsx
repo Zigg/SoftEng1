@@ -59,6 +59,13 @@ export const Login = () => {
     );
   };
 
+  //   // Set the default role as "user"
+  // const defaultRole = "user";
+
+  // // Get the user ID from the user credential using redux
+  // const userId = userCred.user.uid;
+
+
   const signUpWithEmailPass = async () => {
     setEmail('');
     setRegisterPassword('');
@@ -73,6 +80,7 @@ export const Login = () => {
       );
       await updateProfile(userCred.user, { displayName: username });
       const userDetails = { ...userCred.user, displayName: username };
+      // await admin.auth().setCustomUserClaims(userId, { role: defaultRole });
 
       dispatch(setUserDetails(userDetails));
       dispatch(setUserName(username));
@@ -307,46 +315,42 @@ export const Login = () => {
                       <>
                         <div className="space-y-2">
                           <p
-                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
-                              registerPassword.length >= 6
-                                ? 'text-green-500'
-                                : 'text-red-500'
-                            }`}
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${registerPassword.length >= 6
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                              }`}
                           >
                             {registerPassword.length >= 6 ? '✅' : '❌'}{' '}
                             Password must be at least 6 characters
                           </p>
 
                           <p
-                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
-                              /\d/.test(registerPassword)
-                                ? 'text-green-500'
-                                : 'text-red-500'
-                            }`}
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${/\d/.test(registerPassword)
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                              }`}
                           >
                             {/\d/.test(registerPassword) ? '✅' : '❌'} Include
                             at least one number
                           </p>
 
                           <p
-                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
-                              /[A-Z]/.test(registerPassword)
-                                ? 'text-green-500'
-                                : 'text-red-500'
-                            }`}
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${/[A-Z]/.test(registerPassword)
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                              }`}
                           >
                             {/[A-Z]/.test(registerPassword) ? '✅' : '❌'}{' '}
                             Include at least one uppercase character
                           </p>
 
                           <p
-                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${
-                              /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
-                                registerPassword,
-                              )
-                                ? 'text-green-500'
-                                : 'text-red-500'
-                            }`}
+                            className={`text-sm mt-1 transition-all duration-1000 ease-out ${/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
+                              registerPassword,
+                            )
+                              ? 'text-green-500'
+                              : 'text-red-500'
+                              }`}
                           >
                             {/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(
                               registerPassword,
@@ -363,15 +367,14 @@ export const Login = () => {
 
                 <button
                   type="submit"
-                  className={`w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${
-                    isLogin
-                      ? email && loginPassword
-                        ? 'bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
-                        : 'bg-primary-300 cursor-not-allowed opacity-50'
-                      : isFormValid
+                  className={`w-full text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isLogin
+                    ? email && loginPassword
                       ? 'bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
                       : 'bg-primary-300 cursor-not-allowed opacity-50'
-                  }`}
+                    : isFormValid
+                      ? 'bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800'
+                      : 'bg-primary-300 cursor-not-allowed opacity-50'
+                    }`}
                   disabled={isLogin ? !(email && loginPassword) : !isFormValid}
                   title={
                     isLogin
@@ -379,8 +382,8 @@ export const Login = () => {
                         ? ''
                         : 'Please enter your email and password'
                       : isFormValid
-                      ? ''
-                      : 'Please follow the registration requirements'
+                        ? ''
+                        : 'Please follow the registration requirements'
                   }
                 >
                   {isLogin ? 'Sign in' : 'Create an account'}

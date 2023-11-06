@@ -1,5 +1,5 @@
 import { BiBell } from "react-icons/bi";
-const NotificationBell = () => {
+export const NotificationBell = () => {
   return (
     <div>
       <button
@@ -16,4 +16,3 @@ const NotificationBell = () => {
     </div>
   );
 };
-export default NotificationBell;

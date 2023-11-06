@@ -1,5 +1,4 @@
-const ContactsPage = () => {
-  return ( <div>Navbar Contacts Page</div> );
+export const ContactsPage = () => {
+  return (<div>Navbar Contacts Page</div>);
 }
- 
-export default ContactsPage;
+

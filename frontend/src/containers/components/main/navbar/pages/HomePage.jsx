@@ -1,7 +1,4 @@
-import TopNavbar from "../../TopNavbar";
-
-const HomePage = () => {
+export const HomePage = () => {
   return <div> Navbar Home Page </div>;
 };
 
-export default HomePage;

@@ -3,7 +3,7 @@ import { ShoppingBag } from "lucide-react";
 import { PiSignOutBold } from "react-icons/pi";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
-import SearchInputMainPage from "./navbar/SearchInputMainPage.jsx";
+import { SearchInputMainPage } from "./navbar/SearchInputMainPage.jsx";
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -14,13 +14,13 @@ import {
   TbUser,
 } from "react-icons/tb";
 
-import OnboardButton from "./navbar/OnboardButton.jsx";
+import { OnboardButton } from "./navbar/OnboardButton.jsx";
 import { defaultUser, Logo } from "../../../assets/images/index.js";
-import CartBadge from "./navbar/CartBadge.jsx";
+import { CartBadge } from "./navbar/CartBadge.jsx";
 
 const auth = getAuth();
 
-const TopNavbar = () => {
+export const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -310,4 +310,3 @@ const TopNavbar = () => {
   );
 };
 
-export default TopNavbar;

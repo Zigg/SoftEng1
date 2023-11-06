@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserList } from '../../../../api';
 import { setUserListDetails } from '../../../../context/actions/userListAction';
-import DataTable from './components/DataTable';
-import Pagination from './components/Pagination';
-import SearchFilter from './components/SearchFilter';
+import { DataTable } from './components/DataTable';
+import { Pagination } from './components/Pagination';
+import { SearchFilter } from './components/SearchFilter';
 import { AddButton } from './components/AddButton';
 
 // TODO: Optimize this component, and make it more readable
 // FIXME: There are lots of data props being passed around, try to optimize data handling, props and state passing between child and parent components and have a single source of truth between parent and child components, props and states,etc
-const DashboardUsers = () => {
+export const DashboardUsers = () => {
   const dispatch = useDispatch();
   const itemsPerPage = 20;
 
@@ -47,17 +47,17 @@ const DashboardUsers = () => {
 
   const userListData = userList
     ? userList.map((user) => ({
-        'User name': user.displayName || '-',
-        Email: user.email || '-',
-        'Email Verified': user.emailVerified ? 'Yes' : 'No',
-        Disabled: user.disabled ? 'Yes' : 'No',
-        'Last Sign In': user.metadata.lastSignInTime
-          ? new Date(user.metadata.lastSignInTime).toLocaleString()
-          : '-',
-        'Creation Time': user.metadata.creationTime
-          ? new Date(user.metadata.creationTime).toLocaleDateString()
-          : '-',
-      }))
+      'User name': user.displayName || '-',
+      Email: user.email || '-',
+      'Email Verified': user.emailVerified ? 'Yes' : 'No',
+      Disabled: user.disabled ? 'Yes' : 'No',
+      'Last Sign In': user.metadata.lastSignInTime
+        ? new Date(user.metadata.lastSignInTime).toLocaleString()
+        : '-',
+      'Creation Time': user.metadata.creationTime
+        ? new Date(user.metadata.creationTime).toLocaleDateString()
+        : '-',
+    }))
     : [];
 
   const [filteredData, setFilteredData] = useState(userListData);
@@ -181,4 +181,3 @@ const DashboardUsers = () => {
   );
 };
 
-export default DashboardUsers;

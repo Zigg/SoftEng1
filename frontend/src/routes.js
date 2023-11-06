@@ -3,27 +3,42 @@
 import React from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 
-import HomePage from "./containers/components/main/navbar/pages/HomePage";
-import MenuPage from "./containers/components/main/navbar/pages/MenuPage";
-import FeaturedPage from "./containers/components/main/navbar/pages/FeaturedPage";
-import ContactsPage from "./containers/components/main/navbar/pages/ContactsPage";
-import { Login } from "./containers/Login";
-import Profile from "./containers/components/user-profile/user/pages/Profile";
-import Orders from "./containers/components/user-profile/user/pages/Orders";
-import OrderHistory from "./containers/components/user-profile/user/pages/OrderHistory";
-import Transactions from "./containers/components/user-profile/user/pages/Transactions";
-import DashboardOrders from "./containers/components/dashboard/pages/DashboardOrders";
-import DashboardUsers from "./containers/components/dashboard/pages/DashboardUsers";
-import DashboardProducts from "./containers/components/dashboard/pages/DashboardProducts";
-import DashboardRestaurants from "./containers/components/dashboard/pages/DashboardRestaurants";
-import DashboardReports from "./containers/components/dashboard/pages/DashboardReports";
-import DashboardSettings from "./containers/components/dashboard/pages/DashboardSettings";
-import DashboardAddProducts from "./containers/components/dashboard/pages/DashboardAddProducts";
-import { DashboardAddRestaurants } from "./containers/components/dashboard/pages/DashboardAddRestaurants";
-import DashboardAddUsers from "./containers/components/dashboard/pages/DashboardAddUsers";
-import MainDashboard from "./containers/components/dashboard/MainDashboard";
-import TopNavbar from "./containers/components/main/TopNavbar";
-import { Cart } from "./containers/components/user-profile/user/pages/Cart";
+// User Top Nav bar pages
+import {
+  HomePage,
+  MenuPage,
+  FeaturedPage,
+  ContactsPage,
+} from "./containers/components/main/index";
+
+import { Login } from "./containers/index";
+
+// User Profile Pages
+import {
+  Profile,
+  Orders,
+  OrderHistory,
+  Transactions,
+  Cart,
+} from "./containers/components/user-profile/index";
+
+// Dashboard Pages
+import {
+  DashboardOrders,
+  DashboardUsers,
+  DashboardProducts,
+  DashboardRestaurants,
+  DashboardReports,
+  DashboardSettings,
+  DashboardAddProducts,
+  DashboardAddRestaurants,
+  DashboardAddUsers,
+} from "./containers/components/dashboard/pages/index";
+
+// Main Pages
+import { MainDashboard } from "./containers/components/dashboard/index";
+import { TopNavbar } from "./containers/components/main/index";
+
 
 function MainPageRoutes() {
   return (

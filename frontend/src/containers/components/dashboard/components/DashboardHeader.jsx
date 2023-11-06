@@ -1,14 +1,14 @@
 // TODO: Setup the admin role
 // TODO: Add the admin user profile
 import { useLocation, useNavigate } from "react-router-dom";
-import NotificationBell from "./NotificationBell";
+import { NotificationBell } from "./NotificationBell";
 import { PiSignOutBold } from "react-icons/pi";
 import { getAuth } from "firebase/auth";
 import { toast } from "react-hot-toast";
 import { Badge } from "flowbite-react";
 import { Lock } from "lucide-react";
 
-const DashboardHeader = () => {
+export const DashboardHeader = () => {
   // Getting the current route path last sub route
   const navigate = useNavigate();
   const auth = getAuth();
@@ -65,4 +65,3 @@ const DashboardHeader = () => {
   );
 };
 
-export default DashboardHeader;

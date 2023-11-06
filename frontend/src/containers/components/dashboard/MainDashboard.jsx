@@ -13,15 +13,15 @@ import {
   LogIn,
   ShieldX,
 } from 'lucide-react';
-import DashboardHeader from './components/DashboardHeader';
+import {DashboardHeader} from './components/DashboardHeader';
 import { Route, Routes } from 'react-router-dom';
-import DashboardOrders from './pages/DashboardOrders';
-import DashboardUsers from './pages/DashboardUsers';
-import DashboardProducts from './pages/DashboardProducts';
-import DashboardRestaurants from './pages/DashboardRestaurants';
-import DashboardSettings from './pages/DashboardSettings';
-import DashboardReports from './pages/DashboardReports';
-import DashboardOverview from './pages/DashboardOverview';
+import {DashboardOrders} from './pages/DashboardOrders';
+import {DashboardUsers} from './pages/DashboardUsers';
+import {DashboardProducts} from './pages/DashboardProducts';
+import {DashboardRestaurants} from './pages/DashboardRestaurants';
+import {DashboardSettings} from './pages/DashboardSettings';
+import {DashboardReports} from './pages/DashboardReports';
+import {DashboardOverview} from './pages/DashboardOverview';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserCount } from '../../../api';
 import { setUserCount } from '../../../context/actions/userCountAction';
@@ -37,7 +37,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'flowbite-react';
 
-const MainDashboard = () => {
+export const MainDashboard = () => {
   // TODO: Add check on whether the current user is an admin or not
   // TODO: Orders, Products, Restaurants, Reports, Settings Create the functionality for each of these pages
   const firebaseAuth = getAuth(app);
@@ -329,4 +329,3 @@ const MainDashboard = () => {
   );
 };
 
-export default MainDashboard;

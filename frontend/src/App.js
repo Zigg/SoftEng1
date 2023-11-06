@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { setUserDetails, setUserNull } from "./context/actions/userActions";
-import GlobalAlert from "./containers/components/main/GlobalAlert.jsx";
-import Loader from "./components/Loader.jsx";
+import { GlobalAlert } from "./containers/components/main/GlobalAlert.jsx";
+import { Loader } from "./components/Loader.jsx";
 import AllRoutes from "./routes.js";
-import NotFoundPage from "./components/NotFoundPage.jsx";
+import { NotFoundPage } from "./components/NotFoundPage.jsx";
 
 const App = () => {
   const firebaseAuth = getAuth(app);
@@ -35,7 +35,7 @@ const App = () => {
     return () => sessionExpire();
   }, [dispatch, firebaseAuth, navigate]);
 
-  // FIXME: Properly setup the 404 route since putting subroutes might mess with it
+  // FIXME: Properly setup the 404 route since putting sub routes might mess with it
   return (
     // To make the animations pause if the page is still loading but excluding the loader from the animation pause
     <div className={isLoading ? "animation-paused" : "animation-running"}>

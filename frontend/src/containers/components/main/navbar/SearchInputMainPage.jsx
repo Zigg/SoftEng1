@@ -1,4 +1,4 @@
-export default function SearchInputMainPage() {
+export const SearchInputMainPage = () => {
   return (
     <form className="flex items-center">
       <label htmlFor="simple-search" className="sr-only">

@@ -39,7 +39,7 @@ import {
 //   console.log("Form submitted!");
 // };
 // TODO: If possible make this into a reusable component
-const DashboardAddProducts = (data, fields, labels) => {
+export const DashboardAddProducts = (data, fields, labels) => {
   const [addons, setAddons] = useState([]);
   const [currentAddon, setCurrentAddon] = useState({
     addonName: '',
@@ -580,4 +580,3 @@ const DashboardAddProducts = (data, fields, labels) => {
   );
 };
 
-export default DashboardAddProducts;
