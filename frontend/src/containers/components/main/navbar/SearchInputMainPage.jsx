@@ -1,3 +1,4 @@
+import React from 'react';
 export const SearchInputMainPage = () => {
   return (
     <form className="flex items-center">

@@ -1,5 +1,7 @@
 // TODO: Setup the admin role
 // TODO: Add the admin user profile
+import React from 'react';
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { NotificationBell } from "./NotificationBell";
 import { PiSignOutBold } from "react-icons/pi";

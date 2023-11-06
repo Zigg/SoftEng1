@@ -1,27 +1,27 @@
 // Dashboard Pages
 export { DashboardUsers } from './DashboardUsers.jsx'
-export { DashboardOrders } from './DashboardOrders'
-export { DashboardOverview } from './DashboardOverview'
-export { DashboardProducts } from './DashboardProducts'
-export { DashboardSettings } from './DashboardSettings'
-export { DashboardReports } from './DashboardReports'
-export { DashboardRestaurants } from './DashboardRestaurants'
+export { DashboardOrders } from './DashboardOrders.jsx'
+export { DashboardOverview } from './DashboardOverview.jsx'
+export { DashboardProducts } from './DashboardProducts.jsx'
+export { DashboardSettings } from './DashboardSettings.jsx'
+export { DashboardReports } from './DashboardReports.jsx'
+export { DashboardRestaurants } from './DashboardRestaurants.jsx'
 
 // Dashboard Pages Components
-export { AddButton } from './components/AddButton'
-export { DataTable } from './components/DataTable'
-export { Pagination } from './components/Pagination'
-export { SearchFilter } from './components/SearchFilter'
-export { UploadBox } from './components/UploadBox'
+export { AddButton } from './components/AddButton.jsx'
+export { DataTable } from './components/DataTable.jsx'
+export { Pagination } from './components/Pagination.jsx'
+export { SearchFilter } from './components/SearchFilter.jsx'
+export { UploadBox } from './components/UploadBox.jsx'
 
 // Add Dashboard Pages
-export { DashboardAddProducts } from './DashboardAddProducts'
-export { DashboardAddRestaurants } from './DashboardAddRestaurants'
-export { DashboardAddUsers } from './DashboardAddUsers'
+export { DashboardAddProducts } from './DashboardAddProducts.jsx'
+export { DashboardAddRestaurants } from './DashboardAddRestaurants.jsx'
+export { DashboardAddUsers } from './DashboardAddUsers.jsx'
 
 // Mock Data
-export { productsMockData } from './mock/productsMockData'
-export { restaurantsMockData } from './mock/restaurantsMockData'
+export { productsMockData } from './mock/productsMockData.js'
+export { restaurantsMockData } from './mock/restaurantsMockData.js'
 
 // Mock Data Images
 export { default as chickenBurger } from './mock/img/chickenBurger.jpg'

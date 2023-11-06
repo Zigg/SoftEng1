@@ -1,5 +1,7 @@
 import { Checkbox, Table } from "flowbite-react";
 import { Pencil, Trash2 } from "lucide-react";
+import React from 'react';
+
 
 export const DataTable = ({ header, data, activePage, itemsPerPage }) => {
   return (

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { useNavigate } from "react-router-dom";
 import { TbLogin2 } from "react-icons/tb";
 export const OnboardButton = () => {

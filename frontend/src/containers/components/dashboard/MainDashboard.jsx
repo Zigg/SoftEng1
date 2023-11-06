@@ -13,15 +13,15 @@ import {
   LogIn,
   ShieldX,
 } from 'lucide-react';
-import {DashboardHeader} from './components/DashboardHeader';
+import { DashboardHeader } from './components/DashboardHeader';
 import { Route, Routes } from 'react-router-dom';
-import {DashboardOrders} from './pages/DashboardOrders';
-import {DashboardUsers} from './pages/DashboardUsers';
-import {DashboardProducts} from './pages/DashboardProducts';
-import {DashboardRestaurants} from './pages/DashboardRestaurants';
-import {DashboardSettings} from './pages/DashboardSettings';
-import {DashboardReports} from './pages/DashboardReports';
-import {DashboardOverview} from './pages/DashboardOverview';
+import { DashboardOrders } from './pages/DashboardOrders';
+import { DashboardUsers } from './pages/DashboardUsers';
+import { DashboardProducts } from './pages/DashboardProducts';
+import { DashboardRestaurants } from './pages/DashboardRestaurants';
+import { DashboardSettings } from './pages/DashboardSettings';
+import { DashboardReports } from './pages/DashboardReports';
+import { DashboardOverview } from './pages/DashboardOverview';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserCount } from '../../../api';
 import { setUserCount } from '../../../context/actions/userCountAction';
@@ -43,6 +43,7 @@ export const MainDashboard = () => {
   const firebaseAuth = getAuth(app);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(false);
+  // TODO: set modal state to false when not testing
   const [openModal, setOpenModal] = useState(false);
 
   // Fetching user count from the backend
@@ -93,7 +94,8 @@ export const MainDashboard = () => {
 
   return (
     <div>
-      {openModal && (
+      {/* TODO: Set to true when not testing */}
+      {!openModal && (
         <>
           <Modal
             show={openModal}
@@ -169,9 +171,8 @@ export const MainDashboard = () => {
               setIsSidebarOpen(false);
             }
           }}
-          className={`fixed top-0 left-0 z-40 w-64 h-screen  transition-transform ${
-            isSidebarOpen ? 'translate-x-0 ' : '-translate-x-full'
-          } sm:translate-x-0 `}
+          className={`fixed top-0 left-0 z-40 w-64 h-screen  transition-transform ${isSidebarOpen ? 'translate-x-0 ' : '-translate-x-full'
+            } sm:translate-x-0 `}
           aria-label="Sidebar"
         >
           {/* Not using the Navlink because this must have a full reload*/}
@@ -186,11 +187,10 @@ export const MainDashboard = () => {
               <li>
                 <NavLink
                   to="/dashboard"
-                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname === '/dashboard'
-                      ? 'text-red-500 opacity-100'
-                      : ''
-                  }`}
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${window.location.pathname === '/dashboard'
+                    ? 'text-red-500 opacity-100'
+                    : ''
+                    }`}
                 >
                   <RxDashboard className="w-6 h-6" />
                   <span className="ml-3">Dashboard</span>
@@ -200,11 +200,10 @@ export const MainDashboard = () => {
               <li>
                 <NavLink
                   to="/dashboard/orders"
-                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith('/dashboard/orders')
-                      ? 'text-red-500 opacity-100'
-                      : ''
-                  }`}
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${window.location.pathname.startsWith('/dashboard/orders')
+                    ? 'text-red-500 opacity-100'
+                    : ''
+                    }`}
                 >
                   <PackageSearch className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">Orders</span>
@@ -218,11 +217,10 @@ export const MainDashboard = () => {
               <li>
                 <NavLink
                   to="/dashboard/users"
-                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith('/dashboard/users')
-                      ? 'text-red-500 opacity-100'
-                      : ''
-                  }`}
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${window.location.pathname.startsWith('/dashboard/users')
+                    ? 'text-red-500 opacity-100'
+                    : ''
+                    }`}
                 >
                   <Users className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">Users</span>
@@ -236,11 +234,10 @@ export const MainDashboard = () => {
               <li>
                 <NavLink
                   to="/dashboard/products"
-                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith('/dashboard/products')
-                      ? 'text-red-500 opacity-100'
-                      : ''
-                  }`}
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${window.location.pathname.startsWith('/dashboard/products')
+                    ? 'text-red-500 opacity-100'
+                    : ''
+                    }`}
                 >
                   <ShoppingBag className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">
@@ -254,13 +251,12 @@ export const MainDashboard = () => {
               <li>
                 <NavLink
                   to="/dashboard/restaurants"
-                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith(
-                      '/dashboard/restaurants',
-                    )
-                      ? 'text-red-500 opacity-100'
-                      : ''
-                  }`}
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${window.location.pathname.startsWith(
+                    '/dashboard/restaurants',
+                  )
+                    ? 'text-red-500 opacity-100'
+                    : ''
+                    }`}
                 >
                   <Store className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">
@@ -274,11 +270,10 @@ export const MainDashboard = () => {
               <li>
                 <NavLink
                   to="/dashboard/reports"
-                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith('/dashboard/reports')
-                      ? 'text-red-500 opacity-100'
-                      : ''
-                  }`}
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${window.location.pathname.startsWith('/dashboard/reports')
+                    ? 'text-red-500 opacity-100'
+                    : ''
+                    }`}
                 >
                   <AreaChart className="w-6 h-6  " />
                   <span className="flex-1 ml-3 whitespace-nowrap">Reports</span>
@@ -287,11 +282,10 @@ export const MainDashboard = () => {
               <li>
                 <NavLink
                   to="/dashboard/settings"
-                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${
-                    window.location.pathname.startsWith('/dashboard/settings')
-                      ? 'text-red-500 opacity-100'
-                      : ''
-                  }`}
+                  className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700 group opacity-80 hover:opacity-100 ${window.location.pathname.startsWith('/dashboard/settings')
+                    ? 'text-red-500 opacity-100'
+                    : ''
+                    }`}
                 >
                   <IoSettingsOutline className="w-6 h-6  " />
                   <span className="flex-1 ml-3 whitespace-nowrap">

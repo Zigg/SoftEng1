@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import './index.css'
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import rootReducer from "./context/reducers";
@@ -17,9 +17,9 @@ const rootStore = createStore(
 root.render(
   <React.StrictMode>
     <Router>
-    <Provider store={rootStore}>
-    <App />
-    </Provider>
+      <Provider store={rootStore}>
+        <App />
+      </Provider>
     </Router>
   </React.StrictMode>
 );

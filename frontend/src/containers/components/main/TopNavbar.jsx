@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+
 import { ShoppingBag } from "lucide-react";
 import { PiSignOutBold } from "react-icons/pi";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
-import { SearchInputMainPage } from "./navbar/SearchInputMainPage.jsx";
+import { SearchInputMainPage } from '../main/navbar/SearchInputMainPage.jsx';
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";

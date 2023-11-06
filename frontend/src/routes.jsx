@@ -9,9 +9,9 @@ import {
   MenuPage,
   FeaturedPage,
   ContactsPage,
-} from "./containers/components/main/index";
+} from "./containers/components/main/index.js";
 
-import { Login } from "./containers/index";
+import { Login } from "./containers/index.js";
 
 // User Profile Pages
 import {
@@ -20,7 +20,7 @@ import {
   OrderHistory,
   Transactions,
   Cart,
-} from "./containers/components/user-profile/index";
+} from "./containers/components/user-profile/index.js";
 
 // Dashboard Pages
 import {
@@ -33,11 +33,11 @@ import {
   DashboardAddProducts,
   DashboardAddRestaurants,
   DashboardAddUsers,
-} from "./containers/components/dashboard/pages/index";
+} from "./containers/components/dashboard/pages/index.js";
 
 // Main Pages
-import { MainDashboard } from "./containers/components/dashboard/index";
-import { TopNavbar } from "./containers/components/main/index";
+import { MainDashboard } from "./containers/components/dashboard/index.js";
+import { TopNavbar } from "./containers/components/main/index.js";
 
 
 function MainPageRoutes() {

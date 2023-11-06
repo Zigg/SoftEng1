@@ -1,3 +1,3 @@
 // Main App Pages
-export { Main } from './Main'
-export { Login } from './Login'
+export { Main } from './Main.jsx'
+export { Login } from './Login.jsx'

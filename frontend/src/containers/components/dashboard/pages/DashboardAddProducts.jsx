@@ -34,6 +34,7 @@ import {
 // TODO: Add form item validation
 // TODO: Add functionalities for all
 // TODO: Add helper text that states the ingredients, sizes, and addons multi input values can be added by pressing "Enter" key
+// TODO: Fix placement 
 // const onSubmit = (e) => {
 //   e.preventDefault();
 //   console.log("Form submitted!");

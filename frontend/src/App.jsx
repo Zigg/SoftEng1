@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
+import './index.css'
 import { Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { app } from "./config/firebase.config.js";
 import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { setUserDetails, setUserNull } from "./context/actions/userActions";
+import { setUserDetails, setUserNull } from "./context/actions/userActions.js";
 import { GlobalAlert } from "./containers/components/main/GlobalAlert.jsx";
 import { Loader } from "./components/Loader.jsx";
-import AllRoutes from "./routes.js";
-import { NotFoundPage } from "./components/NotFoundPage.jsx";
+import AllRoutes from "./routes.jsx";
+// import { NotFoundPage } from "./components/NotFoundPage.jsx";
 
 const App = () => {
   const firebaseAuth = getAuth(app);

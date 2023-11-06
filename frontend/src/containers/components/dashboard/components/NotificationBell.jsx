@@ -1,4 +1,6 @@
 import { BiBell } from "react-icons/bi";
+import React from 'react';
+
 export const NotificationBell = () => {
   return (
     <div>

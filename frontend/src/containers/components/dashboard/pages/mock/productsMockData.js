@@ -1,6 +1,6 @@
 export const productsMockData = [
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Chicken Burger",
     category: "Fast Food",
     price: 5.99,
@@ -11,7 +11,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Veggie Pizza",
     category: "Italian",
     price: 8.99,
@@ -28,7 +28,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Spaghetti Carbonara",
     category: "Italian",
     price: 9.99,
@@ -45,7 +45,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Sushi Platter",
     category: "Japanese",
     price: 12.99,
@@ -56,7 +56,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Steak Dinner",
     category: "American",
     price: 15.99,
@@ -67,7 +67,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Tacos",
     category: "Mexican",
     price: 7.99,
@@ -78,7 +78,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Ice Cream Sundae",
     category: "Dessert",
     price: 4.99,
@@ -94,7 +94,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Pineapple Pizza",
     category: "Italian",
     price: 10.99,
@@ -105,7 +105,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Fried Chicken",
     category: "Fast Food",
     price: 6.99,
@@ -116,7 +116,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Lasagna",
     category: "Italian",
     price: 11.99,
@@ -132,7 +132,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Pepperoni Pizza",
     category: "Pizza",
     price: 8.99,
@@ -148,7 +148,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Chocolate Sundae",
     category: "Dessert",
     price: 4.49,
@@ -164,7 +164,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Spaghetti Bolognese",
     category: "Italian",
     price: 12.99,
@@ -180,7 +180,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Sushi Roll Combo",
     category: "Japanese",
     price: 14.99,
@@ -191,7 +191,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Fruit Salad",
     category: "Salad",
     price: 6.99,
@@ -202,7 +202,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Ribeye Steak",
     category: "Steakhouse",
     price: 19.99,
@@ -218,7 +218,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Cappuccino",
     category: "Beverage",
     price: 3.49,
@@ -229,7 +229,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Vegetarian Burrito",
     category: "Mexican",
     price: 7.99,
@@ -240,7 +240,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Fresh Vegetable Juice",
     category: "Beverage",
     price: 4.99,
@@ -251,7 +251,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Club Sandwich",
     category: "Sandwich",
     price: 9.49,
@@ -262,7 +262,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Beef Taco",
     category: "Mexican",
     price: 2.99,
@@ -273,7 +273,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Blueberry Pancakes",
     category: "Breakfast",
     price: 6.49,
@@ -284,7 +284,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Lobster Dinner",
     category: "Seafood",
     price: 24.99,
@@ -295,7 +295,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Sweet Potato Fries",
     category: "Appetizer",
     price: 3.99,
@@ -306,7 +306,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Fresh Lemonade",
     category: "Beverage",
     price: 2.49,
@@ -317,7 +317,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Beef Burrito",
     category: "Mexican",
     price: 8.99,
@@ -328,7 +328,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Chicken Wings",
     category: "Appetizer",
     price: 7.49,
@@ -339,7 +339,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Hot Dog",
     category: "Fast Food",
     price: 3.49,
@@ -350,7 +350,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Salmon Sashimi",
     category: "Japanese",
     price: 11.99,
@@ -361,7 +361,7 @@ export const productsMockData = [
     isPublished: "Available",
   },
   {
-    productImage: require("./img/chickenBurger.jpg"),
+    productImage: "Image",
     productName: "Vegetarian Pasta",
     category: "Italian",
     price: 10.49,
