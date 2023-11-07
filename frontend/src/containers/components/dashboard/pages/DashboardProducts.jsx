@@ -1,17 +1,15 @@
-import { Link } from 'react-router-dom';
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { productsMockData } from './mock/productsMockData';
-import SearchFilter from './components/SearchFilter';
-import DataTable from './components/DataTable';
-import Pagination from './components/Pagination';
+import { SearchFilter } from './components/SearchFilter';
+import { DataTable } from './components/DataTable';
+import { Pagination } from './components/Pagination';
 import { AddButton } from './components/AddButton';
 import { ImageOff } from 'lucide-react';
 
 // FIXME: THIS IS JUST MOCK DATA, TABLE HEADERS ARE NOT FINAL
 
-const DashboardProducts = () => {
+export const DashboardProducts = () => {
   const dispatch = useDispatch();
   const itemsPerPage = 20;
 
@@ -50,25 +48,25 @@ const DashboardProducts = () => {
 
   const productsMockDataList = productsMockData
     ? productsMockData.map((product) => ({
-        'Product Image': (
-          <div className="p-7 items-center justify-center flex">
-            <ImageOff className="w-5 h-5" />
-          </div>
-        ),
-        'Product Name': product.productName || '-',
-        Category: product.category || '-',
-        Price: product.price || '-',
-        Ingredients: product.ingredients?.join(', ') || '-',
-        Sizes: product.sizes?.join(', ') || '-',
-        Addons: product.addons?.join(', ') || (
-          <span className="text-red-600">No Addons</span>
-        ),
-        'Addon Price': product.addonPrices?.join(', ') || (
-          <span className="text-red-600">No Addons</span>
-        ),
-        'Date Added': product.dateAdded || '-',
-        Published: product.isPublished || '-',
-      }))
+      'Product Image': (
+        <div className="p-7 items-center justify-center flex">
+          <ImageOff className="w-5 h-5" />
+        </div>
+      ),
+      'Product Name': product.productName || '-',
+      Category: product.category || '-',
+      Price: product.price || '-',
+      Ingredients: product.ingredients?.join(', ') || '-',
+      Sizes: product.sizes?.join(', ') || '-',
+      Addons: product.addons?.join(', ') || (
+        <span className="text-red-600">No Addons</span>
+      ),
+      'Addon Price': product.addonPrices?.join(', ') || (
+        <span className="text-red-600">No Addons</span>
+      ),
+      'Date Added': product.dateAdded || '-',
+      Published: product.isPublished || '-',
+    }))
     : [];
 
   const [filteredData, setFilteredData] = useState(productsMockDataList);
@@ -194,4 +192,3 @@ const DashboardProducts = () => {
     </div>
   );
 };
-export default DashboardProducts;

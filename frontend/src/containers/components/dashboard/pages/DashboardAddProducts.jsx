@@ -34,12 +34,13 @@ import {
 // TODO: Add form item validation
 // TODO: Add functionalities for all
 // TODO: Add helper text that states the ingredients, sizes, and addons multi input values can be added by pressing "Enter" key
+// TODO: Fix placement 
 // const onSubmit = (e) => {
 //   e.preventDefault();
 //   console.log("Form submitted!");
 // };
 // TODO: If possible make this into a reusable component
-const DashboardAddProducts = (data, fields, labels) => {
+export const DashboardAddProducts = (data, fields, labels) => {
   const [addons, setAddons] = useState([]);
   const [currentAddon, setCurrentAddon] = useState({
     addonName: '',
@@ -580,4 +581,3 @@ const DashboardAddProducts = (data, fields, labels) => {
   );
 };
 
-export default DashboardAddProducts;

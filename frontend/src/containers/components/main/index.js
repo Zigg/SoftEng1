@@ -1,4 +1,13 @@
-export {default as TopNavbar} from './components/main/TopNavbar'
-export {default as Alert} from './components/main/navbar/GlobalAlert'
-export {default as SearchInput} from './components/main/navbar/SearchInput'
-export {default as CartBadge} from './components/main/navbar/CartBadge'
+// Main Page Components
+export { TopNavbar} from './TopNavbar.jsx'
+export { GlobalAlert} from './GlobalAlert.jsx'
+export { SearchInputMainPage} from './navbar/SearchInputMainPage.jsx'
+export { CartBadge} from './navbar/CartBadge.jsx'
+export { OnboardButton} from './navbar/OnboardButton.jsx'
+
+// Main Page Pages
+export { ContactsPage} from './navbar/pages/ContactsPage.jsx'
+export { FeaturedPage} from './navbar/pages/FeaturedPage.jsx'
+export { HomePage} from './navbar/pages/HomePage.jsx'
+export { MenuPage} from './navbar/pages/MenuPage.jsx'
+

@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-const Pagination = ({
+export const Pagination = ({
   totalItems,
   activePage,
   onPageChange,
@@ -83,11 +83,10 @@ const Pagination = ({
                 handlePageChange(activePage - 1);
               }
             }}
-            className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-700 bg-white border border-gray-300 rounded-l-lg ${
-              activePage === 1
-                ? "bg-blue-600 dark:text-white"
-                : "hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white"
-            }
+            className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-700 bg-white border border-gray-300 rounded-l-lg ${activePage === 1
+              ? "bg-blue-600 dark:text-white"
+              : "hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white"
+              }
           `}
           >
             <span className="sr-only">Previous</span>
@@ -113,11 +112,10 @@ const Pagination = ({
             <NavLink
               to={`#page-${pageNumber}`}
               onClick={() => handlePageChange(pageNumber)}
-              className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 ${
-                pageNumber === activePage
-                  ? "text-rose-700 font-semibold dark:text-white"
-                  : "hover:text-gray-700 hover:bg-blue-300 dark:hover:bg-blue-700 dark:hover:text-white"
-              }`}
+              className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 ${pageNumber === activePage
+                ? "text-rose-700 font-semibold dark:text-white"
+                : "hover:text-gray-700 hover:bg-blue-300 dark:hover:bg-blue-700 dark:hover:text-white"
+                }`}
             >
               {pageNumber}
             </NavLink>
@@ -130,11 +128,10 @@ const Pagination = ({
                 handlePageChange(activePage + 1);
               }
             }}
-            className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 rounded-r-lg bg-white border border-gray-300 ${
-              activePage === totalPages
-                ? "dark:bg-blue-800 dark:border-gray-700 dark:text-gray-400"
-                : "hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-blue-700 dark:hover:text-white"
-            }
+            className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 rounded-r-lg bg-white border border-gray-300 ${activePage === totalPages
+              ? "dark:bg-blue-800 dark:border-gray-700 dark:text-gray-400"
+              : "hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-blue-700 dark:hover:text-white"
+              }
           `}
           >
             <span className="sr-only">Next</span>
@@ -159,4 +156,3 @@ const Pagination = ({
     </div>
   );
 };
-export default Pagination;

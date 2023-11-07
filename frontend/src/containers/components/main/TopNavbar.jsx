@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+
 import { ShoppingBag } from "lucide-react";
 import { PiSignOutBold } from "react-icons/pi";
 import { getAuth } from "firebase/auth";
 import { useNavigate } from "react-router";
-import SearchInputMainPage from "./navbar/SearchInputMainPage.jsx";
+import { SearchInputMainPage } from '../main/navbar/SearchInputMainPage.jsx';
 import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -14,17 +15,16 @@ import {
   TbUser,
 } from "react-icons/tb";
 
-import OnboardButton from "./navbar/OnboardButton.jsx";
+import { OnboardButton } from "./navbar/OnboardButton.jsx";
 import { defaultUser, Logo } from "../../../assets/images/index.js";
-import CartBadge from "./navbar/CartBadge.jsx";
+import { CartBadge } from "./navbar/CartBadge.jsx";
 
 const auth = getAuth();
 
-const TopNavbar = () => {
+export const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
-
   const userEmail = useSelector((state) =>
     state.user && state.user.email ? state.user.email : ""
   );
@@ -70,16 +70,16 @@ const TopNavbar = () => {
         <NavLink to="/">
           <img
             src={Logo}
-            className="h-12 w-12 lg:z-20 lg:mt-3 relative animate-slide-in-from-top"
+            className="relative w-12 h-12 lg:z-20 lg:mt-3 animate-slide-in-from-top"
             alt="Logo"
           />
         </NavLink>
-        <span className="self-center text-2xl px-2 font-semibold whitespace-nowrap dark:text-white sm:block xs:block  lg:z-20 lg:mt-3 animate-slide-in-from-top">
+        <span className="self-center px-2 text-2xl font-semibold whitespace-nowrap dark:text-white sm:block xs:block lg:z-20 lg:mt-3 animate-slide-in-from-top">
           Ordering System
         </span>
       </div>
-      <nav className="bg-white dark:bg-gray-900 sticky lg:-mt-10 z-10">
-        <div className="flex items-center justify-between mx-auto pb-4 pl-4 pr-4">
+      <nav className="sticky z-10 bg-white dark:bg-gray-900 lg:-mt-10">
+        <div className="flex items-center justify-between pb-4 pl-4 pr-4 mx-auto">
           <div className="flex items-center">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -103,8 +103,8 @@ const TopNavbar = () => {
             </button>
 
             {isSidebarOpen && (
-              <div className="animate-slide-in-from-left md:relative md:flex md:space-x-8 md:mt-0 md:border-0 pl-8 pr-5 mt-2">
-                <ul className="flex flex-col font-medium md:p-0 rounded-lg md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4">
+              <div className="pl-8 pr-5 mt-2 animate-slide-in-from-left md:relative md:flex md:space-x-8 md:mt-0 md:border-0">
+                <ul className="flex flex-col font-medium rounded-lg md:p-0 md:flex-row md:dark:bg-gray-900 hover:text-blue-600 dark:border-gray-700 gap-x-4">
                   <li>
                     <NavLink
                       to="/"
@@ -158,66 +158,66 @@ const TopNavbar = () => {
             )}
           </div>
 
-          <div className="flex items-center sticky">
+          <div className="sticky flex items-center">
             <div className="flex md:items-center md:justify-center md:mx-auto">
               <SearchInputMainPage />
             </div>
-            {user && (
-              <div className="ml-4">
-                <button
-                  type="button"
-                  className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-rose-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
-                  onClick={() => navigate("/cart")}
-                >
-                  <span className="font-semibold">
-                    <ShoppingBag />
-                  </span>
-                  <div className="absolute top-0 right-0">
-                    <CartBadge />
-                  </div>
-                </button>
-              </div>
-            )}
-
-            {isMenuOpen && (
-              <div className="fixed inset-0 bg-black opacity-50"></div>
-            )}
-            {user && (
-              <button
-                type="button"
-                onClick={toggleMenu}
-                className="relative ml-4 flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 hover:ring-4  focus:ring-rose-400 dark:focus:ring-rose-700 z-50 flex-shrink-0"
-                id="user-menu-button"
-                aria-expanded={isMenuOpen}
-                data-dropdown-toggle="user-dropdown"
-                data-dropdown-placement="bottom"
-              >
-                <span className="sr-only">Open user menu</span>
-                <img
-                  className="w-8 h-8 rounded-full object-center flex-shrink-0"
-                  src={defaultUser}
-                  alt="User Profile"
-                />{" "}
-              </button>
-            )}
             {!user && (
               <div className="ml-4">
                 <OnboardButton />
               </div>
             )}
             {isMenuOpen && (
+              <div className="fixed inset-0 bg-black opacity-50"></div>
+            )}
+            {user && (
+              <>
+                <div className="ml-4">
+                  <button
+                    type="button"
+                    className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-rose-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
+                    onClick={() => navigate("/cart")}
+                  >
+                    <span className="font-semibold">
+                      <ShoppingBag />
+                    </span>
+                    <div className="absolute top-0 right-0">
+                      <CartBadge />
+                    </div>
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={toggleMenu}
+                  className="relative z-50 flex flex-shrink-0 ml-4 mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 hover:ring-4 focus:ring-rose-400 dark:focus:ring-rose-700"
+                  id="user-menu-button"
+                  aria-expanded={isMenuOpen}
+                  data-dropdown-toggle="user-dropdown"
+                  data-dropdown-placement="bottom"
+                >
+                  <span className="sr-only">Open user menu</span>
+                  <img
+                    className="flex-shrink-0 object-center w-8 h-8 rounded-full"
+                    src={defaultUser}
+                    alt="User Profile"
+                  />{" "}
+                </button>
+              </>
+            )}
+            {isMenuOpen && (
               <div
                 onMouseLeave={() => {
                   setIsMenuOpen(false);
                 }}
-                className="absolute ml-64 mt-12 translate-y-1/2 xs-ml-52 xs-mt-12 sm:ml-60 sm:mt-12 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 border-t-2 border-rose-500 dark:border-gray-600"
+                className="absolute mt-12 text-base list-none translate-x-52 translate-y-1/2 bg-white border-t-2 divide-y divide-gray-100 rounded-lg shadow xs:mt-12 sm:mt-12 dark:bg-gray-700 dark:divide-gray-600 border-rose-500 dark:border-gray-600"
                 id="user-dropdown"
               >
                 {user && (
                   <div>
                     <div className="px-4 py-3">
                       <span
-                        className="block text-sm text-gray-900 dark:text-white font-medium"
+                        className="block text-sm font-medium text-gray-900 dark:text-white"
                         title={userName}
                       >
                         {userName && userName.length > 12
@@ -225,14 +225,14 @@ const TopNavbar = () => {
                           : userName}
                       </span>
                       <span
-                        className="block text-sm text-gray-500 truncate dark:text-gray-400 mb-1 font-medium"
+                        className="block mb-1 text-sm font-medium text-gray-500 truncate dark:text-gray-400"
                         title={userEmail}
                       >
                         {userEmail && userEmail.length > 12
                           ? `${userEmail.substring(0, 12)}...`
                           : userEmail}
                       </span>
-                      <span className="block text-sm text-black-500 truncate dark:text-white font-medium">
+                      <span className="block text-sm font-medium truncate text-black-500 dark:text-white">
                         123.32
                       </span>
                     </div>
@@ -241,7 +241,7 @@ const TopNavbar = () => {
                       <li>
                         <NavLink
                           to="profile"
-                          className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                          className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                         >
                           <TbUser className="mr-2" />
                           Profile
@@ -250,7 +250,7 @@ const TopNavbar = () => {
                       <li>
                         <NavLink
                           to="orders"
-                          className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                          className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                         >
                           <TbPackage className="mr-2" />
                           Orders
@@ -259,7 +259,7 @@ const TopNavbar = () => {
                       <li>
                         <NavLink
                           to="order-history"
-                          className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                          className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                         >
                           <TbHistory className="mr-2" />
                           History
@@ -269,7 +269,7 @@ const TopNavbar = () => {
                       <li>
                         <NavLink
                           to="transactions"
-                          className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                          className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                         >
                           <TbArrowsTransferDown className="mr-2" />
                           Transactions
@@ -292,7 +292,7 @@ const TopNavbar = () => {
                                 toast.error("Something went wrong");
                               });
                           }}
-                          className="flex items-center px-4 py-2 text-sm text-black font-medium hover:bg-rose-500 dark:hover:bg-rose-700 dark:text-gray-200 dark:hover:text-white focus:outline-none w-full"
+                          className="flex items-center w-full px-4 py-2 text-sm font-medium text-black hover:bg-rose-500 dark:hover:bg-rose-700 dark:text-gray-200 dark:hover:text-white focus:outline-none"
                         >
                           <PiSignOutBold className="mr-2" />
                           Sign out
@@ -310,4 +310,3 @@ const TopNavbar = () => {
   );
 };
 
-export default TopNavbar;

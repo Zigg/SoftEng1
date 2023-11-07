@@ -1,4 +1,5 @@
-export default function SearchInputMainPage() {
+import React from 'react';
+export const SearchInputMainPage = () => {
   return (
     <form className="flex items-center">
       <label htmlFor="simple-search" className="sr-only">

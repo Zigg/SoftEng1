@@ -1,5 +1,6 @@
-const FeaturedPage = () => {
-  return ( <div>Navbar Featured Page</div> );
+import React from 'react';
+
+export const FeaturedPage = () => {
+  return (<div>Navbar Featured Page</div>);
 }
- 
-export default FeaturedPage;
+

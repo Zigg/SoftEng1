@@ -1,4 +1,6 @@
-const SearchFilter = ({ searchQuery, onSearch }) => {
+import React from 'react';
+
+export const SearchFilter = ({ searchQuery, onSearch }) => {
   return (
     <div className="relative overflow-x-auto sm:rounded-lg px-4">
       <div className="pb-4 bg-white dark:bg-gray-900">
@@ -37,4 +39,3 @@ const SearchFilter = ({ searchQuery, onSearch }) => {
   );
 };
 
-export default SearchFilter;

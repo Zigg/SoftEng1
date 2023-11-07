@@ -1,5 +1,6 @@
-const DashboardReports = () => {
+import React from 'react';
+
+export const DashboardReports = () => {
   return <div>Dashboard Reports Page</div>;
 };
 
-export default DashboardReports;

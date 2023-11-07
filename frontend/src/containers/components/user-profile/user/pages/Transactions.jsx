@@ -1,5 +1,6 @@
-const Transactions = () => {
-  return ( <div>Transactions User Profile</div> );
+import React from 'react';
+
+export const Transactions = () => {
+  return (<div>Transactions User Profile</div>);
 }
- 
-export default Transactions;
+

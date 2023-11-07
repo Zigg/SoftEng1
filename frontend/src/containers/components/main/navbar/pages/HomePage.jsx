@@ -1,7 +1,5 @@
-import TopNavbar from "../../TopNavbar";
-
-const HomePage = () => {
+import React from 'react';
+export const HomePage = () => {
   return <div> Navbar Home Page </div>;
 };
 
-export default HomePage;

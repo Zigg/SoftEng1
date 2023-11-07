@@ -1,5 +1,6 @@
-const OrderHistory = () => {
-  return ( <div>Order History User Profile</div> );
+import React from 'react';
+
+export const OrderHistory = () => {
+  return (<div>Order History User Profile</div>);
 }
- 
-export default OrderHistory;
+

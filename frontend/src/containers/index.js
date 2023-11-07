@@ -1,2 +1,3 @@
-export {default as Main} from './Main'
-export {default as Login} from './Login'
+// Main App Pages
+export { Main } from './Main.jsx'
+export { Login } from './Login.jsx'

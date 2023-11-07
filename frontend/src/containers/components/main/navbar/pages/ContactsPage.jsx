@@ -1,5 +1,6 @@
-const ContactsPage = () => {
-  return ( <div>Navbar Contacts Page</div> );
+import React from 'react';
+
+export const ContactsPage = () => {
+  return (<div>Navbar Contacts Page</div>);
 }
- 
-export default ContactsPage;
+

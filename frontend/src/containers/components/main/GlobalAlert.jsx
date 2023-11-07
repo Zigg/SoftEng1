@@ -2,8 +2,9 @@ import { Toast } from "flowbite-react";
 import { AiOutlineInfoCircle, AiOutlineWarning } from "react-icons/ai";
 import { MdOutlineDangerous } from "react-icons/md";
 import { BsCheck2Square, BsCartCheck, BsCartX } from "react-icons/bs";
-import { useState, useEffect, useRef } from "react";
-export default function GlobalAlert({ type, message }) {
+import React, { useState, useEffect, useRef } from "react";
+
+export function GlobalAlert({ type, message }) {
   // TODO: Try to limit toast popups to 1 do not allow toast notifications to stack
   // TODO: These are placeholders for now, Add or remove some of these later on
 

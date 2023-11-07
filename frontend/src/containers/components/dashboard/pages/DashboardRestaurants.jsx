@@ -1,17 +1,15 @@
-import { Link } from "react-router-dom";
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { restaurantsMockData } from "./mock/restaurantsMockData";
-import SearchFilter from "./components/SearchFilter";
-import DataTable from "./components/DataTable";
-import Pagination from "./components/Pagination";
+import { SearchFilter } from "./components/SearchFilter";
+import { DataTable } from "./components/DataTable";
+import { Pagination } from "./components/Pagination";
 import { AddButton } from "./components/AddButton";
 import { ImageOff } from "lucide-react";
 
 // FIXME: THIS IS JUST MOCK DATA, TABLE HEADERS ARE NOT FINAL
 
-const DashboardRestaurants = () => {
+export const DashboardRestaurants = () => {
   const dispatch = useDispatch();
   const itemsPerPage = 20;
 
@@ -47,18 +45,18 @@ const DashboardRestaurants = () => {
 
   const restaurantsMockDataList = restaurantsMockData
     ? restaurantsMockData.map((restaurant) => ({
-        "Restaurant Logo": (
-          <div className="p-7 items-center justify-center flex">
-            <ImageOff className="w-5 h-5" />
-          </div>
-        ),
-        "Restaurant Name": restaurant.restaurantName || "-",
-        Cuisine: restaurant.cuisine || "-",
-        Location: restaurant.location || "-",
-        "Contact Number": restaurant.contactNumber || "-",
-        "Operating Hours": restaurant.operatingHours || "-",
-        "Date Added": restaurant.dataAdded || "-",
-      }))
+      "Restaurant Logo": (
+        <div className="p-7 items-center justify-center flex">
+          <ImageOff className="w-5 h-5" />
+        </div>
+      ),
+      "Restaurant Name": restaurant.restaurantName || "-",
+      Cuisine: restaurant.cuisine || "-",
+      Location: restaurant.location || "-",
+      "Contact Number": restaurant.contactNumber || "-",
+      "Operating Hours": restaurant.operatingHours || "-",
+      "Date Added": restaurant.dataAdded || "-",
+    }))
     : [];
 
   const [filteredData, setFilteredData] = useState(restaurantsMockDataList);
@@ -184,4 +182,3 @@ const DashboardRestaurants = () => {
     </div>
   );
 };
-export default DashboardRestaurants;

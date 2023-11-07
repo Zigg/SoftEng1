@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Loader = () => {
+export const Loader = () => {
   const [loadingText, setLoadingText] = useState("Loading");
   const [showLoader, setShowLoader] = useState(true);
 
@@ -69,4 +69,3 @@ const Loader = () => {
   );
 };
 
-export default Loader;
