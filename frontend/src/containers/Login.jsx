@@ -13,12 +13,17 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { NavLink } from 'react-router-dom';
+import { setRoleType } from '../context/actions/userRoleAction';
+
+
 export const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [username, setUsername] = useState('');
+  // ADMIN ROLE
+  const [role, setRole] = useState('admin');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
   const [showRegisterPasswordRequirements, setRegisterPasswordRequirements] =
@@ -27,6 +32,7 @@ export const Login = () => {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
 
+  // TODO: Default should be user
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const firebaseAuth = getAuth(app);
@@ -78,12 +84,16 @@ export const Login = () => {
         email,
         registerPassword,
       );
-      await updateProfile(userCred.user, { displayName: username });
       const userDetails = { ...userCred.user, displayName: username };
-      // await admin.auth().setCustomUserClaims(userId, { role: defaultRole });
+      // const userDetails = { ...userCred.user, displayName: username, roleType: role };
+      await updateProfile(userCred.user, {
+        displayName: username,
+        // roleType: role,
+      });
 
       dispatch(setUserDetails(userDetails));
       dispatch(setUserName(username));
+      dispatch(setRoleType(role));
 
       // TODO: After confirming the email the user should be redirected to the login page
       // TODO: Create a verification page for the user to verify their email | maybe also setup a resend email verification?
@@ -128,7 +138,7 @@ export const Login = () => {
 
       const userDetails = userCred.user;
       dispatch(setUserDetails(userDetails));
-
+      dispatch(setRoleType(role));
       if (userDetails.emailVerified) {
         const searchParams = new URLSearchParams(window.location.search);
         const redirectTo = searchParams.get('redirectTo');

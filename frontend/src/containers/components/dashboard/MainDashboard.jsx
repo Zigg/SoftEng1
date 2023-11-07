@@ -32,39 +32,67 @@ import { getAuth } from 'firebase/auth';
 import { app } from '../../../config/firebase.config';
 import {
   setUserDetails,
-  setUserNull,
+
 } from '../../../context/actions/userActions';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'flowbite-react';
-
+import { setRoleType } from '../../../context/actions/userRoleAction';
 export const MainDashboard = () => {
   // TODO: Add check on whether the current user is an admin or not
   // TODO: Orders, Products, Restaurants, Reports, Settings Create the functionality for each of these pages
   const firebaseAuth = getAuth(app);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
   // TODO: set modal state to false when not testing
   const [openModal, setOpenModal] = useState(false);
+
+  const roleType = useSelector((state) => state.roleType);
+
 
   // Fetching user count from the backend
   const dispatch = useDispatch();
   const userCount = useSelector((state) => state.userCount);
 
+  console.log('roleType:', roleType);
+  const [count, setCount] = useState(5);
+  const user = useSelector((state) => state.user);
+
+  // dispatch(setRoleType(role));
+
   useEffect(() => {
-    setIsLoading(true);
-    const sessionExpire = firebaseAuth.onAuthStateChanged((user) => {
-      if (user) {
-        dispatch(setUserDetails(user));
+    const checkUserRole = async () => {
+      setIsLoading(true);
+
+      if (user && roleType === 'admin') {
+        setOpenModal(false);
       } else {
-        setIsLoading(true);
-        dispatch(setUserNull());
         setOpenModal(true);
       }
-      setIsLoading(false);
-    });
 
-    return () => sessionExpire();
-  }, [dispatch, firebaseAuth]);
+      console.log('openModal:', openModal);
+
+      setIsLoading(false);
+    };
+
+    checkUserRole();
+  }, [user, roleType]);
+
+
+
+  useEffect(() => {
+    if (count > 0) {
+      const timerId = setInterval(() => {
+        setCount((prevCount) => prevCount - 1);
+      }, 1000);
+
+      return () => clearInterval(timerId);
+    } else if (count === 0) {
+      if (openModal) {
+        navigate('/', { replace: true });
+      }
+    }
+  }, [count, navigate, openModal]);
+
 
   // Properly gets the count of users now
   useEffect(() => {
@@ -95,54 +123,58 @@ export const MainDashboard = () => {
   return (
     <div>
       {/* TODO: Set to true when not testing */}
-      {!openModal && (
-        <>
-          <Modal
-            show={openModal}
-            className="backdrop-blur backdrop-filter-blur-sm"
-          >
-            <Modal.Body>
-              <div className="space-y-6">
-                <ShieldX className="w-24 h-24 mx-auto text-red-600" />
-                <h1 className="flex items-center justify-center font-semibold text-red-600 text-3xl">
-                  Unauthorized Access
-                </h1>
-                <p className="flex items-center justify-center font-semibold">
-                  You must be logged in to access the dashboard
-                </p>
-              </div>
-            </Modal.Body>
-            <div className="flex flex-col items-center justify-center w-full">
-              <Modal.Footer>
-                <Button
-                  onClick={() => {
-                    setOpenModal(false);
-                    const currentRoute = window.location.pathname;
-                    navigate(`/login?redirectTo=${currentRoute}`, {
-                      replace: true,
-                    });
-                  }}
-                >
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Login
-                </Button>
 
-                <Button
-                  color="gray"
-                  className="hover:bg-blue-400"
-                  onClick={() => {
-                    setOpenModal(false);
-                    navigate('/', { replace: true });
-                  }}
-                >
-                  <ArrowBigLeft className="w-6 h-6" />
-                  Home
-                </Button>
-              </Modal.Footer>
+      {(!user || (roleType !== 'admin' && roleType !== null)) && ( // Check user role
+
+        <Modal show={openModal} className="backdrop-blur backdrop-filter-blur-sm">
+          <Modal.Body>
+            <div className="space-y-6">
+              <ShieldX className="w-24 h-24 mx-auto text-red-600" />
+              <h1 className="flex items-center justify-center font-semibold text-red-600 text-3xl">
+                Unauthorized Access
+              </h1>
+              <p className="flex items-center justify-center font-semibold">
+                You must be an ADMIN to access the dashboard
+              </p>
+              <div className='flex flex-col items-center justify-center font-semibold'>
+                <p>Redirecting in <span className='text-red-600 '>{count}</span> seconds...</p>
+              </div>
             </div>
-          </Modal>
-        </>
+          </Modal.Body>
+          <div className="flex flex-col items-center justify-center w-full">
+            <Modal.Footer>
+              <Button
+                onClick={() => {
+                  setOpenModal(false);
+                  const currentRoute = window.location.pathname;
+                  navigate(`/login?redirectTo=${currentRoute}`, {
+                    replace: true,
+                  });
+                }}
+              >
+                <LogIn className="w-4 h-4 mr-2" />
+                Login
+              </Button>
+
+              <Button
+                color="gray"
+                className="hover-bg-blue-400"
+                onClick={() => {
+                  setOpenModal(false);
+                  navigate('/', { replace: true });
+                }}
+              >
+                <ArrowBigLeft className="w-6 h-6" />
+                Home
+              </Button>
+            </Modal.Footer>
+          </div>
+        </Modal>
       )}
+
+
+
+
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         type="button"
