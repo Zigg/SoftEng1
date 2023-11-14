@@ -7,7 +7,7 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import {
   HomePage,
   MenuPage,
-  FeaturedPage,
+  AboutPage,
   ContactsPage,
 } from "./containers/components/main/index.js";
 
@@ -38,6 +38,7 @@ import {
 // Main Pages
 import { MainDashboard } from "./containers/components/dashboard/index.js";
 import { TopNavbar } from "./containers/components/main/index.js";
+import { Footer } from "./containers/components/main/navbar/pages/components/Footer.jsx";
 
 
 function MainPageRoutes() {
@@ -74,15 +75,16 @@ function MainPageTopNavbarRoutes() {
         }
       >
         <Route path="/" element={<HomePage />} />
-        <Route path="/cart" element={<Cart />} />
-
         <Route path="menu" element={<MenuPage />} />
-        <Route path="featured" element={<FeaturedPage />} />
+        <Route path="featured" element={<AboutPage />} />
         <Route path="contacts" element={<ContactsPage />} />
       </Route>
+
+
     </Routes>
   );
 }
+
 
 // TODO: Add the outlet child routes for the dashboard routes
 function AdminDashboardRoutes() {
