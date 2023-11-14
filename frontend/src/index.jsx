@@ -8,6 +8,7 @@ import rootReducer from "./context/reducers";
 
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
+import { ThemeProvider } from "@material-tailwind/react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const rootStore = createStore(
@@ -17,10 +18,12 @@ const rootStore = createStore(
 
 root.render(
   <React.StrictMode>
-    <Router>
-      <Provider store={rootStore}>
-        <App />
-      </Provider>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Provider store={rootStore}>
+          <App />
+        </Provider>
+      </Router>
+    </ThemeProvider>
   </React.StrictMode>
 );
