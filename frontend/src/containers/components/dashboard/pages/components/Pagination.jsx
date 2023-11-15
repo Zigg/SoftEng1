@@ -71,7 +71,7 @@ export const Pagination = ({
           <span className="font-semibold text-gray-700">
             {itemsInLastPage}{" "}
           </span>
-          of <span className="font-semibold text-blue-700">{totalItems}</span>
+          of <span className="font-semibold text-red-700">{totalItems}</span>
         </span>
       )}
 
@@ -84,7 +84,7 @@ export const Pagination = ({
               }
             }}
             className={`flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-700 bg-white border border-gray-300 rounded-l-lg ${activePage === 1
-              ? "bg-blue-600 dark:text-white"
+              ? "bg-red-600 dark:text-white"
               : "hover:bg-gray-200 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white"
               }
           `}
@@ -113,8 +113,8 @@ export const Pagination = ({
               to={`#page-${pageNumber}`}
               onClick={() => handlePageChange(pageNumber)}
               className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 ${pageNumber === activePage
-                ? "text-rose-700 font-semibold dark:text-white"
-                : "hover:text-gray-700 hover:bg-blue-300 dark:hover:bg-blue-700 dark:hover:text-white"
+                ? "text-red-700 font-semibold dark:text-white"
+                : "hover:text-gray-700 hover:bg-red-300 dark:hover:bg-red-700 dark:hover:text-white"
                 }`}
             >
               {pageNumber}
@@ -129,8 +129,8 @@ export const Pagination = ({
               }
             }}
             className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 rounded-r-lg bg-white border border-gray-300 ${activePage === totalPages
-              ? "dark:bg-blue-800 dark:border-gray-700 dark:text-gray-400"
-              : "hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-blue-700 dark:hover:text-white"
+              ? "dark:bg-red-800 dark:border-gray-700 dark:text-gray-400"
+              : "hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-red-700 dark:hover:text-white"
               }
           `}
           >

@@ -30,8 +30,4 @@ TODO: Note these are set as functionalities or sub menus, user can have all thes
 └── Settings /
     ├── Profile Settings 
     ├── Payment Settings 
-    └── Notification Settings 
-
-
-
-
+    └── Notification Settings

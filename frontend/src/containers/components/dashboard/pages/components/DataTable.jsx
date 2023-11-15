@@ -66,7 +66,7 @@ export const DataTable = ({ header, data, activePage, itemsPerPage }) => {
                     title="Delete"
                     className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                   >
-                    <Trash2 className="w-4 h-4 transform transition-transform duration-200 hover:scale-125 text-rose-500 dark:text-rose-700 hover:text-rose-700 dark:hover:text-rose-800" />
+                    <Trash2 className="w-4 h-4 transform transition-transform duration-200 hover:scale-125 text-red-500 dark:text-red-700 hover:text-red-700 dark:hover:text-red-800" />
                   </a>
                 </div>
               </td>

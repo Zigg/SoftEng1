@@ -55,7 +55,7 @@ export const DashboardHeader = () => {
                 toast.error("Something went wrong");
               });
           }}
-          className="ml-10 flex item-center opacity-80 justify-center text-gray-900 rounded-lg border-spacing-2 dark:text-white p-2 hover:text-rose-600"
+          className="ml-10 flex item-center opacity-80 justify-center text-gray-900 rounded-lg border-spacing-2 dark:text-white p-2 hover:text-red-600"
         >
           <div className="flex items-center justify-center">
             <PiSignOutBold className="w-4 h-4" />

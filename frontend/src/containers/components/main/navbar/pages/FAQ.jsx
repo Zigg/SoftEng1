@@ -30,7 +30,7 @@ export const FAQ = () => {
   return (
     <>
       <span className="font-semibold text-4xl pt-12">Frequently Asked Question</span>
-      <div className="px-16 pt-8">
+      <div className="px-16 py-16">
         {accordionData.map((item, index) => (
           <Accordion key={index} open={open === index + 1} className="mb-2 rounded-lg border border-gray-700 px-4">
             <AccordionHeader

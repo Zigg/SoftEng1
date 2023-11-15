@@ -55,7 +55,7 @@ export const DashboardProducts = () => {
       ),
       'Product Name': product.productName || '-',
       Category: product.category || '-',
-      Price: product.price || '-',
+      Price: '$' + (product.price || '-'),
       Ingredients: product.ingredients?.join(', ') || '-',
       Sizes: product.sizes?.join(', ') || '-',
       Addons: product.addons?.join(', ') || (
