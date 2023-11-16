@@ -1,13 +1,41 @@
 import { Filter } from 'lucide-react';
 import { useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars';
-
+import { productsMockData } from '../../../../dashboard/pages/mock/productsMockData';
+import { restaurantsMockData } from '../../../../dashboard/pages/mock/restaurantsMockData';
 // TODO: Fetch these from the database
-const categories = ['Burgers', 'Pizza', 'Pasta', 'Sushi', 'Steak', 'Tacos', 'Desserts', 'Salads', 'Beverages', 'Burritos', 'Sandwiches', 'Breakfast', 'Seafood', 'Appetizers', 'Fastfood', 'Others'];
 
-const addons = ['With Addons', 'Without Addons'];
+// For Dynamically fetching the cuisine available
+const restaurantCuisine = restaurantsMockData.map(restaurant => restaurant.cuisine);
+const uniqueCuisine = [...new Set(restaurantCuisine)].sort();
 
-const sizes = ['Small', 'Regular', 'Large', 'Custom Size'];
+// For Dynamically fetching the addonsStatus if available
+// This could have been hardcoded but if we add more addons, it would be easier to fetch it dynamically, and also the addons name, prices etc
+const addonsStatus = productsMockData.map(product => {
+  if (product.addons && product.addons.length > 0) {
+    return 'With Addons';
+  } else {
+    return 'Without Addons';
+  }
+});
+const uniqueAddonsStatus = [...new Set(addonsStatus)];
+
+// For Dynamically fetching the sizes available
+// FIXME: Map is not working, as this is a nested array
+const productSizes = productsMockData.flatMap(product => {
+  console.log(product.sizes);
+  return product.sizes.map(size => size.name);
+
+});
+
+const uniqueSizes = [...new Set(productSizes)];
+console.log(Array.isArray(uniqueSizes), uniqueSizes);
+
+
+// Do the same for these and the sizes as well
+// const addons = ['With Addons', 'Without Addons'];
+
+// const sizes = ['Small', 'Regular', 'Large', 'Custom Size'];
 
 // TODO: Add the horizontal scrollbar if it gets to big
 
@@ -30,8 +58,8 @@ export const MenuItemFilters = () => {
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
-                <option value="" disabled>Select a cuisine</option>
-                {categories.map((category) => (
+                <option value="" disabled>Select a category</option>
+                {uniqueCuisine.map((category) => (
                   <option key={category} value={category}>{category}</option>
                 ))}
               </select>
@@ -48,9 +76,14 @@ export const MenuItemFilters = () => {
                 onChange={(e) => setSelectedAddon(e.target.value)}
               >
                 <option value="" disabled>Select an Addon</option>
-                {addons.map((addon) => (
+                {/* {addons.map((addon) => (
                   <option key={addon} value={addon}>{addon}</option>
+                ))} */}
+                {uniqueAddonsStatus.map((status, index) => (
+                  <option key={index} value={status}>{status}</option>
                 ))}
+
+
               </select>
             </div>
           </Scrollbars>
@@ -65,7 +98,7 @@ export const MenuItemFilters = () => {
                 onChange={(e) => setSelectedSize(e.target.value)}
               >
                 <option value="" disabled>Select a size</option>
-                {sizes.map((size) => (
+                {uniqueSizes.map((size) => (
                   <option key={size} value={size}>{size}</option>
                 ))}
               </select>
