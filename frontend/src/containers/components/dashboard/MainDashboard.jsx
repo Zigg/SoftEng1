@@ -1,6 +1,6 @@
 // TODO:
 import { IoSettingsOutline } from 'react-icons/io5';
-import { RxDashboard } from 'react-icons/rx';
+import { RxDashboard, RxHamburgerMenu } from 'react-icons/rx';
 import React, { useState, useEffect } from 'react';
 import {
   PackageSearch,
@@ -27,30 +27,26 @@ import { getUserCount } from '../../../api';
 import { setUserCount } from '../../../context/actions/userCountAction';
 import { Logo } from '../../../assets/images';
 import { NavLink } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
 import { app } from '../../../config/firebase.config';
-import {
-  setUserDetails,
-
-} from '../../../context/actions/userActions';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'flowbite-react';
-import { setRoleType } from '../../../context/actions/userRoleAction';
 export const MainDashboard = () => {
   // TODO: Add check on whether the current user is an admin or not
   // TODO: Orders, Products, Restaurants, Reports, Settings Create the functionality for each of these pages
+  // TODO: The main dashboard content should be dependent on the restaurant, since this dashboard is for the restaurant owner but you should be able to switch between restaurants seamlessly
   const firebaseAuth = getAuth(app);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = React.useState(true);
   // TODO: set modal state to false when not testing
   const [openModal, setOpenModal] = useState(false);
+  const dispatch = useDispatch();
+
 
   const roleType = useSelector((state) => state.roleType);
 
 
   // Fetching user count from the backend
-  const dispatch = useDispatch();
   const userCount = useSelector((state) => state.userCount);
 
   console.log('roleType:', roleType);
@@ -102,7 +98,7 @@ export const MainDashboard = () => {
   }, [dispatch]);
 
   // Size of the screen when the hamburger menu should be toggled
-  const screenSizeToggled = 769;
+  const screenSizeToggled = 720;
   const [isSidebarOpen, setIsSidebarOpen] = useState(
     window.innerWidth > screenSizeToggled,
   );
@@ -123,8 +119,8 @@ export const MainDashboard = () => {
   return (
     <div>
       {/* TODO: Set to true when not testing */}
-
-      {(!user || (roleType !== 'admin' && roleType !== null)) && ( // Check user role
+      {/* Remove ! from openModal if not in testing */}
+      {(!user || (roleType !== 'admin' || roleType === null)) && ( // Check user role
 
         <Modal show={openModal} className="backdrop-blur backdrop-filter-blur-sm">
           <Modal.Body>
@@ -158,7 +154,7 @@ export const MainDashboard = () => {
 
               <Button
                 color="gray"
-                className="hover-bg-blue-400"
+                className="hover:bg-blue-400"
                 onClick={() => {
                   setOpenModal(false);
                   navigate('/', { replace: true });
@@ -181,19 +177,7 @@ export const MainDashboard = () => {
         className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
       >
         <span className="sr-only">Open sidebar</span>
-        <svg
-          className="w-6 h-6"
-          aria-hidden="true"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            clipRule="evenodd"
-            fillRule="evenodd"
-            d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-          ></path>
-        </svg>
+        <RxHamburgerMenu className="w-6 h-6" />
       </button>
 
       {isSidebarOpen && (
@@ -307,7 +291,7 @@ export const MainDashboard = () => {
                     : ''
                     }`}
                 >
-                  <AreaChart className="w-6 h-6  " />
+                  <AreaChart className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">Reports</span>
                 </NavLink>
               </li>
@@ -319,7 +303,7 @@ export const MainDashboard = () => {
                     : ''
                     }`}
                 >
-                  <IoSettingsOutline className="w-6 h-6  " />
+                  <IoSettingsOutline className="w-6 h-6" />
                   <span className="flex-1 ml-3 whitespace-nowrap">
                     Settings
                   </span>

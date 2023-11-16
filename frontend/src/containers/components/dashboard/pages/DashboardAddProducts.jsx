@@ -54,6 +54,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
   const [productName, setProductName] = useState('');
 
   const [isPublished, setIsPublished] = useState(false);
+  const [isFeatured, setIsFeatured] = useState(false);
 
   const [ingredients, setIngredients] = useState([]);
   const [currentIngredients, setCurrentIngredients] = useState('');
@@ -68,7 +69,6 @@ export const DashboardAddProducts = (data, fields, labels) => {
   const [isPriceNumeric, setIsPriceNumeric] = useState(true);
 
   const [selectedImages, setSelectedImages] = useState([]);
-  const [currentImage, setCurrentImage] = useState(null);
 
   const handleAddAddon = () => {
     if (
@@ -199,7 +199,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
       <div className="flex flex-col items-center justify-center ">
         {/* <h1 className="mb-4 text-3xl">Add a new product</h1> */}
 
-        <form className="grid flex-shrink-0 grid-cols-2 p-8 bg-blue-100 border-4 border-gray-300 sm:grid-cols-1 gap-x-6 gap-y-8">
+        <form className="grid flex-shrink-0 grid-cols-2 p-8 bg-red-100 border-4 border-gray-300 sm:grid-cols-1 gap-x-6 gap-y-8">
           <div>
             <div className="block mb-2">
               <Label htmlFor="product-name" value="Product Name" />
@@ -218,13 +218,14 @@ export const DashboardAddProducts = (data, fields, labels) => {
           </div>
           <div>
             <div className="block mb-2">
-              <Label htmlFor="product-category" value="Select your category" />
+              <Label htmlFor="product-cuisine" value="Select your cuisine" />
               <span className="ml-0.5 text-red-600 font-semibold text-md">
                 *
               </span>
             </div>
-            <Select id="product-category" required>
-              <option value="">Select food category</option>
+            {/* TODO: Maybe fetch this data instead */}
+            <Select id="product-cuisine" required>
+              <option value="">Select food cuisine</option>
               <option>Burgers</option>
               <option>Pizza</option>
               <option>Pasta</option>
@@ -286,7 +287,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
                 setIngredientsError('');
               }}
               onKeyPress={handleIngredientKeyPress}
-              className={ingredientsError ? 'border-rose-500' : ''}
+              className={ingredientsError ? 'border-red-500' : ''}
             />
             {ingredientsError && (
               <p className="text-sm font-semibold text-red-600">
@@ -297,7 +298,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
               <button
                 type="button"
                 onClick={handleAddIngredient}
-                className="flex items-center text-blue-800 cursor-pointer"
+                className="flex items-center text-red-800 cursor-pointer"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Add Ingredient
@@ -316,7 +317,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
                       className="ml-2 cursor-pointer"
                       onClick={() => handleRemoveIngredient(index)}
                     >
-                      <X className="w-3 h-3 rounded-full text-rose-500 hover:bg-red-600 hover:text-white" />
+                      <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
                     </span>
                   </div>
                 ))}
@@ -379,7 +380,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
                   <button
                     type="button"
                     onClick={handleAddCustomSize}
-                    className="flex items-center text-blue-800 cursor-pointer"
+                    className="flex items-center text-red-800 cursor-pointer"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Custom Size
@@ -397,7 +398,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
                           className="ml-2 cursor-pointer"
                           onClick={() => handleRemoveCustomSize(index)}
                         >
-                          <X className="w-3 h-3 rounded-full text-rose-500 hover:bg-red-600 hover-text-white" />
+                          <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
                         </span>
                       </div>
                     ))}
@@ -471,7 +472,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
                   <button
                     type="button"
                     onClick={handleAddAddon}
-                    className="flex items-center text-blue-800 cursor-pointer"
+                    className="flex items-center text-red-800 cursor-pointer"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Addon
@@ -489,7 +490,7 @@ export const DashboardAddProducts = (data, fields, labels) => {
                           className="ml-2 cursor-pointer"
                           onClick={() => handleRemoveAddon(index)}
                         >
-                          <X className="w-3 h-3 rounded-full text-rose-500 hover:bg-red-600 hover:text-white" />
+                          <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
                         </span>
                       </div>
                     ))}
@@ -510,15 +511,27 @@ export const DashboardAddProducts = (data, fields, labels) => {
               />
             </div>
           </div>
+          <div>
+            <div className="block mb-2">
+              <Label htmlFor="set-featured" value="Set Featured" />
+            </div>
+            <div className="flex flex-col gap-4">
+              <ToggleSwitch
+                checked={isFeatured}
+                label="Featured"
+                onChange={setIsFeatured}
+              />
+            </div>
+          </div>
           <div className="">
             <div className="block mb-2 ">
               <label htmlFor="product-images" className="block mb-2 ">
                 Product Images
               </label>
 
-              <label className="flex flex-col items-center justify-center px-4 py-6 tracking-wide uppercase bg-white border rounded-lg shadow-lg cursor-pointer border-blue dark:text-white">
+              <label className="flex flex-col items-center justify-center px-4 py-6 tracking-wide uppercase bg-white border rounded-lg shadow-lg cursor-pointer border-red dark:text-white">
                 <div className="flex flex-col items-center justify-center">
-                  <UploadCloudIcon className="w-8 h-8 text-blue-500" />
+                  <UploadCloudIcon className="w-8 h-8 text-red-500" />
                   <span className="mt-2 text-base leading-normal">
                     Choose files
                   </span>
