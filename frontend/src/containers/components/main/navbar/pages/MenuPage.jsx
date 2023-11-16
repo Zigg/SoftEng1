@@ -5,21 +5,36 @@ import { MenuItemFilters } from './components/MenuItemFilters';
 import { FaCartArrowDown } from 'react-icons/fa6';
 import { Label, Select } from 'flowbite-react';
 import { Tooltip, Typography } from "@material-tailwind/react";
+import { productsMockData } from '../../../dashboard/pages/mock/productsMockData';
 
 
-
-const menuItems = [
-  { id: 1, itemName: 'Menu Item 1', price: 19.99, sizes: ['Small', 'Regular', 'Large'], addOns: ['Cheese'], ingredients: ['Tomato', 'Lettuce', 'Bread'], imageSrc: "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGZvb2QlMjBtZW51fGVufDB8fDB8fHww" },
-  { id: 2, itemName: 'Menu Item 2', price: 21.99, sizes: ['Small', 'Regular', 'Large'], addOns: ['Cheese', 'Tomato'], ingredients: ['Tomato', 'Cheese', 'Bread'], imageSrc: "https://images.unsplash.com/photo-1604908177453-7462950a6a3b?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZvb2QlMjBtZW51fGVufDB8fDB8fHww" },
-  { id: 3, itemName: 'Menu Item 1', price: 1.99, sizes: ['Regular', 'Large', 'Whole Bowl'], addOns: ['Cheese'], ingredients: ['Lettuce', 'Tomato', 'Radish'], imageSrc: "https://plus.unsplash.com/premium_photo-1673590981774-d9f534e0c617?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  { id: 4, itemName: 'Menu Item 2', price: 11.99, sizes: ['Small', 'Regular'], addOns: ['Cheese', 'Syrup', 'Waffle'], ingredients: ['Blueberries', 'Pancake Mix', 'Sugar', 'Blueberries', 'Pancake Mix', 'Sugar'], imageSrc: "https://images.unsplash.com/photo-1484723091739-30a097e8f929?q=80&w=1547&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
-  // Add more items as needed
-];
+const menuItems = productsMockData.map(product => ({
+  id: product.id,
+  imageSrc: product.productImage,
+  itemName: product.productName,
+  price: product.price,
+  sizes: product.sizes,
+  addOns: product.addons,
+  ingredients: product.ingredients,
+}));
 
 const MenuItem = ({ imageSrc, itemName, price, sizes, addOns, ingredients }) => (
 
   <div className="relative overflow-hidden shadow-lg rounded-lg h-90 w-60 md:w-80 cursor-pointer m-auto">
-    <img
+    {Array.isArray(imageSrc) ? imageSrc.map((src, index) => (
+      <img
+        key={index}
+        alt={itemName}
+        className="w-full h-56 object-cover transform transition-transform duration-200 hover:scale-105"
+        height="200"
+        src={src}
+        style={{
+          aspectRatio: "200/200",
+          objectFit: "cover",
+        }}
+        width="200"
+      />
+    )) : <img
       alt={itemName}
       className="w-full h-56 object-cover transform transition-transform duration-200 hover:scale-105"
       height="200"
@@ -29,7 +44,9 @@ const MenuItem = ({ imageSrc, itemName, price, sizes, addOns, ingredients }) => 
         objectFit: "cover",
       }}
       width="200"
-    />
+    />}
+
+
     <Button color="gray" className="absolute top-0 right-0 m-2" >
       <FaCartArrowDown className='w-4 h-4' />
     </Button>
