@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Badge,
   Button,
@@ -15,6 +15,7 @@ import {
 import {
   ChefHat,
   CircleDollarSign,
+  CloudCog,
   DollarSign,
   Plus,
   PlusCircle,
@@ -51,7 +52,7 @@ const categories = [
 export const DashboardAddProducts = (formData, fields, labels) => {
 
 
-  const { control, handleSubmit, register, setValue, watch, reset, formState: { errors },
+  const { control, handleSubmit, register, setValue, getValues, watch, reset, formState: { errors },
   } = useForm();
 
   const [addons, setAddons] = useState([]);
@@ -79,7 +80,7 @@ export const DashboardAddProducts = (formData, fields, labels) => {
     console.log('remove action: newAddons:', newAddons);
   };
   // FIXME: Addons is not off when clearing form
-
+  // TODO: Fix Ingredients and Addons, Images, not clearing when clearing form
   const handleClearForm = () => {
     reset({
       productName: '',
@@ -98,14 +99,15 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       isVisible: false,
       isFeatured: false,
       images: [],
+      selectedImages: [],
       // TODO: Add other fields if needed
     });
   };
   const [ingredients, setIngredients] = useState([]);
   const [currentIngredients, setCurrentIngredients] = useState('');
   const [ingredientsError, setIngredientsError] = useState('');
+
   const [selectedImages, setSelectedImages] = useState([]);
-  const [currentImage, setCurrentImage] = useState(null);
 
   // const customSizes = useWatch({ control, name: 'customSizes', defaultValue: [] });
   const selectedSizes = useWatch({ control, name: 'sizes', defaultValue: [] });
@@ -113,26 +115,40 @@ export const DashboardAddProducts = (formData, fields, labels) => {
   const isVisible = useWatch({ control, name: 'isVisible', defaultValue: false });
   const isFeatured = useWatch({ control, name: 'isFeatured', defaultValue: false });
   const images = useWatch({ control, name: 'images', defaultValue: [] });
+
+  const onDrop = useCallback((acceptedFiles) => {
+    const newImages = [...selectedImages, ...acceptedFiles];
+
+    setValue('images', newImages);
+
+    setSelectedImages(newImages);
+  }, [selectedImages, setValue]);
+
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: 'image/*',
-    onDrop: (acceptedFiles) => {
-      setValue('images', acceptedFiles);
-    },
-    onDropRejected: () => {
-      console.log('One or more files were rejected.');
-    },
+    accept: 'image/',
+    multiple: true,
+    onDrop,
   });
 
+
   const handleAddIngredient = () => {
-    if (!currentIngredients.trim()) {
-      setIngredientsError(`Don't add empty ingredients!`);
-    } else {
-      setIngredientsError('');
-      const newIngredients = [...ingredients, currentIngredients];
-      setIngredients(newIngredients);
-      setCurrentIngredients('');
+    const currentIngredientsValue = watch('ingredients');
+
+    // Check if the input field is empty
+    if (!currentIngredientsValue.trim()) {
+      setIngredientsError('Please enter an ingredient.');
+      return;
     }
-    console.log('add action: ingredients:', ingredients);
+
+    // Add the current input to the ingredients array
+    setIngredients([...ingredients, currentIngredientsValue.trim()]);
+
+    // Clear the input field
+    setValue('ingredients', '');
+
+    // Reset the error message
+    setIngredientsError('');
   };
 
   const handleIngredientChange = (e) => {
@@ -148,13 +164,14 @@ export const DashboardAddProducts = (formData, fields, labels) => {
   };
 
   const handleRemoveIngredient = (index) => {
-    const newIngredients = [...ingredients];
-    newIngredients.splice(index, 1);
-    setIngredients(newIngredients);
-    console.log('remove action: newIngredients:', newIngredients);
+    const updatedIngredients = [...ingredients];
+    updatedIngredients.splice(index, 1);
+    setIngredients(updatedIngredients);
+
+    // Update the form state after removing an ingredient
+    setValue('ingredients', updatedIngredients);
   };
 
-  // FIXME: For multiple images, not working 
   const handleImageChange = (e) => {
     const files = e.target.files;
     if (files.length > 0) {
@@ -180,11 +197,12 @@ export const DashboardAddProducts = (formData, fields, labels) => {
   };
 
   return (
-    <form className='grid flex-shrink-0 grid-cols-2 p-8 bg-blue-100 border-4 border-gray-300 sm:grid-cols-1 gap-x-6 gap-y-8' onSubmit={handleSubmit(onSubmit)}>
+    <form className='grid flex-shrink-0 grid-cols-2 p-8 bg-blue-100 border-4  sm:grid-cols-1 gap-x-6 gap-y-8 max-w-3xl items-center justify-self-center overflow-x-auto shadow-md sm:rounded-lg' onSubmit={handleSubmit(onSubmit)}>
+
       {/* ... other fields ... */}
 
       {/* Product Name */}
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
           <Label htmlFor="productName" value="Product Name" />
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
@@ -192,18 +210,19 @@ export const DashboardAddProducts = (formData, fields, labels) => {
         <TextInput
           id="productName"
           placeholder="Product Name"
-          addon={<UtensilsCrossed className="w-4 h-4" />}
+          addon={<ChefHat className="w-4 h-4" />}
           {...register('productName', { required: true })}
+          className="w-full p-2   rounded-md"
         />
       </div>
 
       {/* Select Category */}
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="category" value="Select your category" />
+          <Label htmlFor="category" className="text-sm " value="Select your category" />
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
         </div>
-        <select {...register('category', { required: true })}>
+        <select {...register('category', { required: true })} className="w-full p-2 border  rounded-md">
           <option value="">Select food category</option>
           {categories.map((category, index) => (
             <option key={index} value={category}>
@@ -214,9 +233,9 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       </div>
 
       {/* Price */}
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="price" value="Price" />
+          <Label htmlFor="price" value="Base Price" />
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
         </div>
         <TextInput
@@ -225,47 +244,35 @@ export const DashboardAddProducts = (formData, fields, labels) => {
           addon={<CircleDollarSign className="w-4 h-4" />}
           placeholder="Price"
           {...register('price', { required: true, pattern: /^[0-9]*$/ })}
+          className="w-full p-2   rounded-md"
         />
       </div>
 
       {/* Ingredients */}
-      <div>
-        <div className="block mb-2">
-          <Label htmlFor="ingredients" value="Ingredients" />
-          <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
-        </div>
-
-        <TextInput
+      <div className="mb-4">
+        <label htmlFor="ingredients" className="text-md">
+          Ingredients
+        </label>
+        <input
           id="ingredients"
           placeholder="List of ingredients"
-          addon={<UtensilsCrossed className="w-4 h-4" />}
-          {...register('ingredients', { required: true })}
-          value={currentIngredients}
-          onChange={handleIngredientChange}
-          onKeyPress={handleIngredientKeyPress}
-          className={ingredientsError ? 'border-rose-500' : ''}
+          {...register('ingredients')}
+          className={`w-full p-2 ${ingredientsError ? 'border-red-500' : ''} rounded-md`}
         />
-
-        {/* Display errors */}
         {ingredientsError && (
-          <p className="text-sm font-semibold text-red-600">
-            {ingredientsError}
-          </p>
+          <p className="text-sm font-semibold text-red-600 mt-2">{ingredientsError}</p>
         )}
-
-        <div className="flex justify-end mr-2">
+        <div className="flex justify-end mt-2">
           <button
             type="button"
             onClick={handleAddIngredient}
-            className="flex items-center text-red-800 cursor-pointer"
+            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            <Plus className="w-4 h-4 mr-2" />
             Add Ingredient
           </button>
         </div>
-
-        {ingredients && ingredients.length > 0 && (
-          <div className="overflow-x-auto whitespace-nowrap">
+        {ingredients.length > 0 && (
+          <div className="overflow-x-auto whitespace-nowrap mt-4">
             <div className="flex flex-nowrap max-w-[30px]">
               {ingredients.map((ingredient, index) => (
                 <div
@@ -286,42 +293,42 @@ export const DashboardAddProducts = (formData, fields, labels) => {
         )}
       </div>
 
-
-
       {/* Sizes */}
-
-
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="sizes" value="Sizes" />
+          <Label htmlFor="sizes" className="text-lg font-bold" value="Sizes" />
         </div>
 
         <div>
           {['small', 'regular', 'large', 'custom'].map((size) => (
             <React.Fragment key={size}>
-              <Checkbox {...register('sizes', { required: true })} value={size} />
-              <label htmlFor={size}>{size.charAt(0).toUpperCase() + size.slice(1)}</label>
+              <div className="flex items-center mb-2">
+                <Checkbox {...register('sizes', { required: true })} value={size} className="mr-2" />
+                <label htmlFor={size} className="text-md">{size.charAt(0).toUpperCase() + size.slice(1)}</label>
+              </div>
 
               {/* Conditional fields based on selected sizes */}
               {selectedSizes.includes(size) && (
-                <div>
-                  <Label htmlFor={`${size}Price`} value={`${size.charAt(0).toUpperCase() + size.slice(1)} Size Price`} />
+                <div className="mb-2">
+                  <Label htmlFor={`${size}Price`} className="text-md" value={`${size.charAt(0).toUpperCase() + size.slice(1)} Size Price`} />
                   <TextInput
                     id={`${size}Price`}
                     placeholder={`${size.charAt(0).toUpperCase() + size.slice(1)} Size Price`}
                     {...register(`${size}Price`, { required: true, pattern: /^[0-9]*$/ })}
+                    className="w-full p-2 rounded-md"
                   />
                 </div>
               )}
 
               {/* Conditional fields for custom size */}
               {size === 'custom' && selectedSizes.includes('custom') && (
-                <div>
-                  <Label htmlFor="customSizeName" value="Custom Size Name" />
+                <div className="mb-2">
+                  <Label htmlFor="customSizeName" className="text-md" value="Custom Size Name" />
                   <TextInput
                     id="customSizeName"
                     placeholder="Custom Size Name"
                     {...register('customSizeName', { required: true })}
+                    className="w-full p-2 rounded-md"
                   />
 
                   <button
@@ -335,6 +342,7 @@ export const DashboardAddProducts = (formData, fields, labels) => {
                         setValue('customSizePrice', '');
                       }
                     }}
+                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
                   >
                     Add Custom Sizing
                   </button>
@@ -346,53 +354,53 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       </div>
 
 
-
       {/* Addons */}
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
-          <label htmlFor="noAddons">No Addons</label>
+          <label htmlFor="noAddons" className="text-lg font-bold">No Addons</label>
         </div>
 
-        <div>
-          <Checkbox type="checkbox" id="noAddons" {...register('noAddons')} defaultChecked />
-          <label htmlFor="noAddons">No Addons</label>
+        <div className="flex items-center mb-2">
+          <Checkbox type="checkbox" id="noAddons" {...register('noAddons')} defaultChecked className="mr-2" />
+          <label htmlFor="noAddons" className="text-md">No Addons</label>
         </div>
 
         {/* Conditional fields based on noAddons checkbox */}
         {!hasNoAddons && (
-          <div>
-            <label htmlFor="addonName">Addon Name</label>
+          <div className="mb-2">
+            <label htmlFor="addonName" className="text-md">Addon Name</label>
             <input
               id="addonName"
               placeholder="Addon Name"
               {...register('addonName', { required: true })}
               value={currentAddon.addonName}
               onChange={(e) => setCurrentAddon({ ...currentAddon, addonName: e.target.value })}
+              className="w-full p-2 rounded-md"
             />
 
-            <label htmlFor="addonPrice">Addon Price</label>
+            <label htmlFor="addonPrice" className="text-md">Addon Price</label>
             <input
               id="addonPrice"
               placeholder="Addon Price"
               {...register('addonPrice', { required: true, pattern: /^[0-9]*$/ })}
               value={currentAddon.addonPrice}
               onChange={(e) => setCurrentAddon({ ...currentAddon, addonPrice: e.target.value })}
+              className="w-full p-2 rounded-md"
             />
 
             {/* Button for Add Addons */}
-            <div className="flex justify-end mr-2">
+            <div className="flex justify-center mt-2">
               <button
                 type="button"
                 onClick={handleAddAddon}
-                className="flex items-center text-red-800 cursor-pointer"
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
               >
-                <Plus className="w-4 h-4 mr-2" />
                 Add Addons
               </button>
             </div>
 
             {/* Display added addons */}
-            <div className="overflow-x-auto whitespace-nowrap">
+            <div className="overflow-x-auto whitespace-nowrap mt-4">
               <div className="flex flex-nowrap max-w-[30px]">
                 {addons.map((addon, index) => (
                   <div
@@ -404,7 +412,7 @@ export const DashboardAddProducts = (formData, fields, labels) => {
                       className="ml-2 cursor-pointer"
                       onClick={() => handleRemoveAddon(index)}
                     >
-                      <X className="w-3 h-3 rounded-full text-rose-500 hover:bg-red-600 hover:text-white" />
+                      <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
                     </span>
                   </div>
                 ))}
@@ -415,71 +423,76 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       </div>
 
       {/* Set Visibility */}
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="isVisible" value="Set Visibility" />
+          <Label htmlFor="isVisible" className="text-lg font-bold" value="Set Visibility" />
         </div>
 
         <Switch
           id="isVisible"
           checked={isVisible}
           onChange={(value) => setValue('isVisible', value)}
+          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600  rounded"
         />
       </div>
 
       {/* Set Featured */}
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="isFeatured" value="Set Featured" />
+          <Label htmlFor="isFeatured" className="text-lg font-bold" value="Set Featured" />
         </div>
 
         <Switch
           id="isFeatured"
           checked={isFeatured}
           onChange={(value) => setValue('isFeatured', value)}
+          className="focus:ring-indigo-500 h-4 w-4 text-indigo-600  rounded"
         />
       </div>
 
       {/* Image Upload */}
-      <div>
+      <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="images" value="Image Upload" />
+          <Label htmlFor="images" className="text-lg font-bold" value="Image Upload" />
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
         </div>
 
-        <div {...getRootProps()} className="dropzone">
-          <input {...getInputProps()} />
-
-          {isDragActive ? (
-            <p>Drop the files here...</p>
-          ) : (
-            <p>Drag 'n' drop some files here, or click to select files</p>
-          )}
-
-          {images.length > 0 && (
-            <div className="overflow-x-auto whitespace-nowrap">
-              <div className="flex flex-nowrap max-w-[30px]">
-                {images.map((image, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300"
-                  >
-                    {`${image.name}`}
-                    {/* Additional logic for removing images if needed */}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+        <div {...getRootProps()} className="dropzone border-2 border-dashed border-gray-400 rounded-md p-4 text-center">
+          <input {...getInputProps()} onChange={handleImageChange} />
+          <div className='flex flex-col items-center justify-center'>
+            <CloudCog className='w-32 h-16 text-blue-500' />
+            {isDragActive ? (
+              <p className="text-gray-600">Drop the files here...</p>
+            ) : (
+              <p className="text-gray-600">Drag 'n' drop some files here, or click to select files</p>
+            )}
+          </div>
         </div>
 
-        {images.length === 0 && (
-          <p className="text-sm font-semibold text-red-600">
-            Please upload at least one image.
+
+        {selectedImages.length === 0 && (
+          <p className="text-sm font-semibold text-red-600 mt-2">
+            Upload at least one image.
           </p>
         )}
-      </div>
 
+        <div className="overflow-x-auto whitespace-nowrap mt-4">
+          <div className="flex flex-nowrap w-full h-full">
+            {selectedImages.map((image, index) => (
+              <div key={index} className="relative w-16 h-16 m-1">
+                <img src={URL.createObjectURL(image)} alt={`Preview ${index}`} className="object-cover rounded-md" />
+                <button
+                  onClick={() => removeImage(index)}
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-bl-md"
+                >
+                  X
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
 
 
       {/* ... other fields ... */}
@@ -487,14 +500,19 @@ export const DashboardAddProducts = (formData, fields, labels) => {
         <button
           type="button"
           onClick={handleClearForm}
-          className="flex items-center text-red-800 cursor-pointer"
+          className="flex items-center bg-red-500 text-white px-4 py-2 rounded-md"
         >
           <RefreshCcw className="w-4 h-4 mr-2" />
           Clear Form
         </button>
       </div>
 
-      <button type="submit">Submit</button>
+      <button
+        type="submit"
+        className="px-4 py-2 bg-green-500 text-white rounded-md mt-4"
+      >
+        Submit
+      </button>
     </form>
   );
 };
