@@ -25,8 +25,6 @@ export const FAQ = () => {
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
 
-
-
   return (
     <>
       <span className="font-semibold text-4xl pt-12">Frequently Asked Question</span>

@@ -51,7 +51,7 @@ const MenuItem = ({ imageSrc, itemName, basePrice, sizes, addOns, ingredients })
     </Button>
     <div className="bg-white dark:bg-gray-800 w-full p-4 flex flex-col ">
       <div className='flex justify-between'>
-        <p className="text-gray-800 dark:text-white text-xl font-medium mb-2">{itemName}</p>
+        <span className="text-gray-800 dark:text-white text-xl font-medium mb-2">{itemName}</span>
         {/* <p className="text-gray-800 flex items-center dark:text-white text-xl font-medium mb-2"> <span className='text-xs text-red-500 underline'>Starts at</span>
           <DollarSign className='w-5 h-5' /> {basePrice}
         </p> */}
@@ -61,8 +61,8 @@ const MenuItem = ({ imageSrc, itemName, basePrice, sizes, addOns, ingredients })
         <div className="mb-2 block">
           <Label htmlFor="sizes" value="Select Size" />
         </div>
-        <Select id="sizes">
-          <option value="" selected disabled hidden>Select a size</option>
+        <Select id="sizes" defaultValue="">
+          <option value="" disabled hidden>Select a size</option>
           {sizes.map((size, index) => (
             <option key={index} value={size.name}>
               {size.name} - ${size.price}
@@ -85,9 +85,9 @@ const MenuItem = ({ imageSrc, itemName, basePrice, sizes, addOns, ingredients })
             <InfoIcon className='w-4 h-4 ml-1 text-red-500' />
           </Tooltip>
         </div>
-        <Select id="addOns">
+        <Select id="addOns" defaultValue="">
 
-          <option value="" selected disabled hidden>Select an add-on</option>
+          <option value="" disabled hidden>Select an add-on</option>
 
           {addOns.map((addon, index) => (
             <option key={index} value={addon.name}>
@@ -122,7 +122,6 @@ const MenuItem = ({ imageSrc, itemName, basePrice, sizes, addOns, ingredients })
           <Eye className='w-5 h-5 hover:text-blue-600' />
         </Tooltip>
       </div>
-
     </div>
   </div>
 );

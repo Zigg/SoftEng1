@@ -36,6 +36,8 @@ export const DashboardUsers = () => {
     }
   }, [dispatch, userList]);
 
+  // TODO: Do not hardcode this 
+
   const userListHeader = [
     { title: 'User name' },
     { title: 'Email' },
@@ -44,7 +46,7 @@ export const DashboardUsers = () => {
     { title: 'Last Sign In' },
     { title: 'Creation Time' },
   ];
-
+  // TODO: Do not hardcode this 
   const userListData = userList
     ? userList.map((user) => ({
       'User name': user.displayName || '-',

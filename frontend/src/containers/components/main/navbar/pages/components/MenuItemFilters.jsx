@@ -1,4 +1,4 @@
-import { Filter } from 'lucide-react';
+import { Filter, X } from 'lucide-react';
 import { useState } from 'react'
 import { Scrollbars } from 'react-custom-scrollbars';
 import { productsMockData } from '../../../../dashboard/pages/mock/productsMockData';
@@ -25,19 +25,14 @@ const uniqueAddonsStatus = [...new Set(addonsStatus)];
 const productSizes = productsMockData.flatMap(product => {
   console.log(product.sizes);
   return product.sizes.map(size => size.name);
-
 });
-
 const uniqueSizes = [...new Set(productSizes)];
 console.log(Array.isArray(uniqueSizes), uniqueSizes);
-
 
 // Do the same for these and the sizes as well
 // const addons = ['With Addons', 'Without Addons'];
 
 // const sizes = ['Small', 'Regular', 'Large', 'Custom Size'];
-
-// TODO: Add the horizontal scrollbar if it gets to big
 
 export const MenuItemFilters = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -76,14 +71,9 @@ export const MenuItemFilters = () => {
                 onChange={(e) => setSelectedAddon(e.target.value)}
               >
                 <option value="" disabled>Select an Addon</option>
-                {/* {addons.map((addon) => (
-                  <option key={addon} value={addon}>{addon}</option>
-                ))} */}
                 {uniqueAddonsStatus.map((status, index) => (
                   <option key={index} value={status}>{status}</option>
                 ))}
-
-
               </select>
             </div>
           </Scrollbars>
@@ -105,7 +95,22 @@ export const MenuItemFilters = () => {
             </div>
           </Scrollbars>
         </div>
+
+        <button className="btn btn-circle flex items-center justify-center mb-4" onClick={() => {
+
+          setSelectedCategory('');
+          setSelectedAddon('');
+          setSelectedSize('');
+        }}>
+          <div className='flex items-center justify-center'>
+            <X className='w-6 h-6 border-2 hover:bg-red-500 hover:text-white rounded-full transform transition-transform duration-200 hover:scale-110' />
+            {/* <span className='ml-2 underline-offset-4'>
+              Clear Filter
+            </span> */}
+          </div>
+        </button>
       </div>
+
     </>
   )
 }

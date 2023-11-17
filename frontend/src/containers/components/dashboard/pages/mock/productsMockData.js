@@ -379,8 +379,8 @@ export const productsMockData = [
       { "name": "Large", "price": 10.49 }
     ],
     "addons": [
-      { "name": "Avocado", "price": 0.99 },
-      { "name": "Egg", "price": 0.49 }
+      { "name": "Egg", "price": 0.49 },
+      { "name": "Avocado", "price": 0.99 }
     ],
     "dateAdded": "2022-11-08",
     "isPublished": "Yes",

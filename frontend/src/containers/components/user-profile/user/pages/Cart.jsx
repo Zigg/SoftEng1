@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 // TODO: The addons and size should be fetched from the backend
 // TODO: Add the addons price, which must also be fetched from the backend
-const products = [
+const cartItems = [
   {
     id: 1,
     name: 'Pizza',
@@ -31,17 +31,14 @@ const products = [
       'Chicken Burger with white sesame seeded bun, pickles, sliced tomatoes, lettuce, and cheese.',
   },
 
-  // More products...
+  // More cartItems...
 ]
 // TODO: Add the increment and decrement function for the quantity
 
-let total = products.reduce((sum, product) => {
+let total = cartItems.reduce((sum, product) => {
   let price = parseFloat(product.price.replace('$', ''));
   return sum + price * product.quantity;
 }, 0);
-
-
-
 
 // TODO: Fetch the cart data from the global store
 
@@ -97,7 +94,7 @@ export function Cart(data) {
                       <div className="mt-8">
                         <div className="flow-root">
                           <ul role="list" className="-my-6 divide-y divide-gray-200">
-                            {products.map((product) => (
+                            {cartItems.map((product) => (
                               <li key={product.id} className="flex py-6">
                                 <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img

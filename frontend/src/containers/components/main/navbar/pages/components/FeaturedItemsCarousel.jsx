@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Carousel, IconButton } from "@material-tailwind/react";
-import { Rating } from 'flowbite-react';
 
 // TODO Pass the images to the carousel, the is 
 export const FeaturedItemsCarousel = (data) => {
@@ -15,8 +14,8 @@ export const FeaturedItemsCarousel = (data) => {
 
 
   return (
-    <div className='w-full flex flex-col items-center justify-center mt-1.5'>
-      <div className='py-8'>
+    <div className='w-full flex flex-col items-center justify-center py-4'>
+      <div className='py-4'>
         <span className='text-5xl font-semibold '>Featured Items</span>
       </div>
       <div>
@@ -25,7 +24,7 @@ export const FeaturedItemsCarousel = (data) => {
           autoplayDelay={5000}
           loop={true}
           navigation={false}
-          className="h-96 max-w-3xl object-contain"
+          className="h-[30rem] max-w-6xl object-cover"
           prevArrow={({ handlePrev }) => (
             <IconButton
               variant="text"
