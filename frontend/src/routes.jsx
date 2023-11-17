@@ -30,10 +30,13 @@ import {
   DashboardRestaurants,
   DashboardReports,
   DashboardSettings,
-  DashboardAddProducts,
   DashboardAddRestaurants,
   DashboardAddUsers,
 } from "./containers/components/dashboard/pages/index.js";
+
+import {
+  DashboardAddProducts,
+} from "./containers/components/dashboard/pages/dashboardAddProducts/DashboardAddProducts.jsx";
 
 // Main Pages
 import { MainDashboard } from "./containers/components/dashboard/index.js";
