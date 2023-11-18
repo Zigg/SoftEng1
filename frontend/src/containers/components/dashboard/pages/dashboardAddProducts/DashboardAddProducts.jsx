@@ -83,9 +83,9 @@ export const DashboardAddProducts = () => {
   });
 
   const handleRemoveSize = (index) => {
-    const name = watch(`sizes.${index}.name`);
+    const isChecked = watch(`sizes.${index}.checked`);
 
-    if (name === 'custom') {
+    if (isChecked) {
       setValue(`sizes.${index}.customSizeName`, '');
       setValue(`sizes.${index}.customSizePrice`, '');
     }
@@ -108,6 +108,13 @@ export const DashboardAddProducts = () => {
       removeAddon(index);
     }
   };
+
+  const handleRemoveIngredients = (index) => {
+    if (ingredientFields.length > 1) {
+      removeIngredient(index);
+    }
+  };
+
 
   // FIXME: Addons is not off when clearing form
   // TODO: Fix Ingredients and Addons, Images, not clearing when clearing form
@@ -288,26 +295,21 @@ export const DashboardAddProducts = () => {
 
         {ingredientFields.map((field, index) => (
           <div key={field.id} className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300">
-            {field.value}
+            <input
+              id={`ingredients.${index}.value`}
+              name={`ingredients.${index}.value`}
+              placeholder="List of ingredients"
+              {...register(`ingredients.${index}.value`, { required: 'Please enter an ingredient.' })}
+              defaultValue={field.value}
+              className={`w-full p-2 ${errors?.ingredients?.[index]?.value ? 'border-red-500' : ''} rounded-md`}
+            />
             <span
               className="ml-2 cursor-pointer"
               onClick={() => removeIngredient(index)}
             >
-              X
+              <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
             </span>
           </div>
-        ))}
-
-        {ingredientFields.map((field, index) => (
-          <input
-            key={field.id}
-            id={`ingredients.${index}.value`}
-            name={`ingredients.${index}.value`}
-            placeholder="List of ingredients"
-            {...register(`ingredients.${index}.value`, { required: 'Please enter an ingredient.' })}
-            defaultValue={field.value}
-            className={`w-full p-2 ${errors?.ingredients?.[index]?.value ? 'border-red-500' : ''} rounded-md`}
-          />
         ))}
 
         <div className="flex justify-end mt-2">
@@ -318,6 +320,7 @@ export const DashboardAddProducts = () => {
           >
             Add Ingredient
           </button>
+
         </div>
 
         {errors?.ingredients?.map((error, index) => (
@@ -326,6 +329,7 @@ export const DashboardAddProducts = () => {
           </p>
         ))}
       </div>
+
 
 
 
