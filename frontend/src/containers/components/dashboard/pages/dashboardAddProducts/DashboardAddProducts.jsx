@@ -30,6 +30,7 @@ import {
 import { useDropzone } from 'react-dropzone';
 import Switch from 'react-switch';
 import { useForm, Controller, useWatch, useFieldArray } from 'react-hook-form';
+
 const categories = [
   'Burgers',
   'Pizza',
@@ -55,8 +56,6 @@ const categories = [
 
 export const DashboardAddProducts = () => {
 
-
-
   const { control, handleSubmit, register, setValue, getValues, watch, reset, formState: { errors },
   } = useForm({
     defaultValues: {
@@ -68,7 +67,7 @@ export const DashboardAddProducts = () => {
       ],
       noAddons: false,
       addons: [{ addonName: '', addonPrice: '' }],
-
+      // TODO: Add other fields
     }
   });
 
@@ -82,6 +81,13 @@ export const DashboardAddProducts = () => {
     name: 'sizes',
   });
 
+  const { fields: addonFields, append: appendAddon, remove: removeAddon } = useFieldArray({
+    control,
+    name: 'addons',
+  });
+
+  // TODO: There must be at least one value for ingredients, addon, ingredients
+
   const handleRemoveSize = (index) => {
     const isChecked = watch(`sizes.${index}.checked`);
 
@@ -90,18 +96,25 @@ export const DashboardAddProducts = () => {
       setValue(`sizes.${index}.customSizePrice`, '');
     }
 
-    removeSize(index);
-  };
-
-
-  const { fields: addonFields, append: appendAddon, remove: removeAddon } = useFieldArray({
-    control,
-    name: 'addons',
-  });
+    if (sizeFields.length > 1) {
+      removeSize(index);
+    };
+  }
 
   const handleAddAddon = () => {
     appendAddon({ addonName: '', addonPrice: '' });
   };
+
+  const handleAddIngredient = () => {
+    appendIngredient({ value: '' });
+
+  };
+
+
+  const handleAddCustomSize = () => {
+    appendSize({ name: 'custom', price: '', checked: true })
+  };
+
 
   const handleRemoveAddon = (index) => {
     if (addonFields.length > 1) {
@@ -151,16 +164,15 @@ export const DashboardAddProducts = () => {
 
   const isVisible = useWatch({ control, name: 'isVisible', defaultValue: false });
   const isFeatured = useWatch({ control, name: 'isFeatured', defaultValue: false });
-  const images = useWatch({ control, name: 'images', defaultValue: [] });
+  // const images = useWatch({ control, name: 'images', defaultValue: [] });
 
-  const onDrop = useCallback((acceptedFiles) => {
-    // Filter out non-image files
-    const newImages = acceptedFiles.filter(file => file.type.startsWith('image/'));
+  // const onDrop = useCallback((acceptedFiles) => {
+  //   // Filter out non-image files
+  //   const newImages = acceptedFiles.filter(file => file.type.startsWith('image/'));
 
-    setValue('images', [...selectedImages, ...newImages]);
-    setSelectedImages([...selectedImages, ...newImages]);
-  }, [selectedImages, setValue]);
-
+  //   setValue('images', [...selectedImages, ...newImages]);
+  //   setSelectedImages([...selectedImages, ...newImages]);
+  // }, [selectedImages, setValue]);
 
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -215,8 +227,6 @@ export const DashboardAddProducts = () => {
   return (
     <form className='grid flex-shrink-0 grid-cols-2 p-8 bg-blue-100 border-4  sm:grid-cols-1 gap-x-6 gap-y-8 max-w-3xl items-center justify-self-center overflow-x-auto shadow-md sm:rounded-lg' onSubmit={handleSubmit(onSubmit)}>
 
-      {/* ... other fields ... */}
-
       {/* Product Name */}
       <div className="mb-4">
         <div className="block mb-2">
@@ -235,8 +245,6 @@ export const DashboardAddProducts = () => {
           <span className="text-red-600 text-sm">Product Name is required</span>
         )}
       </div>
-
-
 
       {/* Select Category */}
       <div className="mb-4">
@@ -274,7 +282,7 @@ export const DashboardAddProducts = () => {
           type="text"
           // addon={<CircleDollarSign className="w-4 h-4" />}
           placeholder="Price"
-          {...register('price', { required: true, pattern: /^[0-9]*$/ })}
+          {...register('price', { required: true, pattern: /^[0-9]+(\.[0-9]{1,2})?$/, })}
           className={`w-full rounded-md ${errors.price ? 'border-red-500 border-2 rounded-lg' : ''}`}
         />
         {errors.price && (
@@ -286,7 +294,6 @@ export const DashboardAddProducts = () => {
         )}
       </div>
 
-
       {/* Ingredients */}
       <div className="mb-4">
         <label htmlFor="ingredients" className="text-md">
@@ -294,8 +301,9 @@ export const DashboardAddProducts = () => {
         </label>
 
         {ingredientFields.map((field, index) => (
-          <div key={field.id} className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300">
-            <input
+          <div key={field.id} className="flex items-center justify-center p-1 text-sm ">
+            <TextInput
+              type='text'
               id={`ingredients.${index}.value`}
               name={`ingredients.${index}.value`}
               placeholder="List of ingredients"
@@ -305,9 +313,9 @@ export const DashboardAddProducts = () => {
             />
             <span
               className="ml-2 cursor-pointer"
-              onClick={() => removeIngredient(index)}
+              onClick={() => handleRemoveIngredients(index)}
             >
-              <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
+              <X className="w-4 h-4 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
             </span>
           </div>
         ))}
@@ -315,10 +323,10 @@ export const DashboardAddProducts = () => {
         <div className="flex justify-end mt-2">
           <button
             type="button"
-            onClick={() => appendIngredient({ value: '' })}
+            onClick={handleAddIngredient}
             className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Add Ingredient
+            <PlusCircle className="w-4 h-4 mr-2" /><span>Add Ingredient</span>
           </button>
 
         </div>
@@ -329,10 +337,6 @@ export const DashboardAddProducts = () => {
           </p>
         ))}
       </div>
-
-
-
-
 
       {/* Sizes */}
       <div>
@@ -351,10 +355,10 @@ export const DashboardAddProducts = () => {
                 {size.name.charAt(0).toUpperCase() + size.name.slice(1)}
               </label>
               {watch(`sizes.${index}.checked`) && size.name !== 'custom' && (
-                <div className="ml-2">
-                  <input
-                    type="number"
-                    {...register(`sizes.${index}.price`, { required: true, pattern: /^[0-9]*$/ })}
+                <div className="ml-4">
+                  <TextInput
+                    type="text"
+                    {...register(`sizes.${index}.price`, { required: true, pattern: /^[0-9]+(\.[0-9]{1,2})?$/, })}
                     placeholder={`${size.name.charAt(0).toUpperCase() + size.name.slice(1)} Size Price`}
                     className="mr-2"
                   />
@@ -366,6 +370,9 @@ export const DashboardAddProducts = () => {
               >
                 <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
               </span>
+
+              {/* Reset button */}
+
             </div>
           </div>
         ))}
@@ -373,12 +380,10 @@ export const DashboardAddProducts = () => {
         <div className="flex justify-end mt-2">
           <button
             type="button"
-            onClick={() => {
-              appendSize({ name: 'custom', price: '', checked: true });
-            }}
+            onClick={handleAddCustomSize}
             className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Add Custom Size
+            <PlusCircle className="w-4 h-4 mr-2" /><span>Add Custom Size</span>
           </button>
         </div>
 
@@ -388,7 +393,8 @@ export const DashboardAddProducts = () => {
               <label htmlFor="customSizeName" className="text-md">
                 Custom Size Name
               </label>
-              <input
+              <TextInput
+                type='text'
                 id="customSizeName"
                 placeholder="Custom Size Name"
                 {...register(`sizes.${index}.customSizeName`, { required: true })}
@@ -398,27 +404,17 @@ export const DashboardAddProducts = () => {
               <label htmlFor="customSizePrice" className="text-md">
                 Custom Size Price
               </label>
-              <input
+              <TextInput
+                type='text'
                 id="customSizePrice"
                 placeholder="Custom Size Price"
-                {...register(`sizes.${index}.customSizePrice`, { required: true, pattern: /^[0-9]*$/ })}
+                {...register(`sizes.${index}.customSizePrice`, { required: true, pattern: /^[0-9]+(\.[0-9]{1,2})?$/, })}
                 className="w-full p-2 rounded-md"
               />
             </div>
           )
         ))}
       </div>
-
-
-
-
-
-
-
-
-
-
-
 
       {/* Addons */}
       <div className="mb-4">
@@ -435,47 +431,49 @@ export const DashboardAddProducts = () => {
         {!watch('noAddons') && (
           <div className="mb-2">
             {addonFields.map((addon, index) => (
-              <div key={addon.id}>
-                <label htmlFor={`addons.${index}.addonName`} className="text-md">
-                  Addon Name
-                </label>
-                <input
-                  id={`addons.${index}.addonName`}
-                  placeholder="Addon Name"
-                  {...register(`addons.${index}.addonName`, { required: true })}
-                  className="w-full p-2 rounded-md"
-                />
+              <div key={addon.id} className="flex items-center border-2 border-blue-300 my-4 p-4">
+                <div className="flex-grow">
+                  <label htmlFor={`addons.${index}.addonName`} className="text-md">
+                    Addon Name
+                  </label>
+                  <TextInput
+                    type='text'
+                    id={`addons.${index}.addonName`}
+                    placeholder="Addon Name"
+                    {...register(`addons.${index}.addonName`, { required: true })}
+                    className="w-full p-2 rounded-md"
+                  />
 
-
-                <label htmlFor={`addons.${index}.addonPrice`} className="text-md">
-                  Addon Price
-                </label>
-                <input
-                  id={`addons.${index}.addonPrice`}
-                  placeholder="Addon Price"
-                  {...register(`addons.${index}.addonPrice`, { required: true, pattern: /^[0-9]*$/ })}
-                  className="w-full p-2 rounded-md"
-                />
-
+                  <label htmlFor={`addons.${index}.addonPrice`} className="text-md">
+                    Addon Price
+                  </label>
+                  <TextInput
+                    type='text'
+                    id={`addons.${index}.addonPrice`}
+                    placeholder="Addon Price"
+                    {...register(`addons.${index}.addonPrice`, { required: true, pattern: /^[0-9]+(\.[0-9]{1,2})?$/, })}
+                    className="w-full p-2 rounded-md"
+                  />
+                </div>
 
                 {/* Button for Remove Addon */}
                 <span
                   className="ml-2 cursor-pointer"
                   onClick={() => handleRemoveAddon(index)}
                 >
-                  <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
+                  <X className="w-4 h-4 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
                 </span>
               </div>
             ))}
 
             {/* Button for Add Addons */}
-            <div className="flex justify-center mt-2">
+            <div className="flex justify-end mt-2">
               <button
                 type="button"
                 onClick={handleAddAddon}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md"
               >
-                Add Addons
+                <PlusCircle className="w-4 h-4 mr-2" /><span>Add Addons</span>
               </button>
             </div>
 
@@ -500,6 +498,7 @@ export const DashboardAddProducts = () => {
             </div> */}
           </div>
         )}
+
       </div>
 
 
@@ -540,8 +539,8 @@ export const DashboardAddProducts = () => {
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
         </div>
 
-        <div {...getRootProps()} className="dropzone border-2 border-dashed border-gray-400 rounded-md p-4 text-center">
-          <input {...getInputProps()} onChange={handleImageChange} />
+        <div {...getRootProps()} className="dropzone border-2 border-dashed border-gray-400 rounded-md p-4 text-center cursor-pointer">
+          <input  {...getInputProps()} onChange={handleImageChange} />
           <div className='flex flex-col items-center justify-center'>
             <CloudCog className='w-32 h-16 text-blue-500' />
             {isDragActive ? (
@@ -576,7 +575,6 @@ export const DashboardAddProducts = () => {
         </div>
       </div>
 
-      {/* ... other fields ... */}
       <div className="flex justify-end mr-2">
         <button
           type="button"
