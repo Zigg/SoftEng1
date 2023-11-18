@@ -29,7 +29,7 @@ import {
 
 import { useDropzone } from 'react-dropzone';
 import Switch from 'react-switch';
-import { useForm, Controller, useWatch } from 'react-hook-form';
+import { useForm, Controller, useWatch, useFieldArray } from 'react-hook-form';
 const categories = [
   'Burgers',
   'Pizza',
@@ -37,48 +37,78 @@ const categories = [
   'Sushi',
   'Steak',
   'Tacos',
-  'Desserts',
-  'Salads',
-  'Beverages',
   'Burritos',
-  'Sandwiches',
   'Breakfast',
   'Seafood',
-  'Appetizers',
   'Fast Food',
-  'Others',
+  'Italian',
+  'Japanese',
+  'American',
+  'Mexican',
+  'Dessert',
+  'Salad',
+  'Beverage',
+  'Sandwich',
+  'Appetizer',
 ];
 
-export const DashboardAddProducts = (formData, fields, labels) => {
+
+export const DashboardAddProducts = () => {
+
 
 
   const { control, handleSubmit, register, setValue, getValues, watch, reset, formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      ingredients: [{ value: '' }],
+      sizes: [
+        { name: 'small', price: '' },
+        { name: 'regular', price: '' },
+        { name: 'large', price: '' },
+      ],
+      noAddons: false,
+      addons: [{ addonName: '', addonPrice: '' }],
 
-  const [addons, setAddons] = useState([]);
+    }
+  });
 
-  const [currentAddon, setCurrentAddon] = useState({
-    addonName: '',
-    addonPrice: '',
+  const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
+    control,
+    name: 'ingredients',
+  });
+
+  const { fields: sizeFields, append: appendSize, remove: removeSize } = useFieldArray({
+    control,
+    name: 'sizes',
+  });
+
+  const handleRemoveSize = (index) => {
+    const name = watch(`sizes.${index}.name`);
+
+    if (name === 'custom') {
+      setValue(`sizes.${index}.customSizeName`, '');
+      setValue(`sizes.${index}.customSizePrice`, '');
+    }
+
+    removeSize(index);
+  };
+
+
+  const { fields: addonFields, append: appendAddon, remove: removeAddon } = useFieldArray({
+    control,
+    name: 'addons',
   });
 
   const handleAddAddon = () => {
-    if (
-      currentAddon.addonName.trim() !== '' &&
-      currentAddon.addonPrice.trim() !== ''
-    ) {
-      setAddons([...addons, currentAddon]);
-      setCurrentAddon({ addonName: '', addonPrice: '' });
-    }
-    console.log('add action: addons:', addons);
+    appendAddon({ addonName: '', addonPrice: '' });
   };
 
   const handleRemoveAddon = (index) => {
-    const newAddons = [...addons];
-    newAddons.splice(index, 1);
-    setAddons(newAddons);
-    console.log('remove action: newAddons:', newAddons);
+    if (addonFields.length > 1) {
+      removeAddon(index);
+    }
   };
+
   // FIXME: Addons is not off when clearing form
   // TODO: Fix Ingredients and Addons, Images, not clearing when clearing form
   const handleClearForm = () => {
@@ -86,14 +116,17 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       productName: '',
       category: '',
       price: '',
-      ingredients: '',
-      sizes: [],
+      // ingredients: '',
+      ingredients: [],
+
+      sizes: '',
       smallPrice: '',
       regularPrice: '',
       largePrice: '',
       customSizeName: '',
       customSizePrice: '',
       noAddons: true,
+      'addons': [],
       addonName: '',
       addonPrice: '',
       isVisible: false,
@@ -103,74 +136,47 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       // TODO: Add other fields if needed
     });
   };
-  const [ingredients, setIngredients] = useState([]);
-  const [currentIngredients, setCurrentIngredients] = useState('');
-  const [ingredientsError, setIngredientsError] = useState('');
 
   const [selectedImages, setSelectedImages] = useState([]);
 
   // const customSizes = useWatch({ control, name: 'customSizes', defaultValue: [] });
-  const selectedSizes = useWatch({ control, name: 'sizes', defaultValue: [] });
-  const hasNoAddons = useWatch({ control, name: 'noAddons', defaultValue: true });
+  // const selectedSizes = useWatch({ control, name: 'sizes', defaultValue: [] });
+
   const isVisible = useWatch({ control, name: 'isVisible', defaultValue: false });
   const isFeatured = useWatch({ control, name: 'isFeatured', defaultValue: false });
   const images = useWatch({ control, name: 'images', defaultValue: [] });
 
   const onDrop = useCallback((acceptedFiles) => {
-    const newImages = [...selectedImages, ...acceptedFiles];
+    // Filter out non-image files
+    const newImages = acceptedFiles.filter(file => file.type.startsWith('image/'));
 
-    setValue('images', newImages);
-
-    setSelectedImages(newImages);
+    setValue('images', [...selectedImages, ...newImages]);
+    setSelectedImages([...selectedImages, ...newImages]);
   }, [selectedImages, setValue]);
 
 
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: 'image/',
+    accept: 'image/*',
     multiple: true,
-    onDrop,
+    onDrop: useCallback((acceptedFiles) => {
+      // Filter out non-image files
+      const newImages = acceptedFiles.filter(file => file.type.startsWith('image/'));
+
+      if (newImages.length !== acceptedFiles.length) {
+        // Non-image files were dropped, set an error
+        setValue('images', newImages); // Update the images with only valid ones
+        errors.images = {
+          type: 'manual',
+          message: 'Only images are allowed.',
+        };
+      } else {
+        setValue('images', [...selectedImages, ...newImages]);
+        setSelectedImages([...selectedImages, ...newImages]);
+      }
+    }, [selectedImages, setValue, errors]), // Include 'errors' in the dependencies array
   });
 
-
-  const handleAddIngredient = () => {
-    const currentIngredientsValue = watch('ingredients');
-
-    // Check if the input field is empty
-    if (!currentIngredientsValue.trim()) {
-      setIngredientsError('Please enter an ingredient.');
-      return;
-    }
-
-    // Add the current input to the ingredients array
-    setIngredients([...ingredients, currentIngredientsValue.trim()]);
-
-    // Clear the input field
-    setValue('ingredients', '');
-
-    // Reset the error message
-    setIngredientsError('');
-  };
-
-  const handleIngredientChange = (e) => {
-    setCurrentIngredients(e.target.value);
-  };
-
-  const handleIngredientKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddIngredient();
-    }
-    console.log('handleIngredientKeyPress: ingredients:', e.key === 'Enter');
-  };
-
-  const handleRemoveIngredient = (index) => {
-    const updatedIngredients = [...ingredients];
-    updatedIngredients.splice(index, 1);
-    setIngredients(updatedIngredients);
-
-    // Update the form state after removing an ingredient
-    setValue('ingredients', updatedIngredients);
-  };
 
   const handleImageChange = (e) => {
     const files = e.target.files;
@@ -192,6 +198,9 @@ export const DashboardAddProducts = (formData, fields, labels) => {
 
 
   const onSubmit = (data) => {
+    // const filteredSizes = data.sizes.filter((size) => size.checked || size.name !== 'custom');
+    // data.sizes = filteredSizes;
+
     console.log('Form data:', data);
     // Add your logic to handle form submission
   };
@@ -204,33 +213,48 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       {/* Product Name */}
       <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="productName" value="Product Name" />
+          <label htmlFor="productName" className="text-lg font-bold">
+            Product Name
+          </label>
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
         </div>
-        <TextInput
+        <input
           id="productName"
           placeholder="Product Name"
-          addon={<ChefHat className="w-4 h-4" />}
           {...register('productName', { required: true })}
-          className="w-full p-2   rounded-md"
+          className={`w-full p-2 rounded-md ${errors.productName ? 'border-red-500 border-2' : ''}`}
         />
+        {errors.productName && (
+          <span className="text-red-600 text-sm">Product Name is required</span>
+        )}
       </div>
+
+
 
       {/* Select Category */}
       <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="category" className="text-sm " value="Select your category" />
+          <Label htmlFor="category" className="text-sm" value="Select your category" />
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
         </div>
-        <select {...register('category', { required: true })} className="w-full p-2 border  rounded-md">
-          <option value="">Select food category</option>
+        <select
+          {...register('category', { required: true })}
+          className={`w-full p-2 border rounded-md ${errors.category ? 'border-red-500 border-2' : ''}`}
+        >
+          <option selected disabled value="">
+            Select food category
+          </option>
           {categories.map((category, index) => (
             <option key={index} value={category}>
               {category}
             </option>
           ))}
         </select>
+        {errors.category && (
+          <span className="text-red-600 text-sm">Please select a category</span>
+        )}
       </div>
+
 
       {/* Price */}
       <div className="mb-4">
@@ -241,117 +265,155 @@ export const DashboardAddProducts = (formData, fields, labels) => {
         <TextInput
           id="price"
           type="text"
-          addon={<CircleDollarSign className="w-4 h-4" />}
+          // addon={<CircleDollarSign className="w-4 h-4" />}
           placeholder="Price"
           {...register('price', { required: true, pattern: /^[0-9]*$/ })}
-          className="w-full p-2   rounded-md"
+          className={`w-full rounded-md ${errors.price ? 'border-red-500 border-2 rounded-lg' : ''}`}
         />
+        {errors.price && (
+          <span className="text-red-600 text-sm">
+            {errors.price.type === 'required'
+              ? 'Base Price is a required field'
+              : 'Price must be a number'}
+          </span>
+        )}
       </div>
+
 
       {/* Ingredients */}
       <div className="mb-4">
         <label htmlFor="ingredients" className="text-md">
           Ingredients
         </label>
-        <input
-          id="ingredients"
-          placeholder="List of ingredients"
-          {...register('ingredients')}
-          className={`w-full p-2 ${ingredientsError ? 'border-red-500' : ''} rounded-md`}
-        />
-        {ingredientsError && (
-          <p className="text-sm font-semibold text-red-600 mt-2">{ingredientsError}</p>
-        )}
+
+        {ingredientFields.map((field, index) => (
+          <div key={field.id} className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300">
+            {field.value}
+            <span
+              className="ml-2 cursor-pointer"
+              onClick={() => removeIngredient(index)}
+            >
+              X
+            </span>
+          </div>
+        ))}
+
+        {ingredientFields.map((field, index) => (
+          <input
+            key={field.id}
+            id={`ingredients.${index}.value`}
+            name={`ingredients.${index}.value`}
+            placeholder="List of ingredients"
+            {...register(`ingredients.${index}.value`, { required: 'Please enter an ingredient.' })}
+            defaultValue={field.value}
+            className={`w-full p-2 ${errors?.ingredients?.[index]?.value ? 'border-red-500' : ''} rounded-md`}
+          />
+        ))}
+
         <div className="flex justify-end mt-2">
           <button
             type="button"
-            onClick={handleAddIngredient}
+            onClick={() => appendIngredient({ value: '' })}
             className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md"
           >
             Add Ingredient
           </button>
         </div>
-        {ingredients.length > 0 && (
-          <div className="overflow-x-auto whitespace-nowrap mt-4">
-            <div className="flex flex-nowrap max-w-[30px]">
-              {ingredients.map((ingredient, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300"
-                >
-                  {ingredient}
-                  <span
-                    className="ml-2 cursor-pointer"
-                    onClick={() => handleRemoveIngredient(index)}
-                  >
-                    <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+
+        {errors?.ingredients?.map((error, index) => (
+          <p key={index} className="text-sm font-semibold text-red-600 mt-2">
+            {error.value.message}
+          </p>
+        ))}
       </div>
+
+
+
 
       {/* Sizes */}
-      <div className="mb-4">
-        <div className="block mb-2">
-          <Label htmlFor="sizes" className="text-lg font-bold" value="Sizes" />
-        </div>
-
-        <div>
-          {['small', 'regular', 'large', 'custom'].map((size) => (
-            <React.Fragment key={size}>
-              <div className="flex items-center mb-2">
-                <Checkbox {...register('sizes', { required: true })} value={size} className="mr-2" />
-                <label htmlFor={size} className="text-md">{size.charAt(0).toUpperCase() + size.slice(1)}</label>
-              </div>
-
-              {/* Conditional fields based on selected sizes */}
-              {selectedSizes.includes(size) && (
-                <div className="mb-2">
-                  <Label htmlFor={`${size}Price`} className="text-md" value={`${size.charAt(0).toUpperCase() + size.slice(1)} Size Price`} />
-                  <TextInput
-                    id={`${size}Price`}
-                    placeholder={`${size.charAt(0).toUpperCase() + size.slice(1)} Size Price`}
-                    {...register(`${size}Price`, { required: true, pattern: /^[0-9]*$/ })}
-                    className="w-full p-2 rounded-md"
+      <div>
+        <label htmlFor="sizes" className="text-md">
+          Sizes
+        </label>
+        {sizeFields.map((size, index) => (
+          <div key={size.id}>
+            <div className="flex items-center mb-2">
+              <Checkbox
+                type="checkbox"
+                {...register(`sizes.${index}.checked`)}
+                className="mr-2"
+              />
+              <label htmlFor={`sizes.${index}.checked`} className="text-md">
+                {size.name.charAt(0).toUpperCase() + size.name.slice(1)}
+              </label>
+              {watch(`sizes.${index}.checked`) && size.name !== 'custom' && (
+                <div className="ml-2">
+                  <input
+                    type="number"
+                    {...register(`sizes.${index}.price`, { required: true, pattern: /^[0-9]*$/ })}
+                    placeholder={`${size.name.charAt(0).toUpperCase() + size.name.slice(1)} Size Price`}
+                    className="mr-2"
                   />
                 </div>
               )}
+              <span
+                className="ml-2 cursor-pointer"
+                onClick={() => handleRemoveSize(index)}
+              >
+                <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
+              </span>
+            </div>
+          </div>
+        ))}
 
-              {/* Conditional fields for custom size */}
-              {size === 'custom' && selectedSizes.includes('custom') && (
-                <div className="mb-2">
-                  <Label htmlFor="customSizeName" className="text-md" value="Custom Size Name" />
-                  <TextInput
-                    id="customSizeName"
-                    placeholder="Custom Size Name"
-                    {...register('customSizeName', { required: true })}
-                    className="w-full p-2 rounded-md"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const customSizeName = watch('customSizeName');
-                      const customSizePrice = watch('customSizePrice');
-                      if (customSizeName && customSizePrice) {
-                        setCustomSizes((prevSizes) => [...prevSizes, customSizeName]);
-                        setValue('customSizeName', '');
-                        setValue('customSizePrice', '');
-                      }
-                    }}
-                    className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-                  >
-                    Add Custom Sizing
-                  </button>
-                </div>
-              )}
-            </React.Fragment>
-          ))}
+        <div className="flex justify-end mt-2">
+          <button
+            type="button"
+            onClick={() => {
+              appendSize({ name: 'custom', price: '', checked: true });
+            }}
+            className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-md"
+          >
+            Add Custom Size
+          </button>
         </div>
+
+        {sizeFields.map((size, index) => (
+          size.name === 'custom' && size.checked && (
+            <div key={index} className="mb-2">
+              <label htmlFor="customSizeName" className="text-md">
+                Custom Size Name
+              </label>
+              <input
+                id="customSizeName"
+                placeholder="Custom Size Name"
+                {...register(`sizes.${index}.customSizeName`, { required: true })}
+                className="w-full p-2 rounded-md"
+              />
+
+              <label htmlFor="customSizePrice" className="text-md">
+                Custom Size Price
+              </label>
+              <input
+                id="customSizePrice"
+                placeholder="Custom Size Price"
+                {...register(`sizes.${index}.customSizePrice`, { required: true, pattern: /^[0-9]*$/ })}
+                className="w-full p-2 rounded-md"
+              />
+            </div>
+          )
+        ))}
       </div>
+
+
+
+
+
+
+
+
+
+
 
 
       {/* Addons */}
@@ -366,27 +428,41 @@ export const DashboardAddProducts = (formData, fields, labels) => {
         </div>
 
         {/* Conditional fields based on noAddons checkbox */}
-        {!hasNoAddons && (
+        {!watch('noAddons') && (
           <div className="mb-2">
-            <label htmlFor="addonName" className="text-md">Addon Name</label>
-            <input
-              id="addonName"
-              placeholder="Addon Name"
-              {...register('addonName', { required: true })}
-              value={currentAddon.addonName}
-              onChange={(e) => setCurrentAddon({ ...currentAddon, addonName: e.target.value })}
-              className="w-full p-2 rounded-md"
-            />
+            {addonFields.map((addon, index) => (
+              <div key={addon.id}>
+                <label htmlFor={`addons.${index}.addonName`} className="text-md">
+                  Addon Name
+                </label>
+                <input
+                  id={`addons.${index}.addonName`}
+                  placeholder="Addon Name"
+                  {...register(`addons.${index}.addonName`, { required: true })}
+                  className="w-full p-2 rounded-md"
+                />
 
-            <label htmlFor="addonPrice" className="text-md">Addon Price</label>
-            <input
-              id="addonPrice"
-              placeholder="Addon Price"
-              {...register('addonPrice', { required: true, pattern: /^[0-9]*$/ })}
-              value={currentAddon.addonPrice}
-              onChange={(e) => setCurrentAddon({ ...currentAddon, addonPrice: e.target.value })}
-              className="w-full p-2 rounded-md"
-            />
+
+                <label htmlFor={`addons.${index}.addonPrice`} className="text-md">
+                  Addon Price
+                </label>
+                <input
+                  id={`addons.${index}.addonPrice`}
+                  placeholder="Addon Price"
+                  {...register(`addons.${index}.addonPrice`, { required: true, pattern: /^[0-9]*$/ })}
+                  className="w-full p-2 rounded-md"
+                />
+
+
+                {/* Button for Remove Addon */}
+                <span
+                  className="ml-2 cursor-pointer"
+                  onClick={() => handleRemoveAddon(index)}
+                >
+                  <X className="w-3 h-3 rounded-full text-red-500 hover:bg-red-600 hover:text-white" />
+                </span>
+              </div>
+            ))}
 
             {/* Button for Add Addons */}
             <div className="flex justify-center mt-2">
@@ -400,9 +476,9 @@ export const DashboardAddProducts = (formData, fields, labels) => {
             </div>
 
             {/* Display added addons */}
-            <div className="overflow-x-auto whitespace-nowrap mt-4">
+            {/* <div className="overflow-x-auto whitespace-nowrap mt-4">
               <div className="flex flex-nowrap max-w-[30px]">
-                {addons.map((addon, index) => (
+                {addonFields.map((addon, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-center p-1 m-1 text-xs font-semibold rounded-full bg-slate-300"
@@ -417,10 +493,11 @@ export const DashboardAddProducts = (formData, fields, labels) => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>
+
 
       {/* Set Visibility */}
       <div className="mb-4">
@@ -453,7 +530,9 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       {/* Image Upload */}
       <div className="mb-4">
         <div className="block mb-2">
-          <Label htmlFor="images" className="text-lg font-bold" value="Image Upload" />
+          <label htmlFor="images" className="text-lg font-bold">
+            Image Upload
+          </label>
           <span className="ml-0.5 text-red-600 font-semibold text-md">*</span>
         </div>
 
@@ -469,12 +548,12 @@ export const DashboardAddProducts = (formData, fields, labels) => {
           </div>
         </div>
 
-
-        {selectedImages.length === 0 && (
+        {(!selectedImages.length || errors.images) && (
           <p className="text-sm font-semibold text-red-600 mt-2">
-            Upload at least one image.
+            {errors.images ? errors.images.message : 'Upload at least one image.'}
           </p>
         )}
+
 
         <div className="overflow-x-auto whitespace-nowrap mt-4">
           <div className="flex flex-nowrap w-full h-full">
@@ -483,17 +562,15 @@ export const DashboardAddProducts = (formData, fields, labels) => {
                 <img src={URL.createObjectURL(image)} alt={`Preview ${index}`} className="object-cover rounded-md" />
                 <button
                   onClick={() => removeImage(index)}
-                  className="absolute top-0 right-0 bg-red-500 text-white rounded-bl-md"
+                  className="absolute top-0 right-0 bg-white-500 text-white rounded-full "
                 >
-                  X
+                  <X className="w-4 h-4 rounded-full bg-red-500 text-white-500 hover:bg-red-700 hover:text-white" />
                 </button>
               </div>
             ))}
           </div>
         </div>
-
       </div>
-
 
       {/* ... other fields ... */}
       <div className="flex justify-end mr-2">
@@ -515,6 +592,9 @@ export const DashboardAddProducts = (formData, fields, labels) => {
       </button>
     </form>
   );
+
 };
+
+
 
 
