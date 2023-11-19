@@ -138,17 +138,16 @@ export const DashboardAddProducts = () => {
       productName: '',
       category: '',
       basePrice: '',
-      ingredients: '',
-      sizes: '',
-      smallPrice: '',
-      regularPrice: '',
-      largePrice: '',
+      ingredients: [{ value: '' }],
+      sizes: [
+        { name: 'small', price: '' },
+        { name: 'regular', price: '' },
+        { name: 'large', price: '' },
+      ],
       customSizeName: '',
       customSizePrice: '',
       noAddons: true,
-      'addons': '',
-      addonName: '',
-      addonPrice: '',
+      addons: [{ addonName: '', addonPrice: '' }],
       isPublished: false,
       isFeatured: false,
       images: [],
@@ -156,6 +155,9 @@ export const DashboardAddProducts = () => {
       // TODO: Add other fields if needed
     });
   };
+
+
+
 
 
   const isPublished = useWatch({ control, name: 'isPublished', defaultValue: false });
@@ -611,7 +613,7 @@ export const DashboardAddProducts = () => {
             <div {...getRootProps()} className={`dropzone ${isDragActive ? 'drag-active' : ''}`}>
               <input {...getInputProps()} />
               <div className="flex flex-col border-2 border-dashed border-blue-400 items-center justify-center p-4 cursor-pointer">
-                <CloudCog className="w-32 h-16 text-blue-500" />
+                <UploadCloudIcon className="w-32 h-16 text-blue-500" />
                 {isDragActive ? (
                   <p className="text-gray-600">Drop the files here...</p>
                 ) : (
