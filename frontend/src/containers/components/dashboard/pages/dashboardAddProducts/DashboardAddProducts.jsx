@@ -54,6 +54,8 @@ const categories = [
   'Appetizer',
 ];
 
+// TODO: Make this consistent 
+
 // TODO: Fix image upload not allowing submit if another file type is uploaded
 export const DashboardAddProducts = () => {
 
@@ -87,6 +89,11 @@ export const DashboardAddProducts = () => {
     name: 'addons',
   });
 
+  const { fields: imageFields, append: appendImage, remove: removeImage } = useFieldArray({
+    control,
+    name: 'images',
+  });
+
   // TODO: There must be at least one value for ingredients, addon, ingredients
 
   const handleRemoveSize = (index) => {
@@ -116,6 +123,16 @@ export const DashboardAddProducts = () => {
     appendSize({ name: 'custom', price: '', checked: true })
   };
 
+  const handleRemoveImage = (index) => {
+    // Remove from imageFields using remove function
+    removeImage(index);
+
+    // Remove from selectedImages
+    const updatedImages = [...selectedImages];
+    updatedImages.splice(index, 1);
+    setSelectedImages(updatedImages);
+  };
+
 
   const handleRemoveAddon = (index) => {
     if (addonFields.length > 1) {
@@ -129,10 +146,10 @@ export const DashboardAddProducts = () => {
     }
   };
 
+  const [selectedImages, setSelectedImages] = useState([]);
 
   // FIXME: Addons is not off when clearing form
-  // TODO: Fix Ingredients and Addons, Images, not clearing when clearing form
-  // TODO: Properly handle setting mutliple input fields to 1
+  // FIXME: Image array is not cleared when clearing form
   const handleClearForm = () => {
     reset({
       productName: '',
@@ -146,25 +163,23 @@ export const DashboardAddProducts = () => {
       ],
       customSizeName: '',
       customSizePrice: '',
-      noAddons: true,
+      noAddons: false,
       addons: [{ addonName: '', addonPrice: '' }],
       isPublished: false,
       isFeatured: false,
       images: [],
       selectedImages: [],
+
       // TODO: Add other fields if needed
     });
   };
-
-
-
 
 
   const isPublished = useWatch({ control, name: 'isPublished', defaultValue: false });
   const isFeatured = useWatch({ control, name: 'isFeatured', defaultValue: false });
 
 
-  const [selectedImages, setSelectedImages] = useState([]);
+
 
   const {
     getRootProps,
@@ -203,12 +218,7 @@ export const DashboardAddProducts = () => {
     console.log('handleImageChange: selectedImages:', selectedImages);
   }, [selectedImages]);
 
-  const removeImage = (index) => {
-    const updatedImages = [...selectedImages];
-    updatedImages.splice(index, 1);
-    setSelectedImages(updatedImages);
-    console.log('remove action: updatedImages:', updatedImages);
-  };
+
 
 
   const onSubmit = (data) => {
@@ -611,7 +621,7 @@ export const DashboardAddProducts = () => {
             </div>
 
             <div {...getRootProps()} className={`dropzone ${isDragActive ? 'drag-active' : ''}`}>
-              <input {...getInputProps()} />
+              <input {...getInputProps()} onChange={handleImageChange} />
               <div className="flex flex-col border-2 border-dashed border-blue-400 items-center justify-center p-4 cursor-pointer">
                 <UploadCloudIcon className="w-32 h-16 text-blue-500" />
                 {isDragActive ? (
@@ -628,13 +638,18 @@ export const DashboardAddProducts = () => {
               </p>
             )}
 
+            {/*  FIXME: Image preview doesn't work for some reason?????*/}
             <div className="overflow-x-auto whitespace-nowrap mt-4">
               <div className="flex flex-nowrap w-full h-full">
-                {selectedImages.map((file, index) => (
+                {imageFields.map((image, index) => (
                   <div key={index} className="relative w-16 h-16 m-1">
-                    <img src={URL.createObjectURL(file)} alt={`Preview ${index}`} className="object-cover rounded-md" />
+                    <img
+                      src={image instanceof File ? URL.createObjectURL(image) : image.url}
+                      alt={`Preview ${index}`}
+                      className="object-cover rounded-md"
+                    />
                     <button
-                      onClick={() => removeImage(index)}
+                      onClick={() => handleRemoveImage(index)}
                       className="absolute top-0 right-0 bg-white-500 text-white rounded-full"
                     >
                       <X
