@@ -43,15 +43,61 @@ const categories = [
   'Breakfast',
   'Seafood',
   'Fast Food',
-  'Italian',
-  'Japanese',
-  'American',
-  'Mexican',
+  // 'Italian',
+  // 'Japanese',
+  // 'American',
+  // 'Mexican',
   'Dessert',
   'Salad',
   'Beverage',
   'Sandwich',
   'Appetizer',
+  // 'Chinese',
+  'Soup',
+  'Salad',
+  'Sandwich',
+  'Wrap',
+  'Cheese',
+  'Cocoa',
+  'Condiment',
+  'Oil',
+  'Fat',
+  'Egg',
+  'Fermented',
+  'Flour',
+  'Grain',
+  'Herb',
+  'Spice',
+  'Legume',
+  'Mushroom',
+  'Nut',
+  'Seed',
+  'Processed',
+  'Ultra-processed',
+
+  // 'Indian',
+  // 'Thai',
+  // 'Vietnamese',
+  // 'Korean',
+  // 'French',
+  // 'Mediterranean',
+  // 'Middle Eastern',
+  // 'Moroccan',
+  // 'Spanish',
+  // 'Turkish',
+  // 'Ethiopian',
+  // 'Brazilian',
+  // 'Caribbean',
+  // 'Cajun',
+  // 'Soul Food',
+  // 'BBQ',
+  // 'Vegan',
+  // 'Vegetarian',
+  // 'Gluten-Free',
+  // 'Paleo',
+  // 'Keto',
+  // 'Halal',
+  // 'Kosher',
 ];
 
 // TODO: Make this consistent 
@@ -127,10 +173,15 @@ export const DashboardAddProducts = () => {
     // Remove from imageFields using remove function
     removeImage(index);
 
-    // Remove from selectedImages
-    const updatedImages = [...selectedImages];
-    updatedImages.splice(index, 1);
-    setSelectedImages(updatedImages);
+    // Remove from selectedImageFiles
+    const updatedImageFiles = [...selectedImageFiles];
+    updatedImageFiles.splice(index, 1);
+    setSelectedImageFiles(updatedImageFiles);
+
+    // Remove from selectedImageUrls
+    const updatedImageUrls = [...selectedImageUrls];
+    updatedImageUrls.splice(index, 1);
+    setSelectedImageUrls(updatedImageUrls);
   };
 
 
@@ -146,9 +197,9 @@ export const DashboardAddProducts = () => {
     }
   };
 
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImageFiles, setSelectedImageFiles] = useState([]);
+  const [selectedImageUrls, setSelectedImageUrls] = useState([]);
 
-  // FIXME: Addons is not off when clearing form
   // FIXME: Image array is not cleared when clearing form
   const handleClearForm = () => {
     reset({
@@ -168,7 +219,7 @@ export const DashboardAddProducts = () => {
       isPublished: false,
       isFeatured: false,
       images: [],
-      selectedImages: [],
+      // selectedImages: [],
 
       // TODO: Add other fields if needed
     });
@@ -177,9 +228,6 @@ export const DashboardAddProducts = () => {
 
   const isPublished = useWatch({ control, name: 'isPublished', defaultValue: false });
   const isFeatured = useWatch({ control, name: 'isFeatured', defaultValue: false });
-
-
-
 
   const {
     getRootProps,
@@ -200,10 +248,10 @@ export const DashboardAddProducts = () => {
           message: 'Only images are allowed.',
         });
       } else {
-        setValue('images', [...selectedImages, ...newImages]);
-        setSelectedImages([...selectedImages, ...newImages]);
+        setValue('images', [...selectedImageFiles, ...newImages]);
+        setSelectedImageFiles([...selectedImageFiles, ...newImages]);
       }
-    }, [selectedImages, setValue, setError]),
+    }, [selectedImageFiles, setValue, setError]),
   });
 
 
@@ -211,12 +259,12 @@ export const DashboardAddProducts = () => {
     const files = e.target.files;
     if (files.length > 0) {
       const imageArray = Array.from(files);
-      setSelectedImages([...selectedImages, ...imageArray]);
+      setSelectedImageFiles([...selectedImageFiles, ...imageArray]);
     }
   };
   useEffect(() => {
-    console.log('handleImageChange: selectedImages:', selectedImages);
-  }, [selectedImages]);
+    console.log('handleImageChange: selectedImageFiles:', selectedImageFiles);
+  }, [selectedImageFiles]);
 
 
 
@@ -632,7 +680,7 @@ export const DashboardAddProducts = () => {
               </div>
             </div>
 
-            {(selectedImages.length === 0 || errors.images) && (
+            {(selectedImageFiles.length === 0 || errors.images) && (
               <p className="text-sm font-semibold text-red-600 mt-2">
                 {errors.images ? errors.images.message : 'Upload at least one image.'}
               </p>
