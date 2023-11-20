@@ -55,13 +55,17 @@ const MenuItem = ({ id, imageSrc, itemName, basePrice, sizes, addOns, ingredient
       </Button>
       <div className="bg-white dark:bg-gray-800 w-full p-4 flex flex-col ">
         <div className='flex justify-between'>
+
           <span className="text-gray-800 dark:text-white text-xl font-medium mb-2">{itemName}</span>
-          {/* <p className="text-gray-800 flex items-center dark:text-white text-xl font-medium mb-2"> <span className='text-xs text-red-500 underline'>Starts at</span>
-          <DollarSign className='w-5 h-5' /> {basePrice}
-        </p> */}
+          <div>
+            <span className=' text-sm text-red-500 underline font-semibold'>Starts at</span>
+            <p className="text-gray-800 flex items-center dark:text-white text-xl font-medium mb-2">
+              <DollarSign className='w-5 h-5' /> {basePrice}
+            </p>
+          </div>
         </div>
 
-        <div className="max-w-md">
+        {/* <div className="max-w-md">
           <div className="mb-2 block">
             <Label htmlFor="sizes" value="Select Size" />
           </div>
@@ -89,10 +93,10 @@ const MenuItem = ({ id, imageSrc, itemName, basePrice, sizes, addOns, ingredient
             ))}
             <option>No Addons</option>
           </Select>
-        </div>
+        </div> */}
 
         {/* TODO: Should there be ingredients? */}
-        <div className=' flex pt-4'>
+        <div className=' flex'>
           <Label htmlFor="addOns" value="Ingredients" className='pr-2 flex flex-col items-center justify-center' />
           <Tooltip
             content={
@@ -122,9 +126,7 @@ const MenuItem = ({ id, imageSrc, itemName, basePrice, sizes, addOns, ingredient
 );
 
 
-
 export const MenuPage = () => {
-
 
   // FIXME: Why is the selected item id undefined??
   return (
@@ -136,7 +138,7 @@ export const MenuPage = () => {
           <MenuItemFilters />
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-16">
           {menuItems.map(item => (
             <MenuItem
               key={item.id}
