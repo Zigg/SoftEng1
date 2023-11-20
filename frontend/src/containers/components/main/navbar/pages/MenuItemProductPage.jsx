@@ -3,8 +3,23 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { productsMockData } from '../../../dashboard/pages/mock/productsMockData';
 import { Label, Select } from 'flowbite-react';
-import { Tooltip, Typography } from "@material-tailwind/react";
-import { Eye, Minus, Plus, Search, SearchX } from 'lucide-react';
+import { Dessert, Eye, Heart, Minus, Plus, Search, SearchX, Star } from 'lucide-react';
+import { IoMdStar } from "react-icons/io";
+import { GiWrappedSweet } from "react-icons/gi";
+
+
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Typography,
+  Button,
+  Tooltip,
+  IconButton,
+} from "@material-tailwind/react";
+import { FaStarOfLife } from 'react-icons/fa6';
+
 
 // TODO: This is correct now its adding the sizes and addons option to the base price which is correct however my products data is defined to provide the overall value not the added value to the base price. So I need to change the data to reflect the added value to the base price instead of the overall value.
 
@@ -50,9 +65,12 @@ const AnimatedNumber = ({ value, commas }) => {
   );
 };
 
+
+
 export const MenuItemProductPage = () => {
   const { id } = useParams();
   const selectedItem = productsMockData.find(item => item.id === parseInt(id, 10));
+
   // TODO: Add better styling to this page
   if (!selectedItem) {
     return (
@@ -63,6 +81,7 @@ export const MenuItemProductPage = () => {
       </div>
     )
   }
+
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedAddOn, setSelectedAddOn] = useState('');
@@ -103,111 +122,172 @@ export const MenuItemProductPage = () => {
     setSelectedAddOn(e.target.value);
   };
 
+  const addToCart = () => {
+    console.log('Add to cart', data)
+  }
 
 
   return (
-    <div className="container mx-auto px-6 p-10">
-      <h2 className="text-3xl font-bold text-center dark:text-white mb-8">{selectedItem.productName}</h2>
-
-      <div className="flex justify-center">
-        <img
-          src={selectedItem.productImage}
-          alt={selectedItem.productName}
-          style={{
-            aspectRatio: "200/200",
-            objectFit: "cover",
-            width: "50%",
-            border: "1px solid #e5e7eb",
-            borderRadius: "8px",
-          }}
-        />
-      </div>
-
-      <div className="mt-8">
-        <p className="text-lg font-semibold">Base Price: ${selectedItem.basePrice}</p>
-
-        <div className='flex items-center pt-4'>
-          <Label htmlFor="addOns" value="Ingredients" className='pr-2 flex flex-col items-center justify-center' />
-          <Tooltip
-            content={
-              <div className="w-80">
-                <Typography color="white" className="font-medium">
-                  Ingredients Full List
-                </Typography>
-                <Typography
-                  variant="small"
-                  color="white"
-                  className="font-normal opacity-80"
-                >
-                  <p className='pt-2' >
-                    <div className='font-semibold'>{selectedItem.ingredients.join(', ')}</div>
-                  </p>
-                </Typography>
+    <div className="mx-auto p-12">
+      <div className='flex items-center justify-center shadow-2xl'>
+        {/* Product Card */}
+        <div className=" max-w-[26rem] h-full m-8">
+          {/* Card Header */}
+          <div className="relative rounded-lg">
+            <div className="relative">
+              <div className="flex items-center justify-center">
+                <img
+                  src={selectedItem.productImage}
+                  alt={selectedItem.productName}
+                  className=" max-h-[28rem] object-cover  rounded-lg w-full"
+                />
               </div>
-            }
-          >
-            <Eye className='w-5 h-5 hover:text-blue-600 cursor-pointer' />
-          </Tooltip>
-        </div>
-
-        <div className="mt-4">
-          <span className="text-lg font-semibold">Choices</span>
-
-          <div className="mb-2 block">
-            <Label htmlFor="sizes" value="Select Size" />
-          </div>
-          <Select id="sizes" defaultValue="" onChange={handleSizeChange}>
-            <option value="" disabled hidden>Select a size</option>
-            {selectedItem.sizes.map((size, index) => (
-              <option key={index} value={size.name}>
-                {size.name} - ${size.price}
-              </option>
-            ))}
-          </Select>
-
-          <div className="mb-2 block">
-            <Label htmlFor="addOns" value="Select Addon" />
-          </div>
-          <Select id="addOns" defaultValue="" onChange={handleAddOnChange}>
-            <option value="" disabled hidden>Select an add-on</option>
-
-            {selectedItem.addons.map((addon, index) => (
-              <option key={index} value={addon.name}>
-                {addon.name} - ${addon.price}
-              </option>
-            ))}
-            <option>No Addons Available</option>
-          </Select>
-        </div>
-      </div>
-      {/* TODO: Style this better */}
-      {/* TODO: Add the "add to cart" functionality */}
-      <div className="flex flex-col justify-between mt-8">
-        <button className="max-w-xl bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Add to Cart
-        </button>
-
-        <div className="flex items-center justify-center mt-4">
-          <div className="flex items-center">
-            <button onClick={decrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded">
-              <Minus className="w-4 h-4" />
-            </button>
-            <span className="mx-2 text-lg font-semibold">{quantity}</span>
-            <button onClick={incrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 rounded">
-              <Plus className="w-4 h-4" />
+            </div>
+            <div className="to-bg-black-10 absolute inset-0 h-full  bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
+            <button className='right-0'>
+              {/* <Heart className='w-5 h-5' /> */}
             </button>
           </div>
+
+          {/* Card Body */}
+          <CardBody>
+            <div className="mb-3 flex flex-col  items-center justify-between">
+              {/* <Typography variant="h5" color="blue-gray" className="font-medium mb-4">
+                {selectedItem.productName}
+              </Typography> */}
+
+
+            </div>
+            <Typography color="gray">
+              {/* TODO: Add short description for the product limit it to 255 characters in the admin dashboard and add product page */}
+              <div className='flex flex-col'>
+                <span className='text-xs'>Placeholder:</span>
+
+                <span className='font-bold'>Product Description:</span>
+                <span>Duis non dolor irure nulla eu voluptate tempor tempor id aliquip in reprehenderit qui.</span>
+                {selectedItem.productDescription}
+              </div>
+            </Typography>
+
+            {/* TODO: Placeholder */}
+            {/* TODO: Add a taste profile field to the json, /database later on */}
+            {/* <div className='flex flex-col'>Taste Profile:
+              <span className='text-xs'>Placeholder:</span>
+              <div className='flex gap-x-2'><Dessert className='h-6 w-6' /><GiWrappedSweet className='h-6 w-6' /></div>
+            </div> */}
+          </CardBody>
         </div>
 
-        <div className=""> Total: $
-          <AnimatedNumber key={quantity} value={totalPrice.toFixed(2)} commas />
-        </div>
+        <div className="ml-8 px-12 mx-12">
+          <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 ">{selectedItem.productName} Details</h2>
+          <p className="font-bold">Base Price: ${selectedItem.basePrice}</p>
 
-        <div className=""> Total: $
-          {totalPrice.toFixed(2)}
+          <div className="mt-4">
+            <span className=" font-semibold mb-4 block border-b-2 border-slate-300">Variation</span>
+
+            {/* Select Size Dropdown */}
+            <div className="mb-4 ">
+              <Label value="Select Size" />
+              <div className="flex flex-col">
+                {selectedItem.sizes.map((size, index) => (
+                  <div key={index} className="mr-2 mb-4">
+                    <input
+                      type="radio"
+                      id={`size-${index}`}
+                      name="selectedSize"
+                      value={size.name}
+                      onChange={handleSizeChange}
+                    />
+                    <Label htmlFor={`size-${index}`} className="ml-2">
+                      {size.name} (+${size.price})
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Select Add-On Radio Buttons */}
+            <div className="mb-4">
+              <Label value="Select Addons" />
+              <div className="flex flex-col">
+                {selectedItem.addons.length > 0 ? (
+                  selectedItem.addons.map((addon, index) => (
+                    <div key={index} className="mr-2 mb-4">
+                      <input
+                        type="radio"
+                        id={`addon-${index}`}
+                        name="selectedAddon"
+                        value={addon.name}
+                        onChange={handleAddOnChange}
+                      />
+                      <Label htmlFor={`addon-${index}`} className="ml-2">
+                        {addon.name} (+${addon.price})
+                      </Label>
+                    </div>
+                  ))
+                ) : (
+                  <p className='text-red-600'>No Addons Available</p>
+                )}
+              </div>
+            </div>
+
+
+            {/* Ingredients */}
+            <div className='flex items-center mb-4'>
+              <Label htmlFor="addOns" value="Ingredients" className='pr-2 flex flex-col items-center justify-center' />
+              <Tooltip
+                content={
+                  <div className="w-80">
+                    <Typography color="white" className="font-medium">
+                      Ingredients Full List
+                    </Typography>
+                    <Typography variant="small" color="white" className="font-normal opacity-80">
+                      <p className='pt-2'>
+                        <div className='font-semibold'>{selectedItem.ingredients.join(', ')}</div>
+                      </p>
+                    </Typography>
+                  </div>
+                }
+              >
+                <Eye className='w-5 h-5 hover:text-blue-600 cursor-pointer' />
+              </Tooltip>
+            </div>
+
+            {/* Quantity Controls */}
+            <div className="flex items-center mb-4">
+              <span className='mr-2 '>Quantity: </span>
+              <button onClick={decrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 ">
+                <Minus className="w-4 h-4" />
+              </button>
+              <span className="mx-2 font-semibold">{quantity}</span>
+              <button onClick={incrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 ">
+                <Plus className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Checkout/Cart */}
+            <div className="flex gap-x-2  mt-4 ">
+              <button className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0">
+                Add to Cart
+              </button>
+              <button className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0 ">
+                Order Now
+              </button>
+            </div>
+
+            {/* Total Price */}
+            <div className="mt-4 flex justify-end">
+              <div className="font-bold"> Total: $
+                <AnimatedNumber key={quantity} value={totalPrice.toFixed(2)} commas />
+              </div>
+            </div>
+            {/* <div className="text-sm text-gray-500">Free shipping on orders over $50 </div>
+
+            <span className='text-xs text-gray-500 italic'>Terms and Conditions apply</span> */}
+          </div>
         </div>
 
       </div>
-    </div>
+    </div >
   );
 };
