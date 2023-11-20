@@ -19,6 +19,8 @@ import { OnboardButton } from "./navbar/OnboardButton.jsx";
 import { defaultUser, Logo } from "../../../assets/images/index.js";
 import { CartBadge } from "./navbar/CartBadge.jsx";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { RiAdminLine } from "react-icons/ri";
+
 
 const auth = getAuth();
 
@@ -27,8 +29,10 @@ export const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showCart, setShowCart] = useState(false);
 
+
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const roleType = useSelector((state) => state.roleType);
   const userEmail = useSelector((state) =>
     state.user && state.user.email ? state.user.email : ""
   );
@@ -243,6 +247,17 @@ export const TopNavbar = () => {
                     </div>
 
                     <ul className="py-2" aria-labelledby="user-menu-button">
+                      {roleType === "admin" && (
+                        <li>
+                          <NavLink
+                            to="dashboard"
+                            className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                          >
+                            <RiAdminLine className="mr-2" />
+                            Admin Dashboard
+                          </NavLink>
+                        </li>
+                      )}
                       <li>
                         <NavLink
                           to="profile"
@@ -270,8 +285,8 @@ export const TopNavbar = () => {
                           History
                         </NavLink>
                       </li>
-
-                      <li>
+                      {/* Bit unnecessary */}
+                      {/* <li>
                         <NavLink
                           to="transactions"
                           className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
@@ -279,7 +294,7 @@ export const TopNavbar = () => {
                           <TbArrowsTransferDown className="mr-2" />
                           Transactions
                         </NavLink>
-                      </li>
+                      </li> */}
                       <li>
                         <button
                           onClick={() => {
