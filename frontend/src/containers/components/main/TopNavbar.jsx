@@ -254,7 +254,7 @@ export const TopNavbar = () => {
                             className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
                           >
                             <RiAdminLine className="mr-2" />
-                            Admin Dashboard
+                            Dashboard
                           </NavLink>
                         </li>
                       )}
