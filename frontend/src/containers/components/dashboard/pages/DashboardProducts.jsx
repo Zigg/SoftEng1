@@ -71,17 +71,18 @@ export const DashboardProducts = () => {
           <span className='flex items-center justify-center'>No Image</span>
         </>
       ),
-
+      // TODO: Separate the prices and names, or make them a list
       'Product Name': product.productName || '-',
       'Category': product.category || '-',
       'Base Price': '$' + (product.basePrice || '-'),
       'Ingredients': product.ingredients?.join(', ') || '-',
-      'Sizes': product.sizes?.map(size => `${size.name}: $${size.price}`).join(', ') || '-',
-      'Addons': product.addons?.map(addon => `${addon.name}: $${addon.price}`).join(', ') || (
+      'Sizes': product.sizes?.map(size => `${size.name}: $${size.price}`).join(' | ') || '-',
+      'Addons': product.addons?.map(addon => `${addon.name}: $${addon.price}`).join(' | ') || (
         <span className="text-red-600">No Addons</span>
       ),
       'Date Added': product.dateAdded || '-',
       'Published': product.isPublished || '-',
+      'Featured': product.isFeatured || '-',
     })) : [];
 
 
