@@ -42,6 +42,7 @@ import {
 import { MainDashboard } from "./containers/components/dashboard/index.js";
 import { TopNavbar } from "./containers/components/main/index.js";
 import { Footer } from "./containers/components/main/navbar/pages/components/Footer.jsx";
+import { MenuItemProductPage } from "./containers/components/main/navbar/pages/MenuItemProductPage.jsx";
 
 
 function MainPageRoutes() {
@@ -79,14 +80,14 @@ function MainPageTopNavbarRoutes() {
       >
         <Route path="/" element={<HomePage />} />
         <Route path="menu" element={<MenuPage />} />
+        <Route path="menu/:id" element={<MenuItemProductPage />} />
         <Route path="featured" element={<AboutPage />} />
         <Route path="contacts" element={<ContactsPage />} />
       </Route>
-
-
     </Routes>
   );
 }
+
 
 
 // TODO: Add the outlet child routes for the dashboard routes
