@@ -1,5 +1,9 @@
 // TODO: If the product is featured put it in the carousel
 // TODO: For now images are only one image but in the future it can be multiple images
+
+// FIXME: Change name, in size and addon to sizeName, addonName, addonPrice, etc
+
+// TODO: The id's will come from the database
 export const productsMockData = [
   {
     "id": 1,
@@ -9,9 +13,9 @@ export const productsMockData = [
     "basePrice": 5.99,
     "ingredients": ["Chicken", "Bread", "Lettuce", "Tomato"],
     "sizes": [
-      { "name": "Small", "price": 5.99 },
-      { "name": "Regular", "price": 6.99 },
-      { "name": "Large", "price": 7.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2 },
+      { "name": "Large", "price": 2.99 }
     ],
     "addons": [
       { "name": "Cheese", "price": 0.99 },
@@ -30,9 +34,9 @@ export const productsMockData = [
     "basePrice": 8.99,
     "ingredients": ["Dough", "Tomato Sauce", "Cheese", "Bell Peppers", "Mushrooms"],
     "sizes": [
-      { "name": "Small", "price": 8.99 },
-      { "name": "Regular", "price": 9.99 },
-      { "name": "Large", "price": 10.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 1.99 },
+      { "name": "Large", "price": 3.99 }
     ],
     "addons": [
       { "name": "Extra Cheese", "price": 0.99 },
@@ -51,8 +55,8 @@ export const productsMockData = [
     "basePrice": 9.99,
     "ingredients": ["Spaghetti", "Eggs", "Bacon", "Parmesan Cheese", "Black Pepper"],
     "sizes": [
-      { "name": "Small", "price": 9.99 },
-      { "name": "Large", "price": 11.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Large", "price": 3.99 }
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
@@ -70,8 +74,8 @@ export const productsMockData = [
     "basePrice": 12.99,
     "ingredients": ["Sushi Rice", "Nori Seaweed", "Fish", "Vegetables"],
     "sizes": [
-      { "name": "Regular", "price": 12.99 },
-      { "name": "Large", "price": 14.99 }
+      { "name": "Regular", "price": 0 },
+      { "name": "Large", "price": 0.99 }
     ],
     "addons": [
       { "name": "Soy Sauce", "price": 0.49 },
@@ -89,8 +93,8 @@ export const productsMockData = [
     "basePrice": 15.99,
     "ingredients": ["Ribeye Steak", "Mashed Potatoes", "Gravy", "Green Beans"],
     "sizes": [
-      { "name": "Regular", "price": 15.99 },
-      { "name": "Large", "price": 17.99 }
+      { "name": "Regular", "price": 0 },
+      { "name": "Large", "price": 4.99 }
     ],
     "addons": [
       { "name": "Garlic Butter", "price": 0.99 },
@@ -109,9 +113,9 @@ export const productsMockData = [
     "basePrice": 7.99,
     "ingredients": ["Tortillas", "Ground Beef", "Lettuce", "Tomato", "Cheese"],
     "sizes": [
-      { "name": "Small", "price": 7.99 },
-      { "name": "Regular", "price": 8.99 },
-      { "name": "Large", "price": 9.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 1.99 },
+      { "name": "Large", "price": 2.99 }
     ],
     "addons": [
       { "name": "Salsa", "price": 0.49 },
@@ -129,9 +133,9 @@ export const productsMockData = [
     "basePrice": 4.99,
     "ingredients": ["Vanilla Ice Cream", "Hot Fudge", "Whipped Cream", "Cherries"],
     "sizes": [
-      { "name": "Small", "price": 4.99 },
-      { "name": "Regular", "price": 5.99 },
-      { "name": "Large", "price": 6.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.99 },
+      { "name": "Large", "price": 4.99 }
     ],
     "addons": [
       { "name": "Sprinkles", "price": 0.49 },
@@ -149,9 +153,9 @@ export const productsMockData = [
     "basePrice": 10.99,
     "ingredients": ["Dough", "Tomato Sauce", "Cheese", "Pineapple", "Ham"],
     "sizes": [
-      { "name": "Small", "price": 10.99 },
-      { "name": "Regular", "price": 11.99 },
-      { "name": "Large", "price": 12.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 1.99 },
+      { "name": "Large", "price": 2.99 }
     ],
     "addons": [
       { "name": "Extra Cheese", "price": 0.99 },
@@ -169,9 +173,9 @@ export const productsMockData = [
     "basePrice": 6.99,
     "ingredients": ["Chicken", "Breading", "Mashed Potatoes", "Gravy"],
     "sizes": [
-      { "name": "Small", "price": 6.99 },
-      { "name": "Regular", "price": 7.99 },
-      { "name": "Large", "price": 8.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 0.99 },
+      { "name": "Large", "price": 1.99 }
     ],
     "addons": [
       { "name": "Coleslaw", "price": 0.49 },
@@ -189,9 +193,9 @@ export const productsMockData = [
     "basePrice": 11.99,
     "ingredients": ["Lasagna Noodles", "Ricotta Cheese", "Ground Beef", "Tomato Sauce"],
     "sizes": [
-      { "name": "Small", "price": 11.99 },
-      { "name": "Regular", "price": 12.99 },
-      { "name": "Large", "price": 13.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.99 },
+      { "name": "Large", "price": 3.99 }
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
@@ -210,9 +214,9 @@ export const productsMockData = [
     "basePrice": 8.99,
     "ingredients": ["Pepperoni", "Pizza Dough", "Tomato Sauce", "Mozzarella Cheese"],
     "sizes": [
-      { "name": "Small", "price": 8.99 },
-      { "name": "Regular", "price": 9.99 },
-      { "name": "Large", "price": 10.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 4.99 },
+      { "name": "Large", "price": 8.99 }
     ],
     "addons": [
       { "name": "Green Peppers", "price": 0.49 },
@@ -230,9 +234,9 @@ export const productsMockData = [
     "basePrice": 4.49,
     "ingredients": ["Chocolate Ice Cream", "Hot Fudge", "Whipped Cream", "Sprinkles"],
     "sizes": [
-      { "name": "Small", "price": 4.49 },
-      { "name": "Regular", "price": 5.49 },
-      { "name": "Large", "price": 6.49 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.49 },
+      { "name": "Large", "price": 5.49 }
     ],
     "addons": [],
     "dateAdded": "2022-03-10",
@@ -247,9 +251,9 @@ export const productsMockData = [
     "basePrice": 12.99,
     "ingredients": ["Spaghetti", "Bolognese Sauce", "Ground Beef", "Parmesan Cheese"],
     "sizes": [
-      { "name": "Small", "price": 12.99 },
-      { "name": "Regular", "price": 13.99 },
-      { "name": "Large", "price": 14.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 3.49 },
+      { "name": "Large", "price": 4.99 }
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
@@ -267,9 +271,9 @@ export const productsMockData = [
     "basePrice": 14.99,
     "ingredients": ["Rice", "Nori", "Fish", "Vegetables"],
     "sizes": [
-      { "name": "Small", "price": 14.99 },
-      { "name": "Regular", "price": 15.99 },
-      { "name": "Large", "price": 16.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 4.99 },
+      { "name": "Large", "price": 6.99 }
     ],
     "addons": [],
     "dateAdded": "2022-05-12",
@@ -284,9 +288,9 @@ export const productsMockData = [
     "basePrice": 6.99,
     "ingredients": ["Mixed Fruits", "Honey", "Lime Juice", "Mint Leaves"],
     "sizes": [
-      { "name": "Small", "price": 6.99 },
-      { "name": "Regular", "price": 7.99 },
-      { "name": "Large", "price": 8.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.49 },
+      { "name": "Large", "price": 4.99 }
     ],
     "addons": [],
     "dateAdded": "2022-06-30",
@@ -302,9 +306,9 @@ export const productsMockData = [
     "basePrice": 19.99,
     "ingredients": ["Ribeye Steak", "Mashed Potatoes", "Asparagus", "Steak Sauce"],
     "sizes": [
-      { "name": "8 oz", "price": 19.99 },
-      { "name": "12 oz", "price": 22.99 },
-      { "name": "16 oz", "price": 25.99 }
+      { "name": "8 oz", "price": 0 },
+      { "name": "12 oz", "price": 2.99 },
+      { "name": "16 oz", "price": 5.99 }
     ],
     "addons": [
       { "name": "Garlic Butter", "price": 0.99 },
@@ -322,9 +326,9 @@ export const productsMockData = [
     "basePrice": 3.49,
     "ingredients": ["Espresso", "Steamed Milk", "Foamed Milk"],
     "sizes": [
-      { "name": "Small", "price": 3.49 },
-      { "name": "Regular", "price": 3.99 },
-      { "name": "Large", "price": 4.49 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.99 },
+      { "name": "Large", "price": 3.49 }
     ],
     "addons": [],
     "dateAdded": "2022-08-05",
@@ -339,8 +343,8 @@ export const productsMockData = [
     "basePrice": 7.99,
     "ingredients": ["Rice", "Black Beans", "Guacamole", "Salsa"],
     "sizes": [
-      { "name": "Regular", "price": 7.99 },
-      { "name": "Large", "price": 9.99 }
+      { "name": "Regular", "price": 0 },
+      { "name": "Large", "price": 2.99 }
     ],
     "addons": [],
     "dateAdded": "2022-09-14",
@@ -358,9 +362,9 @@ export const productsMockData = [
     "basePrice": 4.99,
     "ingredients": ["Carrots", "Cucumbers", "Kale", "Lemon"],
     "sizes": [
-      { "name": "Small", "price": 4.99 },
-      { "name": "Regular", "price": 5.49 },
-      { "name": "Large", "price": 5.99 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.49 },
+      { "name": "Large", "price": 4.99 }
     ],
     "addons": [],
     "dateAdded": "2022-10-25",
@@ -375,12 +379,13 @@ export const productsMockData = [
     "basePrice": 9.49,
     "ingredients": ["Turkey", "Bacon", "Lettuce", "Tomato"],
     "sizes": [
-      { "name": "Regular", "price": 9.49 },
-      { "name": "Large", "price": 10.49 }
+      { "name": "Regular", "price": 0 },
+      { "name": "Large", "price": 3.49 }
     ],
     "addons": [
       { "name": "Egg", "price": 0.49 },
-      { "name": "Avocado", "price": 0.99 }
+
+      { "name": "Avocado", "price": 0.99 },
     ],
     "dateAdded": "2022-11-08",
     "isPublished": "Yes",
@@ -394,7 +399,7 @@ export const productsMockData = [
     "basePrice": 2.99,
     "ingredients": ["Ground Beef", "Taco Shell", "Lettuce", "Salsa"],
     "sizes": [
-      { "name": "Regular", "price": 2.99 }
+      { "name": "Regular", "price": 0 }
     ],
     "addons": [
       { "name": "Cheese", "price": 0.49 },
@@ -412,7 +417,7 @@ export const productsMockData = [
     "basePrice": 6.49,
     "ingredients": ["Pancakes", "Blueberries", "Maple Syrup", "Whipped Cream"],
     "sizes": [
-      { "name": "Regular", "price": 6.49 }
+      { "name": "Regular", "price": 0 }
     ],
     "addons": [],
     "dateAdded": "2023-01-05",
@@ -428,7 +433,7 @@ export const productsMockData = [
     "basePrice": 24.99,
     "ingredients": ["Lobster", "Butter", "Garlic", "Lemon"],
     "sizes": [
-      { "name": "Whole Lobster", "price": 24.99 }
+      { "name": "Whole Lobster", "price": 0 }
     ],
     "addons": [],
     "dateAdded": "2023-02-20",
@@ -443,8 +448,8 @@ export const productsMockData = [
     "basePrice": 3.99,
     "ingredients": ["Sweet Potatoes", "Salt", "Cayenne Pepper"],
     "sizes": [
-      { "name": "Small", "price": 3.99 },
-      { "name": "Regular", "price": 4.49 },
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.49 },
       { "name": "Large", "price": 4.99 }
     ],
     "addons": [
@@ -464,7 +469,9 @@ export const productsMockData = [
     "basePrice": 2.49,
     "ingredients": ["Lemons", "Water", "Sugar"],
     "sizes": [
-      { "name": "Regular", "price": 2.49 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 2.49 },
+      { "name": "Large", "price": 4.99 }
     ],
     "addons": [],
     "dateAdded": "2023-04-10",
@@ -479,7 +486,7 @@ export const productsMockData = [
     "basePrice": 8.99,
     "ingredients": ["Ground Pork", "Eggs", "Black Pepper", "Flour"],
     "sizes": [
-      { "name": "Regular", "price": 8.99 }
+      { "name": "Regular", "price": 0 }
     ],
     "addons": [],
     "dateAdded": "2023-05-25",
@@ -494,9 +501,9 @@ export const productsMockData = [
     "basePrice": 7.49,
     "ingredients": ["Chicken Wings", "Buffalo Sauce", "Celery", "Ranch Dressing"],
     "sizes": [
-      { "name": "Small", "price": 7.49 },
-      { "name": "Regular", "price": 8.49 },
-      { "name": "Large", "price": 9.49 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 3.49 },
+      { "name": "Large", "price": 5.49 }
     ],
     "addons": [],
     "dateAdded": "2023-06-10",
@@ -512,7 +519,7 @@ export const productsMockData = [
     "basePrice": 3.49,
     "ingredients": ["Hot Dog Bun", "Hot Dog Sausage", "Mustard", "Ketchup"],
     "sizes": [
-      { "name": "Regular", "price": 3.49 }
+      { "name": "Regular", "price": 0 }
     ],
     "addons": [],
     "dateAdded": "2023-07-12",
@@ -527,7 +534,7 @@ export const productsMockData = [
     "basePrice": 11.99,
     "ingredients": ["Salmon", "Wasabi", "Soy Sauce", "Pickled Ginger"],
     "sizes": [
-      { "name": "Regular", "price": 11.99 }
+      { "name": "Regular", "price": 0 }
     ],
     "addons": [],
     "dateAdded": "2023-08-18",
@@ -542,7 +549,9 @@ export const productsMockData = [
     "basePrice": 10.49,
     "ingredients": ["Pasta", "Mixed Vegetables", "Tomato Sauce", "Parmesan Cheese"],
     "sizes": [
-      { "name": "Regular", "price": 10.49 }
+      { "name": "Small", "price": 0 },
+      { "name": "Regular", "price": 3.49 },
+      { "name": "Large", "price": 5.49 }
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
