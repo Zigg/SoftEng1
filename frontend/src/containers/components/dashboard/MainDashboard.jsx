@@ -37,7 +37,6 @@ export const MainDashboard = () => {
   // TODO: The main dashboard content should be dependent on the restaurant, since this dashboard is for the restaurant owner but you should be able to switch between restaurants seamlessly
   const firebaseAuth = getAuth(app);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = React.useState(true);
   // TODO: set modal state to false when not testing
   const [openModal, setOpenModal] = useState(true);
   const dispatch = useDispatch();
@@ -97,7 +96,7 @@ export const MainDashboard = () => {
   }, [dispatch]);
 
   // Size of the screen when the hamburger menu should be toggled
-  const screenSizeToggled = 720;
+  const screenSizeToggled = 767;
   const [isSidebarOpen, setIsSidebarOpen] = useState(
     window.innerWidth > screenSizeToggled,
   );
