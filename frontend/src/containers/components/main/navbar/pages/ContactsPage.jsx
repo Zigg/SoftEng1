@@ -28,7 +28,7 @@ export const ContactsPage = () => {
             </div>
             <Textarea id="comment" placeholder="Leave a comment..." required rows={4} />
           </div>
-          <Button className='flex flex-col justify-center'>Send message</Button>
+          <button className='flex flex-col justify-center bg-red-600 px-4 py-2 rounded-lg hover:bg-red-800 text-white '>Send message</button>
         </div>
 
         <div className="space-y-4">
