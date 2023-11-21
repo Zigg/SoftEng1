@@ -37,42 +37,58 @@ export const DashboardProducts = () => {
     { title: 'Product Image' },
     { title: 'Product Name' },
     { title: 'Category' },
-    { title: 'Price' },
+    { title: 'Base Price' },
     { title: 'Ingredients' },
     { title: 'Sizes' },
     { title: 'Addons' },
-    { title: 'Addon Price' },
     { title: 'Date Added' },
     { title: 'Published' },
+    { title: 'Featured' }
   ];
 
+  // FIXME: The image should be rendering in the data table
   const productsMockDataList = productsMockData
     ? productsMockData.map((product) => ({
-      'Product Image': (
-        <div className="p-7 items-center justify-center flex">
-          <ImageOff className="w-5 h-5" />
+      'Product Image': Array.isArray(product.productImage) ? product.productImage.map((src, index) => (
+        <div key={index} className="p-7 items-center justify-center flex">
+          <img
+            src={src}
+            alt="Product"
+            className="w-full h-56 object-cover transform transition-transform duration-200 hover:scale-105"
+            height="200"
+            style={{
+              aspectRatio: "200/200",
+              objectFit: "cover",
+            }}
+            width="200"
+          />
         </div>
+      )) : (
+        <>
+          <div className="px-7 items-center justify-center flex">
+            <ImageOff className="w-5 h-5" />
+          </div>
+          <span className='flex items-center justify-center'>No Image</span>
+        </>
       ),
+      // TODO: Separate the prices and names, or make them a list
       'Product Name': product.productName || '-',
-      Category: product.category || '-',
-      Price: product.price || '-',
-      Ingredients: product.ingredients?.join(', ') || '-',
-      Sizes: product.sizes?.join(', ') || '-',
-      Addons: product.addons?.join(', ') || (
-        <span className="text-red-600">No Addons</span>
-      ),
-      'Addon Price': product.addonPrices?.join(', ') || (
+      'Category': product.category || '-',
+      'Base Price': '$' + (product.basePrice || '-'),
+      'Ingredients': product.ingredients?.join(', ') || '-',
+      'Sizes': product.sizes?.map(size => `${size.name}: $${size.price}`).join(' | ') || '-',
+      'Addons': product.addons?.map(addon => `${addon.name}: $${addon.price}`).join(' | ') || (
         <span className="text-red-600">No Addons</span>
       ),
       'Date Added': product.dateAdded || '-',
-      Published: product.isPublished || '-',
-    }))
-    : [];
+      'Published': product.isPublished || '-',
+      'Featured': product.isFeatured || '-',
+    })) : [];
+
 
   const [filteredData, setFilteredData] = useState(productsMockDataList);
 
   console.log('filteredData:', filteredData);
-
   const handleSearch = (searchQuery) => {
     setSearchQuery(searchQuery);
     const trimmedQuery = searchQuery.trim().toLowerCase();

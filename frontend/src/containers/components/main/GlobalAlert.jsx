@@ -67,7 +67,7 @@ export function GlobalAlert({ type, message }) {
         <div className="p-3">
           {" "}
           <Toast>
-            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-500 dark:bg-orange-700 dark:text-orange-200">
+            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-700 dark:text-red-200">
               <AiOutlineWarning className="h-5 w-5" />
             </div>
             <div className="ml-3 text-sm font-normal">
@@ -86,7 +86,7 @@ export function GlobalAlert({ type, message }) {
       <div className="fixed right-0  left-0 bottom-5 flex justify-center z-10">
         <div className="p-3">
           <Toast>
-            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-500 dark:bg-blue-700 dark:text-blue-200">
+            <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-700 dark:text-red-200">
               <AiOutlineInfoCircle className="h-5 w-5" />
             </div>
             <div className="ml-3 text-sm font-normal">

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const baseURL =
-  "http://127.0.0.1:5001/ordering-system-d1976/us-central1/app";
+  import.meta.env.VITE_BASE_URL;
 
 export const getUserCount = async () => {
   try {

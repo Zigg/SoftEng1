@@ -14,17 +14,25 @@ import {
   TbPackage,
   TbUser,
 } from "react-icons/tb";
-
+import { Cart } from "../user-profile/index.js";
 import { OnboardButton } from "./navbar/OnboardButton.jsx";
 import { defaultUser, Logo } from "../../../assets/images/index.js";
 import { CartBadge } from "./navbar/CartBadge.jsx";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { RiAdminLine } from "react-icons/ri";
+
 
 const auth = getAuth();
 
+// FIXME: Cart needs to be double clicked to be opened because the state of the cart and this component are not in sync
 export const TopNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showCart, setShowCart] = useState(false);
+
+
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const roleType = useSelector((state) => state.roleType);
   const userEmail = useSelector((state) =>
     state.user && state.user.email ? state.user.email : ""
   );
@@ -39,12 +47,22 @@ export const TopNavbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const toggleCart = (event) => {
+    // event.stopPropagation(); // Comment or remove this line
+    event.preventDefault(); // Add this line
+    setShowCart((prevShowCart) => !prevShowCart);
+  };
+
+
+
+
+
   // TODO: Add badge to cart icon to show how many items are in the cart, based on user input of course
   // TODO: Make the menu a dropdown?
   // TODO: Maybe separate the components into their own files | menuitems, user profile, cart, etc
   // TODO: Make more responsive
   // TODO: On md devices put the search input in the middle w-full
-  const screenSizeToggled = 767;
+  const screenSizeToggled = 719;
   const [isSidebarOpen, setIsSidebarOpen] = useState(
     window.innerWidth > screenSizeToggled
   );
@@ -65,7 +83,7 @@ export const TopNavbar = () => {
   // TODO: Hamburger menu is not absolute
   // However this is more responsive for mobile and desktop
   return (
-    <div className="md:border-b-2 md:border-gray-300 lg:border-b-2 lg:border-gray-300">
+    <div className="shadow-md shadow-black/10">
       <div className="flex items-center justify-center mx-auto">
         <NavLink to="/">
           <img
@@ -87,19 +105,7 @@ export const TopNavbar = () => {
               className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             >
               <span className="sr-only">Open sidebar</span>
-              <svg
-                className="w-6 h-6"
-                aria-hidden="true"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clipRule="evenodd"
-                  fillRule="evenodd"
-                  d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"
-                ></path>
-              </svg>
+              <RxHamburgerMenu className="w-5 h-5" />
             </button>
 
             {isSidebarOpen && (
@@ -110,7 +116,7 @@ export const TopNavbar = () => {
                       to="/"
                       className={({ isActive }) =>
                         isActive
-                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          ? "block font-bold text-red-500 hover:text-blue-700"
                           : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
@@ -122,7 +128,7 @@ export const TopNavbar = () => {
                       to="/menu"
                       className={({ isActive }) =>
                         isActive
-                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          ? "block font-bold text-red-500 hover:text-blue-700"
                           : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
@@ -134,11 +140,11 @@ export const TopNavbar = () => {
                       to="/featured"
                       className={({ isActive }) =>
                         isActive
-                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          ? "block font-bold text-red-500 hover:text-blue-700"
                           : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
-                      Featured
+                      About Us
                     </NavLink>
                   </li>
                   <li>
@@ -146,7 +152,7 @@ export const TopNavbar = () => {
                       to="/contacts"
                       className={({ isActive }) =>
                         isActive
-                          ? "block font-bold text-rose-500 hover:text-blue-700"
+                          ? "block font-bold text-red-500 hover:text-blue-700"
                           : "block py-2 text-gray-900 rounded md:hover:bg-transparent md:p-0 dark:text-white hover:text-blue-600 dark:hover:text-blue-700"
                       }
                     >
@@ -175,8 +181,8 @@ export const TopNavbar = () => {
                 <div className="ml-4">
                   <button
                     type="button"
-                    className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-rose-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-500"
-                    onClick={() => navigate("/cart")}
+                    className="relative inline-flex justify-center px-4 py-1.5 text-base font-medium text-black border border-transparent rounded-3xl shadow-sm hover:bg-red-600 bg-amber-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    onClick={(event) => toggleCart(event)}
                   >
                     <span className="font-semibold">
                       <ShoppingBag />
@@ -185,12 +191,15 @@ export const TopNavbar = () => {
                       <CartBadge />
                     </div>
                   </button>
+                  {/* Show Cart */}
+                  {/* FIXME: Cart needs to be double clicked to be opened???? */}
+                  {showCart && <Cart />}
                 </div>
 
                 <button
                   type="button"
                   onClick={toggleMenu}
-                  className="relative z-50 flex flex-shrink-0 ml-4 mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 hover:ring-4 focus:ring-rose-400 dark:focus:ring-rose-700"
+                  className="relative z-40 flex flex-shrink-0 ml-4 mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 hover:ring-4 focus:ring-red-400 dark:focus:ring-red-700"
                   id="user-menu-button"
                   aria-expanded={isMenuOpen}
                   data-dropdown-toggle="user-dropdown"
@@ -210,7 +219,7 @@ export const TopNavbar = () => {
                 onMouseLeave={() => {
                   setIsMenuOpen(false);
                 }}
-                className="absolute mt-12 text-base list-none translate-x-52 translate-y-1/2 bg-white border-t-2 divide-y divide-gray-100 rounded-lg shadow xs:mt-12 sm:mt-12 dark:bg-gray-700 dark:divide-gray-600 border-rose-500 dark:border-gray-600"
+                className="absolute mt-12 text-base list-none translate-x-52 translate-y-1/2 bg-white border-t-2 divide-y divide-gray-100 rounded-lg shadow xs:mt-12 sm:mt-12 dark:bg-gray-700 dark:divide-gray-600 border-red-500 dark:border-gray-600"
                 id="user-dropdown"
               >
                 {user && (
@@ -238,6 +247,17 @@ export const TopNavbar = () => {
                     </div>
 
                     <ul className="py-2" aria-labelledby="user-menu-button">
+                      {roleType === "admin" && (
+                        <li>
+                          <NavLink
+                            to="dashboard"
+                            className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                          >
+                            <RiAdminLine className="mr-2" />
+                            Dashboard
+                          </NavLink>
+                        </li>
+                      )}
                       <li>
                         <NavLink
                           to="profile"
@@ -259,14 +279,14 @@ export const TopNavbar = () => {
                       <li>
                         <NavLink
                           to="order-history"
-                          className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
+                          className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-red-700 dark:text-gray-200 dark:hover:text-white"
                         >
                           <TbHistory className="mr-2" />
                           History
                         </NavLink>
                       </li>
-
-                      <li>
+                      {/* Bit unnecessary */}
+                      {/* <li>
                         <NavLink
                           to="transactions"
                           className="flex items-center px-4 py-2 text-sm font-medium text-black hover:bg-blue-400 dark:hover:bg-blue-700 dark:text-gray-200 dark:hover:text-white"
@@ -274,7 +294,7 @@ export const TopNavbar = () => {
                           <TbArrowsTransferDown className="mr-2" />
                           Transactions
                         </NavLink>
-                      </li>
+                      </li> */}
                       <li>
                         <button
                           onClick={() => {
@@ -292,7 +312,7 @@ export const TopNavbar = () => {
                                 toast.error("Something went wrong");
                               });
                           }}
-                          className="flex items-center w-full px-4 py-2 text-sm font-medium text-black hover:bg-rose-500 dark:hover:bg-rose-700 dark:text-gray-200 dark:hover:text-white focus:outline-none"
+                          className="flex items-center w-full px-4 py-2 text-sm font-medium text-black hover:bg-red-500 dark:hover:bg-red-700 dark:text-gray-200 dark:hover:text-white focus:outline-none"
                         >
                           <PiSignOutBold className="mr-2" />
                           Sign out
@@ -305,8 +325,8 @@ export const TopNavbar = () => {
             )}
           </div>
         </div>
-      </nav>
-    </div>
+      </nav >
+    </div >
   );
 };
 

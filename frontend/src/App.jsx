@@ -45,9 +45,10 @@ const App = () => {
   // FIXME: Properly setup the 404 route since putting sub routes might mess with it
   return (
     // To make the animations pause if the page is still loading but excluding the loader from the animation pause
-    <div className={isLoading ? "animation-paused" : "animation-running"}>
+    // FIXME: The animation pause is not working properly, and pauses the topnavbar animation fully
+    <div>
       {isLoading && <Loader />}
-      <div className="animate-children">
+      <div>
         <Toaster />
         <Routes>
           {/* TODO: This is set to use a wildcard in order to make sub routes work but this makes the 404 page not work correctly */}
