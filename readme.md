@@ -11,6 +11,10 @@
 - **Feature 4**: Dynamic User Navbar
 - **Feature 5**: User Profile
 - **Feature 6**: Signout Feature
+- **Feature 7**: Admin Dashboard
+- **Feature 8**: Search Feature
+- **Feature 9**: Pagination Feature
+- **Feature 10**: Dynamic Navbar
 
 
 ## Technologies Used
@@ -22,35 +26,49 @@ List of all the technologies, languages, frameworks, libraries etc. used in the 
 - **State Management**: Redux
 - **Database**:  Firebase
 - **Authentication**: Firebase Auth
-- **UI**: Tailwind CSS, Shadcn UI, Flowbite, LucideReact, React Icons
+- **UI**: Tailwind CSS, Shadcn UI, Flowbite, LucideReact, React Icons, Material UI
 - **Email-Service**: Firebase Auth Email Service
 
 # Getting Started
 
 ## Prerequisites
-Before you begin, make sure you have the following installed on your machine:
+Before you begin, make sure you have the following installed on your machine: 
+### [Node.js Link](https://nodejs.org/en/download)
 
 - Node.js
-- yarn 
 
-## Install yarn globally
+## Install yarn globally (globally or within your project)
 ```
+Run this command
 npm install --global yarn
 
 ```
-## Setup .env.example file for frontend folder 
-### These are availble within the firebase console. [link](https://console.firebase.google.com/u/0/)
-For more information on getting started creating a firebase build check the following. [link](https://firebase.google.com/docs/build)
-
+## Clone this repo
+#### Note: You can put this into any directory you want
 
 ```
-REACT_APP_FIREBASE_API_KEY=
-REACT_APP_FIREBASE_AUTH_DOMAIN= 
-REACT_APP_FIREBASE_PROJECT_ID=
-REACT_APP_FIREBASE_STORAGE_BUCKET=
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
-REACT_APP_FIREBASE_APP_ID= 
 
+git clone https://github.com/Software-Engineering-Projects/SoftEng1.git
+```
+
+## Create a new Firebase project
+
+## Create a new Webapp
+### Setup .env file for frontend folder 
+
+#### Upon registering your app you will be prompt with .env files for your firebase SDK
+#### Copy those files into your .env file
+#### Note your environment files will be different from mine so do not copy what is in the video
+
+```
+
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN= 
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET= 
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID= 
+VITE_BASE_URL=
 
 ```
 
@@ -77,13 +95,43 @@ yarn install
 npm i
 ```
 
-## Setup frontend development server 
-```
-cd to frontend
-yarn start
-```
 ## Setup backend development server
 ```
 cd to backend/functions
+npm i
 npm run serve
 ```
+
+## Setup frontend development server 
+```
+cd to frontend
+yarn dev
+```
+#### Note: Occasionaly pull latest changes from main
+```
+git pull origin main
+```
+
+## Installation Video 
+
+- **Video 1**: Installing and Setting Up
+
+https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/5625f287-93dc-436c-b15b-5fe714b7eff3
+
+- **Video 2**: Starting the backend server
+
+https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/b4388e4c-f603-4d28-8260-9ed843ff87c4
+
+
+- **Video 3**: Starting dev server
+
+
+https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/1d935b90-444f-4265-bbaa-1ab3822ef8f1
+
+
+
+
+
+
+
+
