@@ -6,8 +6,8 @@ import { Label, Select } from 'flowbite-react';
 import { Dessert, Eye, Heart, Minus, Plus, Search, SearchX, Star } from 'lucide-react';
 import { IoMdStar } from "react-icons/io";
 import { GiWrappedSweet } from "react-icons/gi";
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../../../../context/actions/cartAction';
 import {
   Card,
   CardHeader,
@@ -68,11 +68,14 @@ const AnimatedNumber = ({ value, commas }) => {
 
 
 export const MenuItemProductPage = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
-  const selectedItem = productsMockData.find(item => item.id === parseInt(id, 10));
+  const searchedItem = productsMockData.find(item => item.id === parseInt(id, 10));
+  const cartItems = useSelector((state) => state.cart.items);
 
+  console.log("searchedItem:", searchedItem)
   // TODO: Add better styling to this page
-  if (!selectedItem) {
+  if (!searchedItem) {
     return (
       <div className="flex flex-col items-center justify-center h-screen pb-60">
         <div className='text-3xl font-semibold flex items-center '>
@@ -89,13 +92,13 @@ export const MenuItemProductPage = () => {
 
   useEffect(() => {
     setTotalPrice(calculateTotalPrice());
-  }, [quantity, selectedSize, selectedAddOn, selectedItem]);
+  }, [quantity, selectedSize, selectedAddOn, searchedItem]);
 
   function calculateTotalPrice() {
-    const selectedSizePrice = selectedSize ? selectedItem.sizes.find(size => size.name === selectedSize)?.price || 0 : 0;
-    const selectedAddOnPrice = selectedAddOn ? selectedItem.addons.find(addon => addon.name === selectedAddOn)?.price || 0 : 0;
+    const selectedSizePrice = selectedSize ? searchedItem.sizes.find(size => size.name === selectedSize)?.price || 0 : 0;
+    const selectedAddOnPrice = selectedAddOn ? searchedItem.addons.find(addon => addon.name === selectedAddOn)?.price || 0 : 0;
 
-    const rawTotal = (selectedItem.basePrice + selectedSizePrice + selectedAddOnPrice) * quantity;
+    const rawTotal = (searchedItem.basePrice + selectedSizePrice + selectedAddOnPrice) * quantity;
 
     // Check if rawTotal is a valid number
     return isNaN(rawTotal) ? 0 : rawTotal;
@@ -122,9 +125,41 @@ export const MenuItemProductPage = () => {
     setSelectedAddOn(e.target.value);
   };
 
-  const addToCart = () => {
-    console.log('Add to cart', data)
-  }
+
+  const handleAddCartItem = () => {
+    // Check if the required options are selected
+    // TODO: Add better validation, 
+    // if (!selectedSize) {
+    //   alert('Please select a size.');
+    //   return;
+    // }
+
+    // Create a unique identifier for the product based on its ID and options
+    const productIdentifier = `${searchedItem.id}${JSON.stringify(searchedItem.sizes.find(size => size.name === selectedSize))}${selectedAddOn ? JSON.stringify(searchedItem.addons.find(addon => addon.name === selectedAddOn)) : ''}`;
+
+    const options = {
+      size: selectedSize,
+      addons: selectedAddOn ? [selectedAddOn] : [], // Assuming addons is an array
+    };
+
+    const productToAdd = {
+      id: searchedItem.id,
+      quantity,
+      options,
+      productIdentifier,
+    };
+
+    dispatch(addToCart(productToAdd));
+
+    // Optionally, you can reset the selected options and quantity after adding to cart
+    setSelectedSize('');
+    setSelectedAddOn('');
+    setQuantity(1);
+  };
+
+
+
+
 
 
   return (
@@ -137,8 +172,8 @@ export const MenuItemProductPage = () => {
             <div className="relative">
               <div className="flex items-center justify-center">
                 <img
-                  src={selectedItem.productImage}
-                  alt={selectedItem.productName}
+                  src={searchedItem.productImage}
+                  alt={searchedItem.productName}
                   className=" max-h-[28rem] object-cover  rounded-lg w-full"
                 />
               </div>
@@ -153,7 +188,7 @@ export const MenuItemProductPage = () => {
           <CardBody>
             <div className="mb-3 flex flex-col  items-center justify-between">
               {/* <Typography variant="h5" color="blue-gray" className="font-medium mb-4">
-                {selectedItem.productName}
+                {searchedItem.productName}
               </Typography> */}
 
 
@@ -165,7 +200,7 @@ export const MenuItemProductPage = () => {
 
                 <span className='font-bold'>Product Description:</span>
                 <span>Duis non dolor irure nulla eu voluptate tempor tempor id aliquip in reprehenderit qui.</span>
-                {selectedItem.productDescription}
+                {searchedItem.productDescription}
               </div>
             </Typography>
 
@@ -179,8 +214,8 @@ export const MenuItemProductPage = () => {
         </div>
 
         <div className="ml-8 px-12 mx-12">
-          <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 ">{selectedItem.productName} Details</h2>
-          <p className="font-bold">Base Price: ${selectedItem.basePrice}</p>
+          <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 ">{searchedItem.productName} Details</h2>
+          <p className="font-bold">Base Price: ${searchedItem.basePrice}</p>
 
           <div className="mt-4">
             <span className=" font-semibold mb-4 block border-b-2 border-slate-300">Variation</span>
@@ -189,7 +224,7 @@ export const MenuItemProductPage = () => {
             <div className="mb-4 ">
               <Label value="Select Size" />
               <div className="flex flex-col">
-                {selectedItem.sizes.map((size, index) => (
+                {searchedItem.sizes.map((size, index) => (
                   <div key={index} className="mr-2 mb-4">
                     <input
                       type="radio"
@@ -210,8 +245,8 @@ export const MenuItemProductPage = () => {
             <div className="mb-4">
               <Label value="Select Addons" />
               <div className="flex flex-col">
-                {selectedItem.addons.length > 0 ? (
-                  selectedItem.addons.map((addon, index) => (
+                {searchedItem.addons.length > 0 ? (
+                  searchedItem.addons.map((addon, index) => (
                     <div key={index} className="mr-2 mb-4">
                       <input
                         type="radio"
@@ -243,7 +278,7 @@ export const MenuItemProductPage = () => {
                     </Typography>
                     <Typography variant="small" color="white" className="font-normal opacity-80">
                       <p className='pt-2'>
-                        <div className='font-semibold'>{selectedItem.ingredients.join(', ')}</div>
+                        <div className='font-semibold'>{searchedItem.ingredients.join(', ')}</div>
                       </p>
                     </Typography>
                   </div>
@@ -267,7 +302,8 @@ export const MenuItemProductPage = () => {
 
             {/* Checkout/Cart */}
             <div className="flex gap-x-2  mt-4 ">
-              <button className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0">
+              {/* TODO: */}
+              <button onClick={handleAddCartItem} className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0">
                 Add to Cart
               </button>
               <button className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0 ">
