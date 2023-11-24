@@ -22,12 +22,11 @@ export function Cart() {
   const [open, setOpen] = useState(true)
   const navigate = useNavigate()
   const dispatch = useDispatch();
-  const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const cartItems = useSelector((state) => state.cart.items);
   console.log("Cart Items", cartItems)
-  const totalPriceArray = cartItems.map((item) => item.options.totalPrice);
+  const totalPriceArray = cartItems.map((item) => item.options.totalPrice * item.quantity);
   const cartTotalPrice = totalPriceArray.reduce((a, b) => a + b, 0);
   console.log("Total Price Array", totalPriceArray)
 
@@ -123,7 +122,7 @@ export function Cart() {
                                 <div
                                   className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
                                   <img
-                                    src={product.imageSrc}
+                                    src={product.image}
                                     alt={product.imageAlt}
                                     className="h-full w-full object-cover object-center" />
                                 </div>
@@ -140,7 +139,8 @@ export function Cart() {
                                         className="ml-4">{product?.options?.totalPrice}</p>
                                     </div>
                                     <p
-                                      className="mt-1 text-sm text-gray-500">Addons: {product?.options?.addons}</p>
+                                      className="mt-1 text-sm text-gray-500">Addons: {product?.options?.addons}
+                                    </p>
                                     <p
                                       className="mt-1 text-sm text-gray-500">Size: {product?.options?.size}</p>
                                   </div>

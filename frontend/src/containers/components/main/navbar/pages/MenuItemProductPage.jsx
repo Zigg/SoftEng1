@@ -148,6 +148,8 @@ export const MenuItemProductPage = () => {
 
     const productToAdd = {
       id: searchedItem.id,
+      name: searchedItem.productName,
+      image: searchedItem.productImage,
       quantity,
       options,
       productIdentifier,
