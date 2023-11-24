@@ -16,7 +16,8 @@ const cartItemReducer = (state = initialState, action) => {
             if (item.productIdentifier === action.payload.productIdentifier) {
               return {
                 ...item,
-                quantity: item.quantity + 1,
+                quantity: item.quantity + action.payload.quantity,
+                // quantity: item.quantity + 1,
               };
             } else {
               return item;
@@ -30,29 +31,41 @@ const cartItemReducer = (state = initialState, action) => {
         };
       }
 
-    // TODO: If the item is the same but different options do not remove all items
+    // FIXME: Not working
     case 'REMOVE_FROM_CART':
-      // Remove the product from the cart
+      const { id, options } = action.payload;
       return {
         ...state,
-        items: state.items.filter((item) => item.id !== action.payload),
+        items: state.items.filter((item) => {
+          if (item.productIdentifier === id) {
+            const sizeMatch = item.options.size === options.size;
+            const addonsMatch = item.options.addons === options.addons;
+
+            return !(sizeMatch && addonsMatch);
+          } else {
+            return true;
+          }
+        }),
       };
 
+    // FIXME: Not working
     case 'INCREASE_QUANTITY':
-      // Increase the quantity of the specified product
+      const incId = action.payload;
       return {
         ...state,
         items: state.items.map((item) =>
-          item.id === action.payload ? { ...item, quantity: item.quantity + 1 } : item
+          item.productIdentifier === incId ? { ...item, quantity: item.quantity + 1 } : item
         ),
-      };
+      }
+
+    // FIXME: Not working
 
     case 'REDUCE_QUANTITY':
-      // Reduce the quantity of the specified product, removing if it becomes zero
+      const redId = action.payload;
       return {
         ...state,
         items: state.items.map((item) =>
-          item.id === action.payload
+          item.productIdentifier === redId
             ? { ...item, quantity: Math.max(1, item.quantity - 1) }
             : item
         ),
