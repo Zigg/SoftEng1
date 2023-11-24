@@ -27,34 +27,34 @@ export function Cart() {
 
   const cartItems = useSelector((state) => state.cart.items);
   console.log("Cart Items", cartItems)
+  const totalPriceArray = cartItems.map((item) => item.options.totalPrice);
+  const cartTotalPrice = totalPriceArray.reduce((a, b) => a + b, 0);
+  console.log("Total Price Array", totalPriceArray)
 
-  useEffect(() => {
-    if (Array.isArray(cartItems)) {
-      const newTotal = cartItems.reduce((sum, product) => {
-        let price = parseFloat((product.totalPrice || '').replace('$', '')) || 0;
-        let quantity = parseInt(product.quantity, 10) || 1;
-        return sum + price * quantity;
-      }, 0);
+  // TODO: When the API endpoints are made, fetch the cart items from the backend
+  // useEffect(() => {
+  //   if (Array.isArray(cartItems)) {
+  //     const newTotal = cartItems.reduce((sum, product) => {
+  //       let price = parseFloat((product.totalPrice || '').replace('$', '')) || 0;
+  //       let quantity = parseInt(product.quantity, 10) || 1;
+  //       return sum + price * quantity;
+  //     }, 0);
+  //     setTotal(newTotal);
+  //     console.log("New Total", newTotal)
 
-      setTotal(newTotal);
-    }
+  //   }
 
-    // Cart has finished loading
-    setIsLoading(false);
-  }, [cartItems]);
+  //   setIsLoading(false);
+  // }, [cartItems]);
 
   if (isLoading) {
     return <p>Loading...</p>
   }
 
+  // TODO: 
   if (!cartItems || cartItems.length === 0) {
     return <p>Your cart is empty.</p>;
   }
-
-
-
-
-
 
   const handleRemoveFromCart = (productId) => {
     dispatch(removeFromCart(productId));
@@ -119,84 +119,36 @@ export function Cart() {
                             {cartItems.map((product) => (
                               <li
                                 key={product.id}
-
                                 className="flex py-6">
-
-
                                 <div
-
                                   className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
-
-
                                   <img
-
                                     src={product.imageSrc}
-
                                     alt={product.imageAlt}
-
                                     className="h-full w-full object-cover object-center" />
-
-
                                 </div>
-
-
                                 <div
-
                                   className="ml-4 flex flex-1 flex-col">
-
-
                                   <div>
-
-
                                     <div
-
                                       className="flex justify-between text-base font-medium text-gray-900">
-
-
                                       <h3>
-
-
                                         <a
-
                                           href={product.href}>{product.name}</a>
-
-
                                       </h3>
-
-
                                       <p
-
-                                        className="ml-4">{product.price}</p>
-
-
+                                        className="ml-4">{product?.options?.totalPrice}</p>
                                     </div>
-
-
                                     <p
-
-                                      className="mt-1 text-sm text-gray-500">Addons: {product.addOns}</p>
-
-
+                                      className="mt-1 text-sm text-gray-500">Addons: {product?.options?.addons}</p>
                                     <p
-
-                                      className="mt-1 text-sm text-gray-500">Size: {product.size}</p>
-
-
+                                      className="mt-1 text-sm text-gray-500">Size: {product?.options?.size}</p>
                                   </div>
-
-
                                   <div
-
                                     className="flex flex-1 items-end justify-between text-sm">
-
-
                                     <p
-
                                       className="text-gray-500">Qty {product.quantity}</p>
-
-
                                     <div
-
                                       className="flex">
                                       <div className="gap-x-1 mr-2 mt-1 p-1 flex">
                                         <button onClick={() => handleIncreaseQuantity(product.id)}>
@@ -223,7 +175,7 @@ export function Cart() {
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
                         <p>Total</p>
-                        <p>${total.toFixed(2)}</p>
+                        <p>${cartTotalPrice.toFixed(2)}</p>
                       </div>
                       {/* <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> */}
                       <div className="mt-6">
