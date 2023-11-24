@@ -8,6 +8,8 @@ import { IoMdStar } from "react-icons/io";
 import { GiWrappedSweet } from "react-icons/gi";
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../../../../context/actions/cartAction';
+import toast, { Toaster } from 'react-hot-toast';
+
 import {
   Card,
   CardHeader,
@@ -73,6 +75,8 @@ export const MenuItemProductPage = () => {
   const searchedItem = productsMockData.find(item => item.id === parseInt(id, 10));
   const cartItems = useSelector((state) => state.cart.items);
 
+
+  console.log("cartItems:", cartItems)
   console.log("searchedItem:", searchedItem)
   // TODO: Add better styling to this page
   if (!searchedItem) {
@@ -100,7 +104,6 @@ export const MenuItemProductPage = () => {
 
     const rawTotal = (searchedItem.basePrice + selectedSizePrice + selectedAddOnPrice) * quantity;
 
-    // Check if rawTotal is a valid number
     return isNaN(rawTotal) ? 0 : rawTotal;
   }
 
@@ -129,17 +132,18 @@ export const MenuItemProductPage = () => {
   const handleAddCartItem = () => {
     // Check if the required options are selected
     // TODO: Add better validation, 
-    // if (!selectedSize) {
-    //   alert('Please select a size.');
-    //   return;
-    // }
+    if (!selectedSize) {
+      alert('Please select a size.');
+      return;
+    }
 
     // Create a unique identifier for the product based on its ID and options
-    const productIdentifier = `${searchedItem.id}${JSON.stringify(searchedItem.sizes.find(size => size.name === selectedSize))}${selectedAddOn ? JSON.stringify(searchedItem.addons.find(addon => addon.name === selectedAddOn)) : ''}`;
+    const productIdentifier = `${searchedItem.id}_${selectedSize || 'no_size'}_${selectedAddOn || 'no_addon'}`;
 
     const options = {
       size: selectedSize,
-      addons: selectedAddOn ? [selectedAddOn] : [], // Assuming addons is an array
+      addons: selectedAddOn,
+      totalPrice: totalPrice
     };
 
     const productToAdd = {
@@ -149,13 +153,41 @@ export const MenuItemProductPage = () => {
       productIdentifier,
     };
 
+    toast.custom((t) => (
+      <div
+        className={`${t.visible ? 'animate-enter' : 'animate-leave'
+          } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="flex-1 w-0 p-4">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <img
+                className="h-10 w-10 rounded-full"
+                src={searchedItem.productImage}
+                alt={searchedItem.productName}
+              />
+            </div>
+            <div className="ml-3 flex-1">
+              <p className="text-sm font-medium text-gray-900">
+                Added {searchedItem.productName} to your cart.
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                {quantity} x {selectedSize} with {selectedAddOn}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+
     dispatch(addToCart(productToAdd));
 
-    // Optionally, you can reset the selected options and quantity after adding to cart
-    setSelectedSize('');
-    setSelectedAddOn('');
+    // TODO: 
+    // setSelectedSize('');
+    // setSelectedAddOn('');
     setQuantity(1);
   };
+
 
 
 
