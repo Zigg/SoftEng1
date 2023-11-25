@@ -1,7 +1,7 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { Minus, Plus } from 'lucide-react'
+import { Minus, Plus, Trash2Icon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeFromCart, addToCart, increaseQuantity, reduceQuantity, clearCart } from '../../../../../context/actions/cartAction';
@@ -180,7 +180,7 @@ export function Cart() {
                                           onClick={() => handleRemoveCartItem(product.productIdentifier)}
                                           className="px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white font-medium"
                                         >
-                                          Remove
+                                          <Trash2Icon className='w-4 h-4' />
                                         </button>
                                       </div>
                                     </div>
