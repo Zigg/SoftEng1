@@ -94,11 +94,12 @@ export const MenuItemProductPage = () => {
   const [selectedAddOn, setSelectedAddOn] = useState('');
   const [totalPrice, setTotalPrice] = useState(calculateTotalPrice());
   const [productIdentifier, setProductIdentifier] = useState('');
-
+  const overallPrice = totalPrice * quantity;
   console.log("productIdentifier:", productIdentifier)
   useEffect(() => {
     setTotalPrice(calculateTotalPrice());
-  }, [quantity, selectedSize, selectedAddOn, searchedItem]);
+  }, [selectedSize, selectedAddOn, searchedItem]);
+
 
   function calculateTotalPrice() {
     const selectedSizePrice = selectedSize ? searchedItem.sizes.find((size) => size.name === selectedSize)?.price || 0 : 0;
@@ -106,7 +107,7 @@ export const MenuItemProductPage = () => {
       ? searchedItem.addons.find((addon) => addon.name === selectedAddOn)?.price || 0
       : 0;
 
-    const rawTotal = (searchedItem.basePrice + selectedSizePrice + selectedAddOnPrice) * quantity;
+    const rawTotal = (searchedItem.basePrice + selectedSizePrice + selectedAddOnPrice);
 
     return isNaN(rawTotal) ? 0 : rawTotal;
   }
@@ -174,7 +175,7 @@ export const MenuItemProductPage = () => {
           <div className="flex items-start">
             <div className="flex-shrink-0 pt-0.5">
               <img
-                className="h-10 w-10 rounded-full"
+                className="h-10 w-10 rounded-full object-cover"
                 src={searchedItem.productImage}
                 alt={searchedItem.productName}
               />
@@ -201,14 +202,16 @@ export const MenuItemProductPage = () => {
   };
 
   return (
-    <div className="mx-auto p-12">
-      <div className='flex items-center justify-center shadow-2xl'>
+    <div className="mx-auto pt-12 flex items-center justify-center">
+      <div className='grid xl:grid-cols-2'>
         {/* Product Card */}
         <div className=" max-w-[26rem] h-full m-8">
           {/* Card Header */}
           <div className="relative rounded-lg">
             <div className="relative">
-              <div className="flex items-center justify-center">
+              {/* <span className='flex flex-col items-center justify-center'>{searchedItem.productName}</span> */}
+
+              <div className="flex items-center justify-center ">
                 <img
                   src={searchedItem.productImage}
                   alt={searchedItem.productName}
@@ -216,7 +219,6 @@ export const MenuItemProductPage = () => {
                 />
               </div>
             </div>
-            <div className="to-bg-black-10 absolute inset-0 h-full  bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
             <button className='right-0'>
               {/* <Heart className='w-5 h-5' /> */}
             </button>
@@ -228,8 +230,6 @@ export const MenuItemProductPage = () => {
               {/* <Typography variant="h5" color="blue-gray" className="font-medium mb-4">
                 {searchedItem.productName}
               </Typography> */}
-
-
             </div>
             <Typography color="gray">
               {/* TODO: Add short description for the product limit it to 255 characters in the admin dashboard and add product page */}
@@ -251,7 +251,7 @@ export const MenuItemProductPage = () => {
           </CardBody>
         </div>
 
-        <div className="ml-8 px-12 mx-12">
+        <div className="ml-8 px-12 mx-12 max-w-md">
           <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 ">{searchedItem.productName} Details</h2>
           <p className="font-bold">Base Price: ${searchedItem.basePrice}</p>
 
@@ -327,33 +327,49 @@ export const MenuItemProductPage = () => {
             </div>
 
             {/* Quantity Controls */}
-            <div className="flex items-center mb-4">
-              <span className='mr-2 '>Quantity: </span>
-              <button onClick={decrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 ">
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="mx-2 font-semibold">{quantity}</span>
-              <button onClick={incrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 ">
-                <Plus className="w-4 h-4" />
-              </button>
+            <div className="flex flex-col  mb-4 justify-between">
+              <div className="flex items-center gap-2">
+                <span className="mr-2">Quantity:</span>
+                <button
+                  onClick={decrementQuantity}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="mx-2 font-semibold">{quantity}</span>
+                <button
+                  onClick={incrementQuantity}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Checkout/Cart */}
+              <div className="flex gap-x-2 mt-4 items-center">
+                <button
+                  onClick={handleAddCartItem}
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
+                >
+                  Order Now
+                </button>
+              </div>
             </div>
 
-            {/* Checkout/Cart */}
-            <div className="flex gap-x-2  mt-4 ">
-              {/* TODO: */}
-              <button onClick={handleAddCartItem} className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0">
-                Add to Cart
-              </button>
-              <button className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0 ">
-                Order Now
-              </button>
-            </div>
 
             {/* Total Price */}
-            <div className="mt-4 flex justify-end">
-              <div className="font-bold"> Total: $
-                <AnimatedNumber key={quantity} value={totalPrice.toFixed(2)} commas />
+            <div className="mt-4 pb-16 flex">
+              <div className="font-semibold text-sm"> Total (per item): $
+                {totalPrice.toFixed(2)}
               </div>
+              {/* <div className="font-semibold text-sm"> Total (overall): $
+                <AnimatedNumber key={quantity} value={overallPrice.toFixed(2)} commas />
+              </div> */}
             </div>
             {/* <div className="text-sm text-gray-500">Free shipping on orders over $50 </div>
 

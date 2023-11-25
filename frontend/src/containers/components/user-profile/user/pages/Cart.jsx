@@ -112,7 +112,7 @@ export function Cart() {
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             type="button"
-                            className="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
+                            className="relative -m-2 p-2 text-gray-400 hover:text-gray-700"
                             onClick={() => setOpen(false)}
                           >
                             <span className="absolute -inset-0.5" />
@@ -123,7 +123,7 @@ export function Cart() {
                       </div>
 
                       {(!cartItems || cartItems.length === 0) ? (
-                        <div className="absolute top-12 ml-24 mt-96 ">
+                        <div className="absolute top-12 ml-24 mt-60">
                           <p className="text-2xl font-semibold text-gray-800">Your cart is empty</p>
                         </div>
                       ) : (
@@ -133,7 +133,7 @@ export function Cart() {
                               <ul role="list" className="-my-6 divide-y divide-gray-200">
                                 {cartItems.map((product) => (
                                   <li
-                                    key={product.id}
+                                    key={product.productIdentifier}
                                     className="flex py-6">
                                     <div
                                       className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
@@ -155,29 +155,33 @@ export function Cart() {
                                             className="ml-4">${' '}{product?.options?.totalPrice}</p>
                                         </div>
                                         <p
-                                          className="mt-1 text-sm text-gray-500">Addons: {product?.options?.addons}
+                                          className="mt-1 text-sm text-gray-700">Addons: {product?.options?.addons}
                                         </p>
                                         <p
-                                          className="mt-1 text-sm text-gray-500">Size: {product?.options?.size}</p>
+                                          className="mt-1 text-sm text-gray-700">Size: {product?.options?.size}
+                                        </p>
+                                        <p
+                                          className="text-gray-500">Qty {product.quantity}
+                                        </p>
                                       </div>
                                       <div
-                                        className="flex flex-1 items-end justify-between text-sm">
-                                        <p
-                                          className="text-gray-500">Qty {product.quantity}</p>
-                                        <div
-                                          className="flex">
-                                          <div className="gap-x-1 mr-2 mt-1 p-1 flex">
-                                            <button onClick={() => handleIncreaseQuantity(product.productIdentifier)}>
-                                              <Plus className="w-4 h-4 hover:text-blue-600" />
-                                            </button>
-                                            <button onClick={() => handleDecreaseQuantity(product.productIdentifier)}>
-                                              <Minus className="w-4 h-4 hover:text-blue-600" />
-                                            </button>
-                                          </div>
-                                          <button type="button" className="font-medium text-red-600 hover:text-red-500" onClick={() => handleRemoveCartItem(product.productIdentifier)}>
-                                            Remove
+                                        className="flex flex-1 items-end justify-between text-xs">
+
+                                        <div className="gap-x-1 mr-2 mt-1 p-1 flex">
+                                          <button onClick={() => handleDecreaseQuantity(product.productIdentifier)}>
+                                            <Minus className="w-4 h-4 hover:text-blue-600" />
+                                          </button>
+                                          <button onClick={() => handleIncreaseQuantity(product.productIdentifier)}>
+                                            <Plus className="w-4 h-4 hover:text-blue-600" />
                                           </button>
                                         </div>
+                                        <button
+                                          type="button"
+                                          onClick={() => handleRemoveCartItem(product.productIdentifier)}
+                                          className="px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white font-medium"
+                                        >
+                                          Remove
+                                        </button>
                                       </div>
                                     </div>
                                   </li>
@@ -192,10 +196,10 @@ export function Cart() {
                     {/* TODO: Add the scrolling effect animation to the total price */}
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
-                        <p>Total</p>
+                        <p>Grand Total</p>
                         <p>${' '}{cartTotalPrice.toFixed(2)}</p>
                       </div>
-                      {/* <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p> */}
+                      {/* <p className="mt-0.5 text-sm text-gray-700">Shipping and taxes calculated at checkout.</p> */}
                       <div className="mt-6">
                         <a
                           href="#"
@@ -204,7 +208,7 @@ export function Cart() {
                           Checkout
                         </a>
                       </div>
-                      <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
+                      <div className="mt-6 flex justify-center text-center text-sm text-gray-700">
                         <p>
                           or{' '}
                           <button
