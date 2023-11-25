@@ -3,19 +3,20 @@ export const addToCart = (product) => ({
   payload: product,
 });
 
-export const removeFromCart = (productId) => ({
+export const removeFromCart = (product) => ({
   type: 'REMOVE_FROM_CART',
-  payload: productId,
+  payload: product,
 });
 
-export const increaseQuantity = (productId) => ({
+
+export const increaseQuantity = (product) => ({
   type: 'INCREASE_QUANTITY',
-  payload: productId,
+  payload: product,
 });
 
-export const reduceQuantity = (productId) => ({
+export const reduceQuantity = (product) => ({
   type: 'REDUCE_QUANTITY',
-  payload: productId,
+  payload: product,
 });
 
 export const clearCart = () => ({

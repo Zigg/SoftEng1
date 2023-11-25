@@ -17,7 +17,6 @@ const cartItemReducer = (state = initialState, action) => {
               return {
                 ...item,
                 quantity: item.quantity + action.payload.quantity,
-                // quantity: item.quantity + 1,
               };
             } else {
               return item;
@@ -31,37 +30,31 @@ const cartItemReducer = (state = initialState, action) => {
         };
       }
 
-    // FIXME: Not working
     case 'REMOVE_FROM_CART':
-      const { id, options } = action.payload;
+      const { productIdentifier } = action.payload;
+      console.log('Removing item from cart. Product Identifier:', productIdentifier);
       return {
         ...state,
-        items: state.items.filter((item) => {
-          if (item.productIdentifier === id) {
-            const sizeMatch = item.options.size === options.size;
-            const addonsMatch = item.options.addons === options.addons;
-
-            return !(sizeMatch && addonsMatch);
-          } else {
-            return true;
-          }
-        }),
+        items: state.items.filter((item) => item.productIdentifier !== productIdentifier),
       };
-
-    // FIXME: Not working
+    // FIXME: Not working properly setup the product identifier when incrementing the item from the cart
+    // INCREASE_QUANTITY
     case 'INCREASE_QUANTITY':
-      const incId = action.payload;
+      const incId = action.payload.productIdentifier;
+      console.log('Product Identifier increase cart reducer', incId);
       return {
         ...state,
         items: state.items.map((item) =>
-          item.productIdentifier === incId ? { ...item, quantity: item.quantity + 1 } : item
+          item.productIdentifier === incId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         ),
-      }
+      };
 
-    // FIXME: Not working
-
+    // REDUCE_QUANTITY
     case 'REDUCE_QUANTITY':
-      const redId = action.payload;
+      const redId = action.payload.productIdentifier;
+      console.log('Product Identifier reduce cart reducer', redId);
       return {
         ...state,
         items: state.items.map((item) =>
@@ -70,6 +63,7 @@ const cartItemReducer = (state = initialState, action) => {
             : item
         ),
       };
+
 
     default:
       return state;

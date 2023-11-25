@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeFromCart, addToCart, increaseQuantity, reduceQuantity, clearCart } from '../../../../../context/actions/cartAction';
 import { productsMockData } from '../../../dashboard/pages/mock/productsMockData';
-
+import { toast } from 'react-hot-toast'
 // TODO: Update the cart when choosing different sizes and addons from initial product page, and add the price of the addons to the total price
 // TODO: Fix image to be displayed in the cart, for now its the local JSON, but im setting up the firebase functionality already
 // TODO: The addons and size should be fetched from the backend
@@ -27,6 +27,8 @@ export function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
   console.log("Cart Items", cartItems)
   const totalPriceArray = cartItems.map((item) => item.options.totalPrice * item.quantity);
+
+
   const cartTotalPrice = totalPriceArray.reduce((a, b) => a + b, 0);
   console.log("Total Price Array", totalPriceArray)
 
@@ -40,7 +42,6 @@ export function Cart() {
   //     }, 0);
   //     setTotal(newTotal);
   //     console.log("New Total", newTotal)
-
   //   }
 
   //   setIsLoading(false);
@@ -52,12 +53,21 @@ export function Cart() {
 
 
 
-  // TODO: 
+  const handleRemoveCartItem = (productIdentifier) => {
+    if (productIdentifier) {
 
+      const payload = { productIdentifier };
 
-  const handleRemoveFromCart = (productId) => {
-    dispatch(removeFromCart(productId));
+      dispatch(removeFromCart(payload));
+      toast.success('Item removed from cart');
+      console.log("Product Identifier remove Cart", productIdentifier);
+    }
+    else {
+      console.error("Could not find productIdentifier in the cart.");
+    }
   };
+
+
 
   const handleIncreaseQuantity = (productId) => {
     dispatch(increaseQuantity(productId));
@@ -157,14 +167,14 @@ export function Cart() {
                                         <div
                                           className="flex">
                                           <div className="gap-x-1 mr-2 mt-1 p-1 flex">
-                                            <button onClick={() => handleIncreaseQuantity(product.id)}>
+                                            <button onClick={() => handleIncreaseQuantity(product.productIdentifier)}>
                                               <Plus className="w-4 h-4 hover:text-blue-600" />
                                             </button>
-                                            <button onClick={() => handleDecreaseQuantity(product.id)}>
+                                            <button onClick={() => handleDecreaseQuantity(product.productIdentifier)}>
                                               <Minus className="w-4 h-4 hover:text-blue-600" />
                                             </button>
                                           </div>
-                                          <button type="button" className="font-medium text-red-600 hover:text-red-500" onClick={() => handleRemoveFromCart(product.id)}>
+                                          <button type="button" className="font-medium text-red-600 hover:text-red-500" onClick={() => handleRemoveCartItem(product.productIdentifier)}>
                                             Remove
                                           </button>
                                         </div>
