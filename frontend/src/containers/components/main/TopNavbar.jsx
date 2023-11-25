@@ -48,8 +48,7 @@ export const TopNavbar = () => {
   };
 
   const toggleCart = (event) => {
-    // event.stopPropagation(); // Comment or remove this line
-    event.preventDefault(); // Add this line
+    event.preventDefault(); // Prevents the page from reloading
     setShowCart((prevShowCart) => !prevShowCart);
   };
 
