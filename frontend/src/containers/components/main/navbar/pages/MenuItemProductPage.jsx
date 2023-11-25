@@ -145,10 +145,10 @@ export const MenuItemProductPage = () => {
       alert('Please select a size.');
       return;
     }
-    if (!selectedAddOn) {
-      alert('Please select an addon.');
-      return;
-    }
+    // if (!selectedAddOn) {
+
+    //   return
+    // }
 
     const options = {
       size: selectedSize,
@@ -184,7 +184,7 @@ export const MenuItemProductPage = () => {
                 Added {searchedItem.productName} to your cart.
               </p>
               <p className="mt-1 text-sm text-gray-500">
-                {quantity} x {selectedSize} with {selectedAddOn}
+                {quantity} x {selectedSize} {searchedItem.productName}  {selectedAddOn}
               </p>
             </div>
           </div>
