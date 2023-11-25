@@ -93,14 +93,18 @@ export const MenuItemProductPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedAddOn, setSelectedAddOn] = useState('');
   const [totalPrice, setTotalPrice] = useState(calculateTotalPrice());
+  const [productIdentifier, setProductIdentifier] = useState('');
 
+  console.log("productIdentifier:", productIdentifier)
   useEffect(() => {
     setTotalPrice(calculateTotalPrice());
   }, [quantity, selectedSize, selectedAddOn, searchedItem]);
 
   function calculateTotalPrice() {
-    const selectedSizePrice = selectedSize ? searchedItem.sizes.find(size => size.name === selectedSize)?.price || 0 : 0;
-    const selectedAddOnPrice = selectedAddOn ? searchedItem.addons.find(addon => addon.name === selectedAddOn)?.price || 0 : 0;
+    const selectedSizePrice = selectedSize ? searchedItem.sizes.find((size) => size.name === selectedSize)?.price || 0 : 0;
+    const selectedAddOnPrice = selectedAddOn
+      ? searchedItem.addons.find((addon) => addon.name === selectedAddOn)?.price || 0
+      : 0;
 
     const rawTotal = (searchedItem.basePrice + selectedSizePrice + selectedAddOnPrice) * quantity;
 
@@ -119,31 +123,37 @@ export const MenuItemProductPage = () => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity - 1));
   };
 
-
   const handleSizeChange = (e) => {
     setSelectedSize(e.target.value);
+    updateProductIdentifier(e.target.value, selectedAddOn);
   };
 
   const handleAddOnChange = (e) => {
     setSelectedAddOn(e.target.value);
+    updateProductIdentifier(selectedSize, e.target.value);
+  };
+
+  const updateProductIdentifier = (size, addon) => {
+    const updatedProductIdentifier = `${searchedItem.id}_${size || 'no_size'}_${addon || 'no_addon'}`;
+    setProductIdentifier(updatedProductIdentifier);
   };
 
 
   const handleAddCartItem = () => {
-    // Check if the required options are selected
-    // TODO: Add better validation, 
+    // TODO: Add better validation,
     if (!selectedSize) {
       alert('Please select a size.');
       return;
     }
-
-    // Create a unique identifier for the product based on its ID and options
-    const productIdentifier = `${searchedItem.id}_${selectedSize || 'no_size'}_${selectedAddOn || 'no_addon'}`;
+    if (!selectedAddOn) {
+      alert('Please select an addon.');
+      return;
+    }
 
     const options = {
       size: selectedSize,
       addons: selectedAddOn,
-      totalPrice: totalPrice
+      totalPrice: totalPrice,
     };
 
     const productToAdd = {
@@ -189,12 +199,6 @@ export const MenuItemProductPage = () => {
     // setSelectedAddOn('');
     setQuantity(1);
   };
-
-
-
-
-
-
 
   return (
     <div className="mx-auto p-12">
