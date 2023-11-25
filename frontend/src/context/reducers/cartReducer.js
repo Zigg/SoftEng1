@@ -37,10 +37,12 @@ const cartItemReducer = (state = initialState, action) => {
         ...state,
         items: state.items.filter((item) => item.productIdentifier !== productIdentifier),
       };
+
+
     // FIXME: Not working properly setup the product identifier when incrementing the item from the cart
     // INCREASE_QUANTITY
     case 'INCREASE_QUANTITY':
-      const incId = action.payload.productIdentifier;
+      const incId = action.payload;
       console.log('Product Identifier increase cart reducer', incId);
       return {
         ...state,
@@ -53,7 +55,7 @@ const cartItemReducer = (state = initialState, action) => {
 
     // REDUCE_QUANTITY
     case 'REDUCE_QUANTITY':
-      const redId = action.payload.productIdentifier;
+      const redId = action.payload;
       console.log('Product Identifier reduce cart reducer', redId);
       return {
         ...state,
