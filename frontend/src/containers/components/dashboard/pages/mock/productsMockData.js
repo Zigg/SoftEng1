@@ -19,7 +19,8 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Cheese", "price": 0.99 },
-      { "name": "Bacon", "price": 1.49 }
+      { "name": "Bacon", "price": 1.49 },
+
     ],
     "dateAdded": "2022-01-01",
     "isPublished": "Yes",
@@ -40,7 +41,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Extra Cheese", "price": 0.99 },
-      { "name": "Olives", "price": 0.49 }
+      { "name": "Olives", "price": 0.49 },
+
+
     ],
     "dateAdded": "2022-02-01",
     "isPublished": "Yes",
@@ -60,7 +63,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
-      { "name": "Salad", "price": 1.49 }
+      { "name": "Salad", "price": 1.49 },
+
+
     ],
     "dateAdded": "2022-03-15",
     "isPublished": "Yes",
@@ -79,7 +84,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Soy Sauce", "price": 0.49 },
-      { "name": "Wasabi", "price": 0.49 }
+      { "name": "Wasabi", "price": 0.49 },
+
+
     ],
     "dateAdded": "2022-04-20",
     "isPublished": "Yes",
@@ -98,7 +105,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Garlic Butter", "price": 0.99 },
-      { "name": "Mushrooms", "price": 1.49 }
+      { "name": "Mushrooms", "price": 1.49 },
+
+
     ],
     "dateAdded": "2022-05-10",
     "isPublished": "Yes",
@@ -119,7 +128,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Salsa", "price": 0.49 },
-      { "name": "Guacamole", "price": 0.99 }
+      { "name": "Guacamole", "price": 0.99 },
+
+
     ],
     "dateAdded": "2022-06-18",
     "isPublished": "Yes",
@@ -139,7 +150,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Sprinkles", "price": 0.49 },
-      { "name": "Nuts", "price": 0.99 }
+      { "name": "Nuts", "price": 0.99 },
+
+
     ],
     "dateAdded": "2022-07-30",
     "isPublished": "Yes",
@@ -159,7 +172,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Extra Cheese", "price": 0.99 },
-      { "name": "Olives", "price": 0.49 }
+      { "name": "Olives", "price": 0.49 },
+
+
     ],
     "dateAdded": "2022-08-25",
     "isPublished": "Yes",
@@ -179,7 +194,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Coleslaw", "price": 0.49 },
-      { "name": "Biscuits", "price": 0.99 }
+      { "name": "Biscuits", "price": 0.99 },
+
+
     ],
     "dateAdded": "2022-09-12",
     "isPublished": "Yes",
@@ -199,7 +216,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
-      { "name": "Salad", "price": 1.49 }
+      { "name": "Salad", "price": 1.49 },
+
+
     ],
     "dateAdded": "2022-10-20",
     "isPublished": "Yes",
@@ -220,7 +239,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Green Peppers", "price": 0.49 },
-      { "name": "Olives", "price": 0.49 }
+      { "name": "Olives", "price": 0.49 },
+
+
     ],
     "dateAdded": "2022-02-15",
     "isPublished": "Yes",
@@ -257,7 +278,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
-      { "name": "Salad", "price": 1.49 }
+      { "name": "Salad", "price": 1.49 },
+
+
     ],
     "dateAdded": "2022-04-20",
     "isPublished": "Yes",
@@ -312,7 +335,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Garlic Butter", "price": 0.99 },
-      { "name": "Mushroom Sauce", "price": 1.49 }
+      { "name": "Mushroom Sauce", "price": 1.49 },
+
+
     ],
     "dateAdded": "2022-07-18",
     "isPublished": "Yes",
@@ -384,8 +409,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Egg", "price": 0.49 },
-
       { "name": "Avocado", "price": 0.99 },
+
+
     ],
     "dateAdded": "2022-11-08",
     "isPublished": "Yes",
@@ -403,7 +429,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Cheese", "price": 0.49 },
-      { "name": "Sour Cream", "price": 0.49 }
+      { "name": "Sour Cream", "price": 0.49 },
+
+
     ],
     "dateAdded": "2022-12-12",
     "isPublished": "Yes",
@@ -454,7 +482,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Chipotle Mayo", "price": 0.49 },
-      { "name": "Ketchup", "price": 0.49 }
+      { "name": "Ketchup", "price": 0.49 },
+
+
     ],
     "dateAdded": "2023-03-15",
     "isPublished": "Yes",
@@ -555,7 +585,9 @@ export const productsMockData = [
     ],
     "addons": [
       { "name": "Garlic Bread", "price": 0.99 },
-      { "name": "Caesar Salad", "price": 1.49 }
+      { "name": "Caesar Salad", "price": 1.49 },
+
+
     ],
     "dateAdded": "2023-09-22",
     "isPublished": "Yes",

@@ -6,7 +6,9 @@ import { Label, Select } from 'flowbite-react';
 import { Dessert, Eye, Heart, Minus, Plus, Search, SearchX, Star } from 'lucide-react';
 import { IoMdStar } from "react-icons/io";
 import { GiWrappedSweet } from "react-icons/gi";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../../../../context/actions/cartAction';
+import toast, { Toaster } from 'react-hot-toast';
 
 import {
   Card,
@@ -68,11 +70,16 @@ const AnimatedNumber = ({ value, commas }) => {
 
 
 export const MenuItemProductPage = () => {
+  const dispatch = useDispatch();
   const { id } = useParams();
-  const selectedItem = productsMockData.find(item => item.id === parseInt(id, 10));
+  const searchedItem = productsMockData.find(item => item.id === parseInt(id, 10));
+  const cartItems = useSelector((state) => state.cart.items);
 
+
+  console.log("cartItems:", cartItems)
+  console.log("searchedItem:", searchedItem)
   // TODO: Add better styling to this page
-  if (!selectedItem) {
+  if (!searchedItem) {
     return (
       <div className="flex flex-col items-center justify-center h-screen pb-60">
         <div className='text-3xl font-semibold flex items-center '>
@@ -86,18 +93,22 @@ export const MenuItemProductPage = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedAddOn, setSelectedAddOn] = useState('');
   const [totalPrice, setTotalPrice] = useState(calculateTotalPrice());
-
+  const [productIdentifier, setProductIdentifier] = useState('');
+  const overallPrice = totalPrice * quantity;
+  console.log("productIdentifier:", productIdentifier)
   useEffect(() => {
     setTotalPrice(calculateTotalPrice());
-  }, [quantity, selectedSize, selectedAddOn, selectedItem]);
+  }, [selectedSize, selectedAddOn, searchedItem]);
+
 
   function calculateTotalPrice() {
-    const selectedSizePrice = selectedSize ? selectedItem.sizes.find(size => size.name === selectedSize)?.price || 0 : 0;
-    const selectedAddOnPrice = selectedAddOn ? selectedItem.addons.find(addon => addon.name === selectedAddOn)?.price || 0 : 0;
+    const selectedSizePrice = selectedSize ? searchedItem.sizes.find((size) => size.name === selectedSize)?.price || 0 : 0;
+    const selectedAddOnPrice = selectedAddOn
+      ? searchedItem.addons.find((addon) => addon.name === selectedAddOn)?.price || 0
+      : 0;
 
-    const rawTotal = (selectedItem.basePrice + selectedSizePrice + selectedAddOnPrice) * quantity;
+    const rawTotal = (searchedItem.basePrice + selectedSizePrice + selectedAddOnPrice);
 
-    // Check if rawTotal is a valid number
     return isNaN(rawTotal) ? 0 : rawTotal;
   }
 
@@ -113,37 +124,101 @@ export const MenuItemProductPage = () => {
     setQuantity((prevQuantity) => Math.max(1, prevQuantity - 1));
   };
 
-
   const handleSizeChange = (e) => {
     setSelectedSize(e.target.value);
+    updateProductIdentifier(e.target.value, selectedAddOn);
   };
 
   const handleAddOnChange = (e) => {
     setSelectedAddOn(e.target.value);
+    updateProductIdentifier(selectedSize, e.target.value);
   };
 
-  const addToCart = () => {
-    console.log('Add to cart', data)
-  }
+  const updateProductIdentifier = (size, addon) => {
+    const updatedProductIdentifier = `${searchedItem.id}_${size || 'no_size'}_${addon || 'no_addon'}`;
+    setProductIdentifier(updatedProductIdentifier);
+  };
 
+
+  const handleAddCartItem = () => {
+    // TODO: Add better validation,
+    if (!selectedSize) {
+      alert('Please select a size.');
+      return;
+    }
+    // if (!selectedAddOn) {
+
+    //   return
+    // }
+
+    const options = {
+      size: selectedSize,
+      addons: selectedAddOn,
+      totalPrice: totalPrice,
+    };
+
+    const productToAdd = {
+      id: searchedItem.id,
+      name: searchedItem.productName,
+      image: searchedItem.productImage,
+      quantity,
+      options,
+      productIdentifier,
+    };
+
+    toast.custom((t) => (
+      <div
+        className={`${t.visible ? 'animate-enter' : 'animate-leave'
+          } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+      >
+        <div className="flex-1 w-0 p-4">
+          <div className="flex items-start">
+            <div className="flex-shrink-0 pt-0.5">
+              <img
+                className="h-10 w-10 rounded-full object-cover"
+                src={searchedItem.productImage}
+                alt={searchedItem.productName}
+              />
+            </div>
+            <div className="ml-3 flex-1">
+              <p className="text-sm font-medium text-gray-900">
+                Added {searchedItem.productName} to your cart.
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                {quantity} x {selectedSize} {searchedItem.productName}  {selectedAddOn}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+
+    dispatch(addToCart(productToAdd));
+
+    // TODO: 
+    // setSelectedSize('');
+    // setSelectedAddOn('');
+    setQuantity(1);
+  };
 
   return (
-    <div className="mx-auto p-12">
-      <div className='flex items-center justify-center shadow-2xl'>
+    <div className="mx-auto pt-12 flex items-center justify-center">
+      <div className='grid xl:grid-cols-2'>
         {/* Product Card */}
         <div className=" max-w-[26rem] h-full m-8">
           {/* Card Header */}
           <div className="relative rounded-lg">
             <div className="relative">
-              <div className="flex items-center justify-center">
+              {/* <span className='flex flex-col items-center justify-center'>{searchedItem.productName}</span> */}
+
+              <div className="flex items-center justify-center ">
                 <img
-                  src={selectedItem.productImage}
-                  alt={selectedItem.productName}
+                  src={searchedItem.productImage}
+                  alt={searchedItem.productName}
                   className=" max-h-[28rem] object-cover  rounded-lg w-full"
                 />
               </div>
             </div>
-            <div className="to-bg-black-10 absolute inset-0 h-full  bg-gradient-to-tr from-transparent via-transparent to-black/60 " />
             <button className='right-0'>
               {/* <Heart className='w-5 h-5' /> */}
             </button>
@@ -153,10 +228,8 @@ export const MenuItemProductPage = () => {
           <CardBody>
             <div className="mb-3 flex flex-col  items-center justify-between">
               {/* <Typography variant="h5" color="blue-gray" className="font-medium mb-4">
-                {selectedItem.productName}
+                {searchedItem.productName}
               </Typography> */}
-
-
             </div>
             <Typography color="gray">
               {/* TODO: Add short description for the product limit it to 255 characters in the admin dashboard and add product page */}
@@ -165,7 +238,7 @@ export const MenuItemProductPage = () => {
 
                 <span className='font-bold'>Product Description:</span>
                 <span>Duis non dolor irure nulla eu voluptate tempor tempor id aliquip in reprehenderit qui.</span>
-                {selectedItem.productDescription}
+                {searchedItem.productDescription}
               </div>
             </Typography>
 
@@ -178,9 +251,9 @@ export const MenuItemProductPage = () => {
           </CardBody>
         </div>
 
-        <div className="ml-8 px-12 mx-12">
-          <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 ">{selectedItem.productName} Details</h2>
-          <p className="font-bold">Base Price: ${selectedItem.basePrice}</p>
+        <div className="ml-8 px-12 mx-12 max-w-md">
+          <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 ">{searchedItem.productName} Details</h2>
+          <p className="font-bold">Base Price: ${searchedItem.basePrice}</p>
 
           <div className="mt-4">
             <span className=" font-semibold mb-4 block border-b-2 border-slate-300">Variation</span>
@@ -189,7 +262,7 @@ export const MenuItemProductPage = () => {
             <div className="mb-4 ">
               <Label value="Select Size" />
               <div className="flex flex-col">
-                {selectedItem.sizes.map((size, index) => (
+                {searchedItem.sizes.map((size, index) => (
                   <div key={index} className="mr-2 mb-4">
                     <input
                       type="radio"
@@ -210,8 +283,8 @@ export const MenuItemProductPage = () => {
             <div className="mb-4">
               <Label value="Select Addons" />
               <div className="flex flex-col">
-                {selectedItem.addons.length > 0 ? (
-                  selectedItem.addons.map((addon, index) => (
+                {searchedItem.addons.length > 0 ? (
+                  searchedItem.addons.map((addon, index) => (
                     <div key={index} className="mr-2 mb-4">
                       <input
                         type="radio"
@@ -243,7 +316,7 @@ export const MenuItemProductPage = () => {
                     </Typography>
                     <Typography variant="small" color="white" className="font-normal opacity-80">
                       <p className='pt-2'>
-                        <div className='font-semibold'>{selectedItem.ingredients.join(', ')}</div>
+                        <div className='font-semibold'>{searchedItem.ingredients.join(', ')}</div>
                       </p>
                     </Typography>
                   </div>
@@ -254,32 +327,49 @@ export const MenuItemProductPage = () => {
             </div>
 
             {/* Quantity Controls */}
-            <div className="flex items-center mb-4">
-              <span className='mr-2 '>Quantity: </span>
-              <button onClick={decrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 ">
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="mx-2 font-semibold">{quantity}</span>
-              <button onClick={incrementQuantity} className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4 ">
-                <Plus className="w-4 h-4" />
-              </button>
+            <div className="flex flex-col  mb-4 justify-between">
+              <div className="flex items-center gap-2">
+                <span className="mr-2">Quantity:</span>
+                <button
+                  onClick={decrementQuantity}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <span className="mx-2 font-semibold">{quantity}</span>
+                <button
+                  onClick={incrementQuantity}
+                  className="bg-gray-200 hover:bg-gray-300 text-gray-600 font-bold py-2 px-4"
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Checkout/Cart */}
+              <div className="flex gap-x-2 mt-4 items-center">
+                <button
+                  onClick={handleAddCartItem}
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
+                >
+                  Order Now
+                </button>
+              </div>
             </div>
 
-            {/* Checkout/Cart */}
-            <div className="flex gap-x-2  mt-4 ">
-              <button className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0">
-                Add to Cart
-              </button>
-              <button className=" bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0 ">
-                Order Now
-              </button>
-            </div>
 
             {/* Total Price */}
-            <div className="mt-4 flex justify-end">
-              <div className="font-bold"> Total: $
-                <AnimatedNumber key={quantity} value={totalPrice.toFixed(2)} commas />
+            <div className="mt-4 pb-16 flex">
+              <div className="font-semibold text-sm"> Total (per item): $
+                {totalPrice.toFixed(2)}
               </div>
+              {/* <div className="font-semibold text-sm"> Total (overall): $
+                <AnimatedNumber key={quantity} value={overallPrice.toFixed(2)} commas />
+              </div> */}
             </div>
             {/* <div className="text-sm text-gray-500">Free shipping on orders over $50 </div>
 
