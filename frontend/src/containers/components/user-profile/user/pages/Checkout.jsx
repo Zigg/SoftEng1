@@ -12,56 +12,19 @@ export const Checkout = () => {
   const cartTotalPrice = totalPriceArray.reduce((a, b) => a + b, 0);
   const cartLength = cartItems.length;
   const shippingFee = cartLength * 1.5;
-
+  const cartGrandTotal = cartTotalPrice + shippingFee;
   console.log("Total Price Array", totalPriceArray)
   console.log("Cart Total Price", cartTotalPrice)
   return (
-    <div className="gap-4 max-w-2xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+
+
+
+
+    <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto p-4">
       <div className="col-span-2">
-        <h1 className="text-3xl font-bold mb-6 text-center">Checkout</h1>
+        <h1 className="text-3xl font-bold my-6 text-center">Checkout</h1>
       </div>
-      <div className="border-b pb-4 mb-4 col-span-2">
-        <h2 className="text-xl font-semibold mb-2 text-gray-700">Order Summary</h2>
-
-        <ul className="space-y-4">
-          {cartItems.map((product) => (
-            <li key={product.id} className="flex space-x-4">
-              <div className="flex-shrink-0 w-20 h-20 overflow-hidden rounded-md border border-gray-200">
-                <img
-                  src={product.image}
-                  alt={product.imageAlt}
-                  className="w-full h-full object-cover object-center"
-                />
-              </div>
-
-              <div className="flex-grow">
-                <p className="text-lg font-semibold">
-                  {/* TODO: Add link to item in the menu */}
-                  <a href={product.href} className="text-blue-500 hover:underline cursor-pointer">
-                    {product.name}
-                  </a>
-                </p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-700">Price: ${product.options.totalPrice}</p>
-                    <p className="text-sm text-gray-700">Addons: {product.options.addons}</p>
-                    <p className="text-sm text-gray-700">Size: {product.options.size}</p>
-                    <p className="text-gray-500">Qty {product.quantity}</p>
-                  </div>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <div className="flex flex-col">
-          <span>Item Count: {cartLength}</span>
-          <span>Shipping: ${shippingFee.toFixed(2)} </span>
-          <span>Total Price: ${cartTotalPrice.toFixed(2)}</span>
-        </div>
-      </div>
-
-
-      <div className="border-b pb-4 mb-4 col-span-2">
+      <div className="border-b pb-4 mb-4 col-span-2 md:col-span-1">
         <h2 className="text-xl font-semibold mb-2 text-gray-700">Payment Method</h2>
 
         <div className="flex flex-col gap-y-2">
@@ -90,8 +53,75 @@ export const Checkout = () => {
         </div>
       </div>
 
-      <div className="border-b pb-4 mb-4 col-span-1">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-700">Shipping Information</h2>
+      <div className="border-b pb-4 mb-4 col-span-2 md:col-span-1">
+        <h2 className="text-2xl font-semibold mb-4 text-gray-700">Order Summary</h2>
+
+
+        <div className="overflow-y-auto max-h-96">
+          <ul className="space-y-4">
+            {cartItems.map((product) => (
+              <li key={product.id} className="flex items-center space-x-4">
+                <div className="flex-shrink-0 w-20 h-20 overflow-hidden rounded-md border border-gray-200">
+                  <img
+                    src={product.image}
+                    alt={product.imageAlt}
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
+
+                <div className="flex-grow">
+                  <p className="text-lg font-semibold">
+                    <a href={product.href} className="text-blue-500 hover:underline cursor-pointer">
+                      {product.name}
+                    </a>
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-700">Price: ${product.options.totalPrice}</p>
+                      <p className="text-sm text-gray-700">Addons: {product.options.addons}</p>
+                      <p className="text-sm text-gray-700">Size: {product.options.size}</p>
+                      <p className="text-gray-500">Qty {product.quantity}</p>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="flex flex-col mt-4">
+          <span className="text-gray-700 text-sm py-4">Item Count: {cartLength}</span>
+          <div className="flex justify-between">
+            <span className="text-gray-700 text-sm">Shipping: </span> <span>${shippingFee.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-700 text-sm">Subtotal </span>
+            <span className="">${cartTotalPrice.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-black font-bold text-lg">Total: </span>  <span className="text-black font-bold text-lg">${cartGrandTotal.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+
+      <h2 className="text-2xl font-semibold mb-4 text-gray-700 flex flex-col col-span-2 mt-auto">Contact Information</h2>
+      <div className="border-b pb-4 mb-4 col-span-2 md:col-span-1">
+        <div className="flex flex-col space-y-2">
+          <Label className="text-gray-600" htmlFor="mobile-number">
+            Mobile Number
+          </Label>
+          <Input
+            className="rounded-lg border-gray-300"
+            id="mobile-number"
+            placeholder="Enter your mobile number"
+            type="tel"
+          />
+        </div>
+      </div>
+
+      <h2 className="text-2xl font-semibold mb-4 text-gray-700 flex flex-col items-center justify-center col-span-2 mt-auto">Shipping Information</h2>
+      <div className="border-b pb-4 mb-4 col-span-2 grid-cols-2 md:col-span-1">
+
         <div className="space-y-4">
           <div className="flex flex-col space-y-2">
             <Label className="text-gray-600" htmlFor="name">
@@ -99,17 +129,7 @@ export const Checkout = () => {
             </Label>
             <Input className="rounded-lg border-gray-300" id="name" placeholder="Enter your name" />
           </div>
-          <div className="flex flex-col space-y-2">
-            <Label className="text-gray-600" htmlFor="mobile-number">
-              Mobile Number
-            </Label>
-            <Input
-              className="rounded-lg border-gray-300"
-              id="mobile-number"
-              placeholder="Enter your mobile number"
-              type="tel"
-            />
-          </div>
+
           <div className="flex flex-col space-y-2">
             <Label className="text-gray-600" htmlFor="city">
               City
@@ -122,12 +142,6 @@ export const Checkout = () => {
             </Label>
             <Input className="rounded-lg border-gray-300" id="state" placeholder="Enter your state" />
           </div>
-        </div>
-      </div>
-
-      <div className="border-b pb-4 mb-4 col-span-1">
-        <h2 className="text-2xl font-semibold mb-4 text-gray-700">More Information</h2>
-        <div className="space-y-4">
           <div className="flex flex-col space-y-2">
             <Label className="text-gray-600" htmlFor="country">
               Country
@@ -146,30 +160,15 @@ export const Checkout = () => {
             </Label>
             <Input className="rounded-lg border-gray-300" id="address" placeholder="Enter your address" />
           </div>
-          <div className="flex flex-col space-y-2">
-            <Label className="text-gray-600" htmlFor="map-pin">
-              Map Pin
-            </Label>
-            <img
-              alt="Map pin location"
-              className="rounded-lg"
-              height="200"
-              src="/placeholder.svg"
-              style={{
-                aspectRatio: "200/200",
-                objectFit: "cover",
-              }}
-              width="200"
-            />
-          </div>
         </div>
       </div>
+
 
       <Button className="col-span-2 mt-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full">
         Place Order
       </Button>
 
-    </div>
+    </div >
   )
 }
 
