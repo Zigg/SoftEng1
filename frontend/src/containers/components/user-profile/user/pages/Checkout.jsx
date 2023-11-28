@@ -15,11 +15,8 @@ export const Checkout = () => {
   const cartGrandTotal = cartTotalPrice + shippingFee;
   console.log("Total Price Array", totalPriceArray)
   console.log("Cart Total Price", cartTotalPrice)
+
   return (
-
-
-
-
     <div className="grid grid-cols-2 gap-8 max-w-4xl mx-auto p-4">
       <div className="col-span-2">
         <h1 className="text-3xl font-bold my-6 text-center">Checkout</h1>

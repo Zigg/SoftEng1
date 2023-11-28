@@ -19,8 +19,9 @@ import {
   Orders,
   OrderHistory,
   Transactions,
-  Cart,
+  Checkout
 } from "./containers/components/user-profile/index.js";
+
 
 // Dashboard Pages
 import {
@@ -43,7 +44,7 @@ import { MainDashboard } from "./containers/components/dashboard/index.js";
 import { TopNavbar } from "./containers/components/main/index.js";
 import { Footer } from "./containers/components/main/navbar/pages/components/Footer.jsx";
 import { MenuItemProductPage } from "./containers/components/main/navbar/pages/MenuItemProductPage.jsx";
-
+// import { Checkout } from "./containers/components/user-profile/user/pages/Checkout.jsx";
 
 function MainPageRoutes() {
   return (
@@ -81,6 +82,8 @@ function MainPageTopNavbarRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="menu" element={<MenuPage />} />
         <Route path="menu/:id" element={<MenuItemProductPage />} />
+        <Route path="checkout" element={<Checkout />} />
+
         <Route path="featured" element={<AboutPage />} />
         <Route path="contacts" element={<ContactsPage />} />
       </Route>
