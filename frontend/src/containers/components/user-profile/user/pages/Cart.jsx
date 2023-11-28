@@ -17,8 +17,7 @@ import { toast } from 'react-hot-toast'
 
 
 // TODO: Fetch the cart data from the global store
-// FIXME: Cart items undefined..
-export function Cart() {
+export const Cart = () => {
   const [open, setOpen] = useState(true)
   const navigate = useNavigate()
   const dispatch = useDispatch();
@@ -27,8 +26,6 @@ export function Cart() {
   const cartItems = useSelector((state) => state.cart.items);
   console.log("Cart Items", cartItems)
   const totalPriceArray = cartItems.map((item) => item.options.totalPrice * item.quantity);
-
-
   const cartTotalPrice = totalPriceArray.reduce((a, b) => a + b, 0);
   console.log("Total Price Array", totalPriceArray)
 
@@ -69,12 +66,12 @@ export function Cart() {
 
 
 
-  const handleIncreaseQuantity = (productId) => {
-    dispatch(increaseQuantity(productId));
+  const handleIncreaseQuantity = (productIdentifier) => {
+    dispatch(increaseQuantity(productIdentifier));
   };
 
-  const handleDecreaseQuantity = (productId) => {
-    dispatch(reduceQuantity(productId));
+  const handleDecreaseQuantity = (productIdentifier) => {
+    dispatch(reduceQuantity(productIdentifier));
   };
 
   return (
@@ -123,7 +120,7 @@ export function Cart() {
                       </div>
 
                       {(!cartItems || cartItems.length === 0) ? (
-                        <div className="absolute top-12 ml-24 mt-60">
+                        <div className="absolute top-12 ml-24 mt-72">
                           <p className="text-2xl font-semibold text-gray-800">Your cart is empty</p>
                         </div>
                       ) : (
@@ -196,21 +193,27 @@ export function Cart() {
                     {/* TODO: Add the scrolling effect animation to the total price */}
                     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                       <div className="flex justify-between text-base font-medium text-gray-900">
-                        <p>Grand Total</p>
+                        <p>Total</p>
                         <p>${' '}{cartTotalPrice.toFixed(2)}</p>
                       </div>
                       {/* <p className="mt-0.5 text-sm text-gray-700">Shipping and taxes calculated at checkout.</p> */}
-                      <div className="mt-6">
-                        <a
-                          href="#"
-                          className="flex items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700"
-                        >
-                          Checkout
-                        </a>
-                      </div>
+                      {(cartItems && cartItems.length > 0) && (
+                        <div className="mt-6">
+                          <button
+                            onClick={() => {
+                              setOpen(false);
+                              navigate('/checkout', { replace: true });
+                            }
+                            }
+                            className="flex w-full items-center justify-center rounded-md border border-transparent bg-red-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-red-700"
+                          >
+                            Checkout
+                          </button>
+                        </div>
+                      )}
                       <div className="mt-6 flex justify-center text-center text-sm text-gray-700">
                         <p>
-                          or{' '}
+
                           <button
                             type="button"
                             className="font-medium text-blue-600 hover:text-blue-500"

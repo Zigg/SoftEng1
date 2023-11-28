@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { productsMockData } from '../../../dashboard/pages/mock/productsMockData';
-import { Label, Select } from 'flowbite-react';
+import { Label, Modal, Select } from 'flowbite-react';
 import { Dessert, Eye, Heart, Minus, Plus, Search, SearchX, Star } from 'lucide-react';
 import { IoMdStar } from "react-icons/io";
 import { GiWrappedSweet } from "react-icons/gi";
@@ -21,6 +21,7 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { FaStarOfLife } from 'react-icons/fa6';
+import { LoginModal } from '../../../LoginModal';
 
 
 // TODO: This is correct now its adding the sizes and addons option to the base price which is correct however my products data is defined to provide the overall value not the added value to the base price. So I need to change the data to reflect the added value to the base price instead of the overall value.
@@ -70,6 +71,8 @@ const AnimatedNumber = ({ value, commas }) => {
 
 
 export const MenuItemProductPage = () => {
+  const user = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
   const { id } = useParams();
   const searchedItem = productsMockData.find(item => item.id === parseInt(id, 10));
@@ -139,9 +142,16 @@ export const MenuItemProductPage = () => {
     setProductIdentifier(updatedProductIdentifier);
   };
 
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleAddCartItem = () => {
     // TODO: Add better validation,
+    if (!user) {
+      alert('Please login to add items to your cart.');
+      return;
+    }
+
+
     if (!selectedSize) {
       alert('Please select a size.');
       return;
@@ -171,14 +181,17 @@ export const MenuItemProductPage = () => {
         className={`${t.visible ? 'animate-enter' : 'animate-leave'
           } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
       >
+
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
             <div className="flex-shrink-0 pt-0.5">
+
               <img
                 className="h-10 w-10 rounded-full object-cover"
                 src={searchedItem.productImage}
                 alt={searchedItem.productName}
               />
+
             </div>
             <div className="ml-3 flex-1">
               <p className="text-sm font-medium text-gray-900">
@@ -201,6 +214,11 @@ export const MenuItemProductPage = () => {
     setQuantity(1);
   };
 
+  const handleCloseLoginModal = () => {
+    // close the modal
+    setShowLoginModal(false);
+  };
+
   return (
     <div className="mx-auto pt-12 flex items-center justify-center">
       <div className='grid xl:grid-cols-2'>
@@ -209,7 +227,7 @@ export const MenuItemProductPage = () => {
           {/* Card Header */}
           <div className="relative rounded-lg">
             <div className="relative">
-              {/* <span className='flex flex-col items-center justify-center'>{searchedItem.productName}</span> */}
+
 
               <div className="flex items-center justify-center ">
                 <img
@@ -218,6 +236,7 @@ export const MenuItemProductPage = () => {
                   className=" max-h-[28rem] object-cover  rounded-lg w-full"
                 />
               </div>
+              <span className='flex flex-col items-center justify-center font-bold text-2xl pt-4'>{searchedItem.productName}</span>
             </div>
             <button className='right-0'>
               {/* <Heart className='w-5 h-5' /> */}
@@ -251,8 +270,8 @@ export const MenuItemProductPage = () => {
           </CardBody>
         </div>
 
-        <div className="ml-8 px-12 mx-12 max-w-md">
-          <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 ">{searchedItem.productName} Details</h2>
+        <div className="flex flex-col ml-8 max-w-[16rem]">
+          <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 "> Details</h2>
           <p className="font-bold">Base Price: ${searchedItem.basePrice}</p>
 
           <div className="mt-4">
@@ -346,19 +365,21 @@ export const MenuItemProductPage = () => {
               </div>
 
               {/* Checkout/Cart */}
+
               <div className="flex gap-x-2 mt-4 items-center">
                 <button
                   onClick={handleAddCartItem}
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
+                  className="bg-red-600 w-full hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
                 >
                   Add to Cart
                 </button>
-                <button
+                {/* <button
                   className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
                 >
                   Order Now
-                </button>
+                </button> */}
               </div>
+
             </div>
 
 
