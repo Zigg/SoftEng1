@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable require-jsdoc */
 const express = require("express");
 const admin = require("firebase-admin");
@@ -11,12 +12,15 @@ admin.initializeApp({
 });
 const app = express();
 
-app.use(cors({origin: true}));
+app.use(cors({ origin: true }));
 app.use(express.json());
 
 // TODO: Setup user routes
 const userRoute = require("./routes/user");
 app.use("/api/users", userRoute);
+
+const productRoute = require("./routes/products");
+app.use("/api/products", productRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
