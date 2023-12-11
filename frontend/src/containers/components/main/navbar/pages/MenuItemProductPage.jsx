@@ -21,7 +21,7 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { FaStarOfLife } from 'react-icons/fa6';
-import { LoginModal } from '../../../LoginModal';
+// import { LoginModal } from '../../../LoginModal';
 
 
 // TODO: This is correct now its adding the sizes and addons option to the base price which is correct however my products data is defined to provide the overall value not the added value to the base price. So I need to change the data to reflect the added value to the base price instead of the overall value.
@@ -221,64 +221,48 @@ export const MenuItemProductPage = () => {
 
   return (
     <div className="mx-auto pt-12 flex items-center justify-center">
-      <div className='grid xl:grid-cols-2'>
+      <div className='grid grid-cols-1 xl:grid-cols-2 gap-8'>
         {/* Product Card */}
-        <div className=" max-w-[26rem] h-full m-8">
+        <div className="max-w-[26rem] h-full m-8">
           {/* Card Header */}
-          <div className="relative rounded-lg">
-            <div className="relative">
-
-
-              <div className="flex items-center justify-center ">
-                <img
-                  src={searchedItem.productImage}
-                  alt={searchedItem.productName}
-                  className=" max-h-[28rem] object-cover  rounded-lg w-full"
-                />
-              </div>
-              <span className='flex flex-col items-center justify-center font-bold text-2xl pt-4'>{searchedItem.productName}</span>
+          <div className="relative rounded-lg overflow-hidden">
+            <div className="flex items-center justify-center">
+              <img
+                src={searchedItem.productImage}
+                alt={searchedItem.productName}
+                className="max-h-[28rem] object-cover rounded-lg w-full"
+              />
             </div>
-            <button className='right-0'>
-              {/* <Heart className='w-5 h-5' /> */}
+            <span className='flex flex-col items-center justify-center font-bold text-2xl pt-4'>{searchedItem.productName}</span>
+            <button className='absolute top-0 right-0 m-2'>
+              {/* Add your favorite icon (e.g., Heart) */}
             </button>
           </div>
 
           {/* Card Body */}
           <CardBody>
-            <div className="mb-3 flex flex-col  items-center justify-between">
-              {/* <Typography variant="h5" color="blue-gray" className="font-medium mb-4">
-                {searchedItem.productName}
-              </Typography> */}
+            <div className="mb-3 flex flex-col items-center justify-between">
+              {/* Add a title or subtitle if needed */}
             </div>
             <Typography color="gray">
-              {/* TODO: Add short description for the product limit it to 255 characters in the admin dashboard and add product page */}
               <div className='flex flex-col'>
-                <span className='text-xs'>Placeholder:</span>
-
-                <span className='font-bold'>Product Description:</span>
-                <span>Duis non dolor irure nulla eu voluptate tempor tempor id aliquip in reprehenderit qui.</span>
-                {searchedItem.productDescription}
+                {/* <span className='font-bold'>Product Description:</span> */}
+                <span>{searchedItem.description}</span>
               </div>
             </Typography>
-
-            {/* TODO: Placeholder */}
-            {/* TODO: Add a taste profile field to the json, /database later on */}
-            {/* <div className='flex flex-col'>Taste Profile:
-              <span className='text-xs'>Placeholder:</span>
-              <div className='flex gap-x-2'><Dessert className='h-6 w-6' /><GiWrappedSweet className='h-6 w-6' /></div>
-            </div> */}
           </CardBody>
         </div>
 
+        {/* Product Details */}
         <div className="flex flex-col ml-8 max-w-[16rem]">
           <h2 className="text-xl border-b-2 border-slate-300 font-bold text-center dark:text-white mb-4 "> Details</h2>
           <p className="font-bold">Base Price: ${searchedItem.basePrice}</p>
 
           <div className="mt-4">
-            <span className=" font-semibold mb-4 block border-b-2 border-slate-300">Variation</span>
+            <span className="font-semibold mb-4 block border-b-2 border-slate-300">Variation</span>
 
             {/* Select Size Dropdown */}
-            <div className="mb-4 ">
+            <div className="mb-4">
               <Label value="Select Size" />
               <div className="flex flex-col">
                 {searchedItem.sizes.map((size, index) => (
@@ -323,18 +307,17 @@ export const MenuItemProductPage = () => {
               </div>
             </div>
 
-
             {/* Ingredients */}
             <div className='flex items-center mb-4'>
-              <Label htmlFor="addOns" value="Ingredients" className='pr-2 flex flex-col items-center justify-center' />
+              <Label htmlFor="addOns" value="Ingredients" className='pr-2 text-gray-600' />
               <Tooltip
                 content={
                   <div className="w-80">
-                    <Typography color="white" className="font-medium">
+                    <Typography color="white" className="font-medium text-lg mb-2">
                       Ingredients Full List
                     </Typography>
                     <Typography variant="small" color="white" className="font-normal opacity-80">
-                      <p className='pt-2'>
+                      <p className='leading-relaxed'>
                         <div className='font-semibold'>{searchedItem.ingredients.join(', ')}</div>
                       </p>
                     </Typography>
@@ -346,7 +329,7 @@ export const MenuItemProductPage = () => {
             </div>
 
             {/* Quantity Controls */}
-            <div className="flex flex-col  mb-4 justify-between">
+            <div className="flex flex-col mb-4 justify-between">
               <div className="flex items-center gap-2">
                 <span className="mr-2">Quantity:</span>
                 <button
@@ -365,7 +348,6 @@ export const MenuItemProductPage = () => {
               </div>
 
               {/* Checkout/Cart */}
-
               <div className="flex gap-x-2 mt-4 items-center">
                 <button
                   onClick={handleAddCartItem}
@@ -373,32 +355,17 @@ export const MenuItemProductPage = () => {
                 >
                   Add to Cart
                 </button>
-                {/* <button
-                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded text-sm flex-shrink-0"
-                >
-                  Order Now
-                </button> */}
               </div>
-
             </div>
-
 
             {/* Total Price */}
             <div className="mt-4 pb-16 flex">
-              <div className="font-semibold text-sm"> Total (per item): $
-                {totalPrice.toFixed(2)}
-              </div>
-              {/* <div className="font-semibold text-sm"> Total (overall): $
-                <AnimatedNumber key={quantity} value={overallPrice.toFixed(2)} commas />
-              </div> */}
+              <div className="font-semibold text-sm">Total (per item): ${totalPrice.toFixed(2)}</div>
             </div>
-            {/* <div className="text-sm text-gray-500">Free shipping on orders over $50 </div>
-
-            <span className='text-xs text-gray-500 italic'>Terms and Conditions apply</span> */}
           </div>
         </div>
-
       </div>
-    </div >
+    </div>
   );
+
 };
