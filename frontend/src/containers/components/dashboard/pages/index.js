@@ -23,5 +23,3 @@ export { DashboardAddUsers } from './DashboardAddUsers.jsx'
 export { productsMockData } from './mock/productsMockData.js'
 export { restaurantsMockData } from './mock/restaurantsMockData.js'
 
-// Mock Data Images
-export { default as chickenBurger } from './mock/img/chickenBurger.jpg'
