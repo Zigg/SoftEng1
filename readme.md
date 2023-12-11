@@ -95,10 +95,25 @@ yarn install
 npm i
 ```
 
+## Install Firebase Tools
+```
+cd to backend
+npm install firebase-tools 
+```
+
 ## Setup backend development server
 ```
 cd to backend/functions
 npm i
+```
+
+## Login to the firebase CLI
+```
+firebase login
+```
+
+## Run the backend server
+```
 npm run serve
 ```
 
