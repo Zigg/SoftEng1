@@ -149,7 +149,7 @@ export const Cart = () => {
                                               href={product.href}>{product.name}</a>
                                           </h3>
                                           <p
-                                            className="ml-4">${' '}{product?.options?.totalPrice}</p>
+                                            className="ml-4">${' '}{product?.options?.totalPrice.toFixed(2)}</p>
                                         </div>
                                         <p
                                           className="mt-1 text-sm text-gray-700">Addons: {product?.options?.addons}
@@ -235,6 +235,6 @@ export const Cart = () => {
           </div>
         </div>
       </Dialog>
-    </Transition.Root >
+    </Transition.Root>
   )
 }

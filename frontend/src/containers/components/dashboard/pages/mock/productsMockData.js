@@ -23,8 +23,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-01-01",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Juicy chicken, fresh lettuce, and ripe tomatoes sandwiched in a soft bun. A classic delight for fast food lovers."
   },
 
   {
@@ -46,8 +47,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-02-01",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Savor the flavors of Italy with our Veggie Pizza. A crispy crust topped with bell peppers, mushrooms, and extra cheese."
   },
   // TODO: Add the sizes, addons price to total price calculation
   {
@@ -68,8 +70,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-03-15",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Indulge in the rich taste of our Spaghetti Carbonara. Perfectly cooked pasta with bacon, eggs, and Parmesan cheese."
   },
   {
     "id": 4,
@@ -89,8 +92,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-04-20",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Immerse yourself in the world of Japanese cuisine with our Sushi Platter. Fresh fish and vegetables rolled in nori seaweed."
   },
   {
     "id": 5,
@@ -110,8 +114,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-05-10",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A hearty American feast with Ribeye Steak, creamy mashed potatoes, and green beans. Served with garlic butter and mushrooms."
   },
 
   {
@@ -133,8 +138,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-06-18",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Experience the vibrant flavors of Mexico with our Tacos. Ground beef, lettuce, and cheese wrapped in soft tortillas."
   },
   {
     "id": 7,
@@ -155,8 +161,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-07-30",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Treat yourself to a delightful dessert with our Ice Cream Sundae. Vanilla ice cream, hot fudge, and whipped cream."
   },
   {
     "id": 8,
@@ -177,8 +184,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-08-25",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A tropical twist on traditional pizza. Enjoy the sweetness of pineapple paired with ham and extra cheese."
   },
   {
     "id": 9,
@@ -199,8 +207,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-09-12",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Crispy on the outside, tender on the inside. Our Fried Chicken comes with mashed potatoes and gravy."
   },
   {
     "id": 10,
@@ -221,8 +230,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-10-20",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": " Layers of lasagna noodles, ricotta cheese, and savory meat sauce. A classic Italian dish."
   },
 
   {
@@ -244,8 +254,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-02-15",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A pizza lover's dream! Pepperoni, mozzarella cheese, and tomato sauce on a perfect crust."
   },
   {
     "id": 12,
@@ -261,8 +272,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2022-03-10",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Indulge your sweet tooth with our Chocolate Sundae. Rich chocolate ice cream, hot fudge, and sprinkles."
   },
   {
     "id": 13,
@@ -283,8 +295,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-04-20",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A comforting Italian favorite. Spaghetti with hearty Bolognese sauce and Parmesan cheese."
   },
   {
     "id": 14,
@@ -300,8 +313,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2022-05-12",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Dive into the flavors of Japan with our Sushi Roll Combo. Fresh rice, nori, fish, and vegetables."
   },
   {
     "id": 15,
@@ -317,8 +331,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2022-06-30",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    description: "A refreshing salad with mixed fruits, honey, and lime juice. Perfect for a hot summer day."
   },
 
   {
@@ -340,8 +355,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-07-18",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A succulent Ribeye Steak cooked to perfection. Served with mashed potatoes, asparagus, and steak sauce."
   },
   {
     "id": 17,
@@ -357,8 +373,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2022-08-05",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    description: "A classic Italian coffee drink. Espresso with steamed milk and foamed milk."
   },
   {
     "id": 18,
@@ -373,8 +390,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2022-09-14",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A Mexican favorite. Rice, black beans, guacamole, and salsa wrapped in a soft tortilla."
   },
 
 
@@ -393,8 +411,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2022-10-25",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A refreshing drink made with fresh carrots, cucumbers, kale, and lemon."
   },
   {
     "id": 20,
@@ -414,8 +433,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-11-08",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A satisfying combination of turkey, bacon, lettuce, and tomato. Add an egg or avocado for extra flavor."
   },
   {
     "id": 21,
@@ -434,8 +454,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2022-12-12",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A classic Mexican dish. Ground beef, lettuce, and salsa in a crispy taco shell."
   },
   {
     "id": 22,
@@ -449,8 +470,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2023-01-05",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Blueberry Pancakes: Start your morning right with our Blueberry Pancakes. Fluffy pancakes with sweet blueberries and maple syrup."
   },
 
   {
@@ -465,8 +487,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2023-02-20",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Elevate your dining experience with our Lobster Dinner. Whole lobster served with butter, garlic, and lemon."
   },
   {
     "id": 24,
@@ -487,8 +510,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2023-03-15",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Crispy sweet potato fries with a choice of chipotle mayo or ketchup for dipping."
   },
 
   {
@@ -505,8 +529,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2023-04-10",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A refreshing drink made with fresh lemons, water, and sugar."
   },
   {
     "id": 26,
@@ -520,8 +545,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2023-05-25",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Juicy meatballs made with ground pork, eggs, black pepper, and flour."
   },
   {
     "id": 27,
@@ -537,8 +563,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2023-06-10",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Crispy chicken wings tossed in buffalo sauce. Served with celery and ranch dressing."
   },
 
   {
@@ -553,8 +580,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2023-07-12",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A classic American favorite. Hot dog sausage, mustard, and ketchup in a soft bun."
   },
   {
     "id": 29,
@@ -568,8 +596,9 @@ export const productsMockData = [
     ],
     "addons": [],
     "dateAdded": "2023-08-18",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "Fresh salmon sashimi served with wasabi, soy sauce, and pickled ginger."
   },
   {
     "id": 30,
@@ -590,8 +619,9 @@ export const productsMockData = [
 
     ],
     "dateAdded": "2023-09-22",
-    "isPublished": "Yes",
-    "isFeatured": "Yes"
+    "isPublished": true,
+    "isFeatured": true,
+    "description": "A hearty Italian classic. Pasta with mixed vegetables, tomato sauce, and Parmesan cheese."
   }
 
 ];
