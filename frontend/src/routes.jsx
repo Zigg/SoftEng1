@@ -33,11 +33,10 @@ import {
   DashboardSettings,
   DashboardAddRestaurants,
   DashboardAddUsers,
+  DashboardAddProducts
 } from "./containers/components/dashboard/pages/index.js";
 
-import {
-  DashboardAddProducts,
-} from "./containers/components/dashboard/pages/dashboardAddProducts/DashboardAddProducts.jsx";
+
 
 // Main Pages
 import { MainDashboard } from "./containers/components/dashboard/index.js";
@@ -110,6 +109,7 @@ function AdminDashboardRoutes() {
 }
 
 // TODO: Add the outlet child routes for the dashboard routes
+// TODO: Fix the routing compoennt rendering
 function AdminDashboardAddRoutes() {
   return (
     <Routes>
