@@ -15,13 +15,19 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
-// TODO: Setup user routes
+/**
+ * This will be where the routes are initialized globally
+ */
 const userRoute = require("./routes/user");
 app.use("/api/users", userRoute);
 
 const productRoute = require("./routes/products");
 app.use("/api/products", productRoute);
 
+/**
+ * This routes is only for testing purposes
+ * Create a GET Request to the given BASEURL from firebase
+ */
 app.get("/", (req, res) => {
   res.send("Hello World");
 });

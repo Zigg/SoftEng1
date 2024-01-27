@@ -7,10 +7,18 @@ const router = require("express").Router();
 const admin = require("firebase-admin");
 let data = [];
 
+/**
+ * This route is just only for testing purposes make sure to
+ * check whether on not this route returns the follow response
+ */
 router.get("/", (req, res) => {
   return res.send("Inside the user router");
 });
 
+/**
+ * Retrieves the total count of users.
+ * @return {Promise<number>} The total count of users.
+ */
 const getUserCount = async () => {
   let count = 0;
   const getCount = async (nextPageToken) => {
@@ -72,5 +80,14 @@ router.get("/list", async (req, res) => {
   }
 });
 
-// eslint-disable-next-line linebreak-style
+// TODO:
+/**
+ * This will be where the update user details will go
+ */
+
+// TODO:
+/**
+ * This will be where the delete user, make sure to use cascading delete
+ */
+
 module.exports = router;
