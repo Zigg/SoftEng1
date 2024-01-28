@@ -24,9 +24,15 @@ app.use("/api/users", userRoute);
 const productRoute = require("./routes/products");
 app.use("/api/products", productRoute);
 
+const ordersRoute = require("./routes/orders");
+app.use("/api/orders", ordersRoute);
+
 /**
  * This routes is only for testing purposes
  * Create a GET Request to the given BASEURL from firebase
+ * Make sure to run the backend server first using the command
+ * npm run serve
+ * NOTE: make sure to be in the backend/functions directory
  */
 app.get("/", (req, res) => {
   res.send("Hello World");

@@ -1,11 +1,8 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable new-cap */
-/* eslint-disable indent */
 /* eslint-disable object-curly-spacing */
-/* eslint-disable linebreak-style */
+/* eslint-disable max-len */
 const router = require("express").Router();
 const admin = require("firebase-admin");
-let data = [];
 
 /**
  * This route is just only for testing purposes make sure to
@@ -22,16 +19,11 @@ router.get("/", (req, res) => {
 const getUserCount = async () => {
   let count = 0;
   const getCount = async (nextPageToken) => {
-    await admin
-      .auth()
-      .listUsers(1000, nextPageToken)
-      .then((listUserResults) => {
-        count += listUserResults.users.length;
-        if (listUserResults.pageToken) {
-          return getCount(listUserResults.pageToken);
-        }
-      })
-      .catch((er) => console.log(er));
+    const listUserResults = await admin.auth().listUsers(1000, nextPageToken);
+    count += listUserResults.users.length;
+    if (listUserResults.pageToken) {
+      return getCount(listUserResults.pageToken);
+    }
   };
 
   await getCount();
@@ -45,37 +37,40 @@ router.get("/count", async (req, res) => {
   } catch (er) {
     return res.send({
       success: false,
-      msg: `Error in getting user count :,${er}`,
+      msg: `Error in getting user count: ${er}`,
     });
   }
 });
 
-const userList = (nextPageToken) => {
-  return admin
-    .auth()
-    .listUsers(1000, nextPageToken)
-    .then((userListResult) => {
-      userListResult.users.forEach((rec) => {
-        data.push(rec.toJSON());
-      });
-      if (userListResult.pageToken) {
-        return userList(userListResult.pageToken);
-      }
-    })
-    .catch((er) => console.log(er));
+/**
+ * Retrieves a list of users from firebase
+ * @param {string} nextPageToken - The token for the next page results limiting to 1000
+ * @return {Promise<Array<Object>>} - A promise that resolves to an array of user objects
+ */
+const getUserList = async (nextPageToken) => {
+  let data = [];
+  const userListResult = await admin.auth().listUsers(1000, nextPageToken);
+  userListResult.users.forEach((record) => {
+    data.push(record.toJSON());
+  });
+  if (userListResult.pageToken) {
+    const nextPageData = await getUserList(userListResult.pageToken);
+    data = data.concat(nextPageData);
+  }
+  return data;
 };
 
+/**
+ * API Endpoint for the list
+ */
 router.get("/list", async (req, res) => {
-  data = [];
-  await userList();
   try {
-    return res
-      .status(200)
-      .send({ success: true, data: data, dataCount: data.length });
+    const data = await getUserList();
+    return res.status(200).send({ success: true, data, dataCount: data.length });
   } catch (er) {
     return res.send({
       success: false,
-      msg: `Error in listing users :,${er}`,
+      msg: `Error in listing users: ${er}`,
     });
   }
 });
