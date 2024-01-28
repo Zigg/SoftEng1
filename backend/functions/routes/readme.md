@@ -2,6 +2,7 @@
 # API Testing Overview
 
 ## User API Reference
+
 ### Make sure you've already setup firebase to ensure testing of these endpoints as the BASE_URL will come from that
 
 #### Get user count
@@ -9,19 +10,24 @@
 ```http
   GET `${BASE_URL}/app/api/users/count`
 ```
-#### Sample JSON Response:
+
+#### Sample JSON Response
+
 ```http
 {
     "success": true,
     "count": 32
 }
 ```
+
 #### Get user list
 
 ```http
   GET `${BASE_URL}/app/api/users/list`
 ```
-#### Sample JSON Response:
+
+#### Sample JSON Response
+
 ```http
 {
     "success": true,
@@ -56,11 +62,15 @@
 ## Product API Reference
 
 Create Single Product
+
 ```http
   POST `${BASE_URL}/app/api/products/create`
 ```
-NOTE: This doesn't have an enforced controller for this form on the backend(frontend only), this is for testing first and the request body fields are not yet validated only a productId. There are lots of optional fields 
-#### Sample JSON Response:
+
+NOTE: This doesn't have an enforced controller for this form on the backend(frontend only), this is for testing first and the request body fields are not yet validated only a productId. There are lots of optional fields
+
+#### Sample JSON Response
+
 ```http
 {
     "success": true,
@@ -69,11 +79,15 @@ NOTE: This doesn't have an enforced controller for this form on the backend(fron
 ```
 
 Get all products
+
 ```http
   GET `${BASE_URL}/app/api/products/all`
 ```
-NOTE: This doesn't have an enforced controller for this form on the backend(frontend only), this is for testing first and the request body fields are not yet validated only a productId 
-#### Sample JSON Response:
+
+NOTE: This doesn't have an enforced controller for this form on the backend(frontend only), this is for testing first and the request body fields are not yet validated only a productId
+
+#### Sample JSON Response
+
 ```http
 {
     "success": true,
