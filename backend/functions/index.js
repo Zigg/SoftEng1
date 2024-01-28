@@ -18,13 +18,13 @@ app.use(express.json());
 /**
  * This will be where the routes are initialized globally
  */
-const userRoute = require("./routes/user");
+const userRoute = require("./routes/api/user");
 app.use("/api/users", userRoute);
 
-const productRoute = require("./routes/products");
+const productRoute = require("./routes/api/products");
 app.use("/api/products", productRoute);
 
-const ordersRoute = require("./routes/orders");
+const ordersRoute = require("./routes/api/orders");
 app.use("/api/orders", ordersRoute);
 
 /**

@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 
 /**
  * This will be where the order api endpoints will go
- * Update orders(status, details, etc), Get orders,
+ * Update orders(status, details, etc), Get/view orders,
  */
 
 module.exports = router;
