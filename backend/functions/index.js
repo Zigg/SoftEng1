@@ -17,6 +17,10 @@ if (!app) {
   app = express();
   app.use(cors({ origin: true }));
   app.use(express.json());
+  app.use((req, res, next) => {
+    res.set("Access-Control-Allow-Origin", "*");
+    next();
+  });
 
   /**
    * This will be where the routes are initialized globally
@@ -29,6 +33,9 @@ if (!app) {
 
   const ordersRoute = require("./routes/api/orders");
   app.use("/api/orders", ordersRoute);
+
+  const cartRoute = require("./routes/api/cart");
+  app.use("/api/cart", cartRoute);
 
   /**
    * This routes is only for testing purposes
