@@ -10,32 +10,36 @@ const serviceAccountKey = require("./serviceAccountKey.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccountKey),
 });
-const app = express();
 
-app.use(cors({ origin: true }));
-app.use(express.json());
+let app = null;
 
-/**
- * This will be where the routes are initialized globally
- */
-const userRoute = require("./routes/api/user");
-app.use("/api/users", userRoute);
+if (!app) {
+  app = express();
+  app.use(cors({ origin: true }));
+  app.use(express.json());
 
-const productRoute = require("./routes/api/products");
-app.use("/api/products", productRoute);
+  /**
+   * This will be where the routes are initialized globally
+   */
+  const userRoute = require("./routes/api/user");
+  app.use("/api/users", userRoute);
 
-const ordersRoute = require("./routes/api/orders");
-app.use("/api/orders", ordersRoute);
+  const productRoute = require("./routes/api/products");
+  app.use("/api/products", productRoute);
 
-/**
- * This routes is only for testing purposes
- * Create a GET Request to the given BASEURL from firebase
- * Make sure to run the backend server first using the command
- * npm run serve
- * NOTE: make sure to be in the backend/functions directory
- */
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+  const ordersRoute = require("./routes/api/orders");
+  app.use("/api/orders", ordersRoute);
+
+  /**
+   * This routes is only for testing purposes
+   * Create a GET Request to the given BASEURL from firebase
+   * Make sure to run the backend server first using the command
+   * npm run serve
+   * NOTE: make sure to be in the backend/functions directory
+   */
+  app.get("/", (req, res) => {
+    res.send("Hello World");
+  });
+}
 
 exports.app = functions.https.onRequest(app);
