@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable object-curly-spacing */
 /* eslint-disable require-jsdoc */
 const express = require("express");
 const admin = require("firebase-admin");
@@ -17,7 +18,7 @@ if (!app) {
   app = express();
   app.use(cors({ origin: true }));
   app.use(express.json());
-  app.use((req, res, next) => {
+  app.use((_req, res, next) => {
     res.set("Access-Control-Allow-Origin", "*");
     next();
   });
@@ -44,7 +45,7 @@ if (!app) {
    * npm run serve
    * NOTE: make sure to be in the backend/functions directory
    */
-  app.get("/", (req, res) => {
+  app.get("/", (_req, res) => {
     res.send("Hello World");
   });
 }

@@ -8,9 +8,7 @@ const admin = require("firebase-admin");
 const express = require("express");
 
 const productController = require("../../controllers/productController");
-/**
- * This is for testing the route
- */
+
 
 router.get("/", productController.productTestRouteServer);
 router.post("/create", productController.addNewProductServer);

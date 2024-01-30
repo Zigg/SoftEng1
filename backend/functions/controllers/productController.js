@@ -8,23 +8,23 @@ const admin = require("firebase-admin");
 
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
-const productTestRouteServer = (req, res, next) => {
+const productTestRouteServer = (_req, res, next) => {
   res.status(200).send({ success: true, msg: "Inside Products Route" })
 };
 
 /**
  * Add a new product to the server.
- * @param {Object} req - The request object.
+ * @param {Object} _req - The request object.
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  * @return {Object} - The response object containing the success status and product data.
  * @throws {Object} - The response object containing the error status and error message.
  */
-const addNewProductServer = async (req, res, next) => {
+const addNewProductServer = async (_req, res, next) => {
   try {
     // TODO: The request body fields are not yet validated here, the product ID is the only request sent when setting up this end point for now. You can create a POST request to this endpoint to check, make sure to setup firebase and its collections first before anything else, for consistency create the collection for your firebase store based on the given readme in the models directory
 
-    const productData = req.body;
+    const productData = _req.body;
     const generateProductId = () => {
       return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     };
@@ -47,13 +47,13 @@ const addNewProductServer = async (req, res, next) => {
 
 /**
  * Retrieves all products from the Firestore database.
- * @param {Object} req - The request object.
+ * @param {Object} _req - The request object.
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  * @return {Object} - The response object containing the retrieved products.
  * @throws {Object} - The response object containing the error message if an error occurs.
  */
-const getAllProductsServer = async (req, res, next) => {
+const getAllProductsServer = async (_req, res, next) => {
   try {
     const querySnapshot = await admin.firestore().collection("products").get();
 

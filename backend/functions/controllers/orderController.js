@@ -3,7 +3,7 @@
 const admin = require("firebase-admin");
 const db = admin.firestore();
 
-const orderTestRouteServer = (req, res, next) => {
+const orderTestRouteServer = (_req, res, next) => {
   return res.send("Inside the orders router");
 };
 

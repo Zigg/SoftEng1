@@ -5,7 +5,7 @@
 const admin = require("firebase-admin");
 const db = admin.firestore();
 
-const cartTestRouteServer = (req, res, next) => {
+const cartTestRouteServer = (_req, res, next) => {
   return res.send("Inside the cart router");
 };
 

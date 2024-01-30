@@ -1,5 +1,6 @@
 These schemas are not SQL as they deal with firebase's collection schema which is a NoSQL database.
 ```
+FIXME: These are not yet the final schema models, these are just for testing purposes
 
 Products Collection Schema:
 ```

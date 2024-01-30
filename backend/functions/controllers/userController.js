@@ -6,7 +6,7 @@ const admin = require("firebase-admin");
 
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
-const userTestProductServer = (req, res, next) => {
+const userTestProductServer = (_req, res, next) => {
   res.status(200).send({ success: true, msg: "Inside user route" });
 };
 
@@ -14,7 +14,7 @@ const userTestProductServer = (req, res, next) => {
  * Retrieves the total count of users.
  * @return {Promise<number>} The total count of users.
  */
-const getUserCountServer = async (req, res, next) => {
+const getUserCountServer = async (_req, res, next) => {
   try {
     let count = 0;
     const getCount = async (nextPageToken) => {
@@ -42,12 +42,12 @@ const getUserCountServer = async (req, res, next) => {
  */
 /**
  * Retrieves the list of users from the server.
- * @param {Object} req - The request object.
+ * @param {Object} _req - The request object.
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  * @returns {Object} - The response object containing the user list or an error message.
  */
-const getUserListServer = async (req, res, next) => {
+const getUserListServer = async (_req, res, next) => {
   const getList = async (nextPageToken) => {
     let data = [];
     const userListResult = await admin.auth().listUsers(1000, nextPageToken);
