@@ -25,7 +25,7 @@ if (!app) {
   /**
    * This will be where the routes are initialized globally
    */
-  const userRoute = require("./routes/api/user");
+  const userRoute = require("./routes/api/users");
   app.use("/api/users", userRoute);
 
   const productRoute = require("./routes/api/products");
