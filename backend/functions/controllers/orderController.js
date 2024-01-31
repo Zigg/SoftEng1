@@ -11,6 +11,8 @@ const orderTestRouteServer = (_req, res, next) => {
  * This will be where the order api endpoints will go
  * Update orders(status, details, etc)
  *  Get orders
+ * Get all orders
+ * Get order by id, users, etc
  */
 
 module.exports = {

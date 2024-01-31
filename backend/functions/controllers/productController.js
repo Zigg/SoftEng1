@@ -34,10 +34,10 @@ const addNewProductServer = async (req, res, next) => {
       };
 
       productsRef.add(product).then((docRef) => {
-        return res.status(200).send({ success: true, data: docRef.id });
+        return res.status(200).send({ success: true, data: product, id: docRef.id });
       }).catch((error) => {
         console.error("Error adding document: ", error);
-        return res.status(500).send({ success: false, msg: `SAVE PRODUCT ERROR [SERVER] ${error.message}` });
+        return res.status(500).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
       });
     }
   } catch (error) {

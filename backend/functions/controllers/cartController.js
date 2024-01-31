@@ -9,7 +9,7 @@ const cartTestRouteServer = (_req, res, next) => {
   return res.send("Inside the cart router");
 };
 
-// TODO: Store all these instances to Redux
+// TODO: Store all these instances to Redux(if applicable)
 
 // TODO: Create cart instance
 // NOTE: Only initialized for the frontend using Redux
@@ -19,7 +19,7 @@ const cartTestRouteServer = (_req, res, next) => {
 // --Same items but different options are separated, product identifier will be created based on the selected options
 // --Adding a product to the cart whilst there already is an instance of the items will add x quantity from the current items selected
 
-// TODO: Fetch currents users cart items
+// TODO: Fetch currents user's cart items
 
 
 module.exports = {

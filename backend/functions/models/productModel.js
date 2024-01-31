@@ -36,17 +36,6 @@ const productSchema = Joi.object({
   preparationTime: Joi.number().required(),
 });
 
-// TODO: Pass the response for validation
-const data = {};
-const { error, value } = productSchema.validate(data);
-
-// TODO: Handle the validation result
-if (error) {
-  console.error("Validation error:", error.message);
-} else {
-  console.log("Validation success:", value);
-}
-
 module.exports = {
   productSchema,
 };
