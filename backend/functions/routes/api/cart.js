@@ -9,5 +9,7 @@ const express = require("express");
 const cartController = require("../../controllers/cartController");
 
 router.get("/", cartController.cartTestRouteServer);
-
+router.post("/add/:userId", cartController.addToCartServer);
+router.patch("/update/:userId", cartController.changeCartItemQuantityServer);
+router.get("/all", cartController.getAllCartItemsServer);
 module.exports = router;

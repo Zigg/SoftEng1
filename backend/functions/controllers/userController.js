@@ -1,8 +1,11 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable indent */
 /* eslint-disable object-curly-spacing */
 /* eslint-disable valid-jsdoc */
 /* eslint-disable max-len */
 const admin = require("firebase-admin");
+const auth = admin.auth();
+
 
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
@@ -64,14 +67,13 @@ const getUserListServer = async (_req, res, next) => {
     const data = await getList();
     return res.status(200).send({ success: true, data });
   } catch (error) {
-    console.log(`USER LIST ERROR [SERVE] ${error.message}`);
+    console.log(`USER LIST ERROR [SERVER] ${error.message}`);
     return res.send({
       success: false,
-      msg: `USER LIST ERROR [SERVE] ${error.message}`,
+      msg: `USER LIST ERROR [SERVER] ${error.message}`,
     });
   }
 };
-
 
 // TODO: Add update user details endpoint.
 

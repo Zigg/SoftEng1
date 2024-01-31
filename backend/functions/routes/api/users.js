@@ -2,7 +2,6 @@
 /* eslint-disable object-curly-spacing */
 /* eslint-disable max-len */
 const router = require("express").Router();
-const admin = require("firebase-admin");
 
 const userController = require("../../controllers/userController");
 
