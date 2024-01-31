@@ -4,46 +4,46 @@
 /* eslint-disable max-len */
 
 const admin = require("firebase-admin");
-// const db = admin.firestore();
+const db = admin.firestore();
+const productsRef = db.collection("products");
+const { productSchema } = require("../models/productModel");
+
 
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
-
 const productTestRouteServer = (_req, res, next) => {
   res.status(200).send({ success: true, msg: "Inside Products Route" })
 };
 
 /**
- * Add a new product to the server.
- * @param {Object} _req - The request object.
+ * Add a new product to firebase.
+ * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  * @return {Object} - The response object containing the success status and product data.
  * @throws {Object} - The response object containing the error status and error message.
  */
-const addNewProductServer = async (_req, res, next) => {
+const addNewProductServer = async (req, res, next) => {
   try {
-    // TODO: The request body fields are not yet validated here, the product ID is the only request sent when setting up this end point for now. You can create a POST request to this endpoint to check, make sure to setup firebase and its collections first before anything else, for consistency create the collection for your firebase store based on the given readme in the models directory
+    const { error, value } = productSchema.validate(req.body);
 
-    const productData = _req.body;
-    const generateProductId = () => {
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    };
-    const id = generateProductId();
+    if (error) {
+      return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
+    } else {
+      const product = {
+        ...value,
+      };
 
-    const product = {
-      productId: id,
-      ...productData,
-    };
-
-
-    // const result = await admin.firestore().collection("products").add(product);
-    // TODO: This is only for testing purposes for now the response is only sending the product ID
-    return res.status(200).send({ success: true, data: product });
+      productsRef.add(product).then((docRef) => {
+        return res.status(200).send({ success: true, data: docRef.id });
+      }).catch((error) => {
+        console.error("Error adding document: ", error);
+        return res.status(500).send({ success: false, msg: `SAVE PRODUCT ERROR [SERVER] ${error.message}` });
+      });
+    }
   } catch (error) {
     return res.status(500).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
   }
 };
-
 
 /**
  * Retrieves all products from the Firestore database.
