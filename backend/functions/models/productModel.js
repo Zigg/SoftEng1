@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable indent */
 /* eslint-disable object-curly-spacing */
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
@@ -10,21 +11,26 @@ const productSchema = Joi.object({
   id: Joi.string(),
   productName: Joi.string().required(),
   basePrice: Joi.number().required(),
-  sizes: Joi.array().items(Joi.object({
-    price: Joi.number().required(),
-    name: Joi.string().required(),
-  })).optional(),
-  addons: Joi.array().items(Joi.object({
-    name: Joi.string().required(),
-    price: Joi.number().required(),
-  })).optional(),
+  sizes: Joi.array().items(
+    Joi.object({
+      price: Joi.number().required(),
+      name: Joi.string().required(),
+    }),
+  ).optional(),
+  addons: Joi.array().items(
+    Joi.object({
+      name: Joi.string().required(),
+      price: Joi.number().required(),
+    }),
+  ).optional(),
   ingredients: Joi.array().items(Joi.string()),
   description: Joi.string().min(1),
   category: Joi.string().required(),
   // NOTE: This will be given by firebase storage
+  // TODO: This needs to be required but will be optional for now, need to setup firebase storage
   imageUrl: Joi.string(),
   isFeatured: Joi.boolean().required().default(false),
-  isPublished: Joi.boolean().required(),
+  isPublished: Joi.boolean().required().default(false),
   nutritionalInfo: Joi.object({
     calories: Joi.number().required(),
     carbohydrates: Joi.number().required(),
@@ -36,6 +42,9 @@ const productSchema = Joi.object({
   preparationTime: Joi.number().required(),
 });
 
+// TODO: Create fork of the main product schema to be used for updating products
+const updateProductSchema = productSchema.fork(["productName", "basePrice", "category", "isFeatured", "isPublished", "nutritionalInfo", "preparationTime"], (schema) => schema.optional());
+
 module.exports = {
-  productSchema,
+  productSchema, updateProductSchema,
 };
