@@ -7,6 +7,7 @@ const admin = require("firebase-admin");
 const db = admin.firestore();
 const cartCollectionRef = db.collection("cart");
 const { cartSchema } = require("../models/cartModel");
+db.settings({ ignoreUndefinedProperties: true });
 
 const cartTestRouteServer = (_req, res, next) => {
   return res.send("Inside the cart router");
@@ -115,11 +116,25 @@ const getUserCartServer = async (req, res, next) => {
 const createCartServer = async (req, res, next) => {
   const userId = req.params.userId;
   try {
-    console.log(userId);
+    const { error, value } = cartSchema.validate(req.body);
 
-    return res.status(200).send({ success: true, message: "Cart created successfully" });
+    if (error) {
+      return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
+    } else {
+      const cartInstance = {
+        userId: userId,
+        ...value,
+      };
+
+      cartCollectionRef.add(cartInstance).then((docRef) => {
+        return res.status(200).send({ success: true, data: cartInstance, id: docRef.id });
+      }).catch((error) => {
+        console.error("Error adding document: ", error);
+        return res.status(400).send({ success: false, msg: `CREATE CART ERROR [SERVER] ${error.message}` });
+      });
+    }
   } catch (error) {
-    return res.status(400).send({ success: false, message: `ERROR CREATE CART [SERVER]: ${error.message}` });
+    return res.status(400).send({ success: false, msg: `CREATE CART ERROR [SERVER] ${error.message}` });
   }
 };
 

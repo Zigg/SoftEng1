@@ -6,6 +6,7 @@ const admin = require("firebase-admin");
 
 const cartController = require("../../controllers/cartController");
 
+// TODO:
 router.get("/", cartController.cartTestRouteServer);
 router.get("/:cartId", cartController.getUserCartServer);
 router.get("/all/:cartId", cartController.getAllCartItemsServer);

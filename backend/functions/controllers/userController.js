@@ -4,7 +4,6 @@
 /* eslint-disable valid-jsdoc */
 /* eslint-disable max-len */
 const admin = require("firebase-admin");
-
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
 const userTestProductServer = (_req, res, next) => {

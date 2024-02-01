@@ -12,16 +12,16 @@ const Joi = require("joi");
 // Define a schema for the Cart class using Joi
 const cartSchema = Joi.object({
   id: Joi.string(),
-  userId: Joi.string().required(),
+  userId: Joi.string(),
   items: Joi.array().items(Joi.object({
     productId: Joi.string().required(),
     // This will be derived from the chosen addons,sizes,etc different from the productId
-    // Example: "large_cheese" derived from size and possible addons to help distinguish it from the same items from the cart if any
+    // Example: "large-cheese" derived from size and possible addons to help distinguish it from the same items from the cart if any
     productIdentifier: Joi.string().required(),
     productQuantity: Joi.number().required(),
     productPrice: Joi.number().required(),
   })).optional(),
-  totalPrice: Joi.number().required(),
+  totalPrice: Joi.number(),
 });
 
 // TODO: Pass the response for validation
@@ -35,4 +35,4 @@ if (error) {
   console.log("Validation success:", value);
 }
 
-module.exports = cartSchema;
+module.exports = { cartSchema };
