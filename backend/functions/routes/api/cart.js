@@ -3,13 +3,20 @@
 
 const router = require("express").Router();
 const admin = require("firebase-admin");
-const db = admin.firestore();
-const express = require("express");
 
 const cartController = require("../../controllers/cartController");
 
 router.get("/", cartController.cartTestRouteServer);
-router.post("/add/:userId", cartController.addToCartServer);
-router.patch("/update/:userId", cartController.changeCartItemQuantityServer);
-router.get("/all", cartController.getAllCartItemsServer);
+router.get("/:cartId", cartController.getUserCartServer);
+router.get("/all/:cartId", cartController.getAllCartItemsServer);
+
+router.post("/create", cartController.createCartServer);
+router.post("/add/:cartId", cartController.addToCartServer);
+
+router.patch("/update/:cartId/:productId/:productIdentifier", cartController.changeCartItemQuantityServer);
+
+router.put("clear/:cartId", cartController.clearCartItemsServer);
+
+router.delete("/delete/:cartId/:productId/:productIdentifier", cartController.clearCartItemsServer);
+
 module.exports = router;
