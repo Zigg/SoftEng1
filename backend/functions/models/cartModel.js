@@ -11,7 +11,8 @@ const Joi = require("joi");
 
 // Define a schema for the Cart class using Joi
 const cartSchema = Joi.object({
-  id: Joi.number().required(),
+  id: Joi.string(),
+  userId: Joi.string().required(),
   items: Joi.array().items(Joi.object({
     productId: Joi.string().required(),
     // This will be derived from the chosen addons,sizes,etc different from the productId

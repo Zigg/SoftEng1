@@ -12,12 +12,17 @@
 // TODO: This is not yet final
 const Joi = require("joi");
 
+const orderStatus = [
+  "pending", "confirmed", "shipped", "delivered", "cancelled"
+];
+
 // Define a schema for the Order class using Joi
 const orderSchema = Joi.object({
-  id: Joi.string().required(),
+  id: Joi.string(),
   userId: Joi.string().required(),
   orderDate: Joi.string().required(),
-  status: Joi.string().valid("pending", "confirmed", "shipped", "delivered", "cancelled").required(),
+  // NOTE: firestore doesn't have native support for enums so it needs to be enforced on the application level
+  status: Joi.string().valid(...orderStatus).required(),
   customerName: Joi.string(),
   customerEmail: Joi.string().email().required(),
   shippingAddress: Joi.array().items(Joi.object({
@@ -25,8 +30,15 @@ const orderSchema = Joi.object({
     city: Joi.string().required(),
     province: Joi.string().required(),
   })).optional(),
-  // TODO: These should be derived from the cart schema
-  cartId: Joi.string().required(),
+  // TODO: This should be derived from the cart schema
+  items: Joi.array().items(Joi.object({
+    productId: Joi.string().required(),
+    // This will be derived from the chosen addons,sizes,etc different from the productId
+    // Example: "large_cheese" derived from size and possible addons to help distinguish it from the same items from the cart if any
+    productIdentifier: Joi.string().required(),
+    productQuantity: Joi.number().required(),
+    productPrice: Joi.number().required(),
+  })).optional(),
   totalPrice: Joi.number().required(),
 });
 
