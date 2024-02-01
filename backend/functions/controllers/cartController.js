@@ -32,11 +32,11 @@ const addToCartServer = async (req, res, next) => {
         return res.status(200).send({ success: true, data: cart, id: docRef.id });
       }).catch((error) => {
         console.error("Error adding document: ", error);
-        return res.status(500).send({ success: false, msg: `ADD TO CART ERROR [SERVER] ${error.message}` });
+        return res.status(400).send({ success: false, msg: `ADD TO CART ERROR [SERVER] ${error.message}` });
       });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `ADD TO CART ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `ADD TO CART ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -62,11 +62,11 @@ const changeCartItemQuantityServer = async (req, res, next) => {
         return res.status(200).send({ success: true, data: cart, id: docRef.id });
       }).catch((error) => {
         console.error("Error adding document: ", error);
-        return res.status(500).send({ success: false, msg: `CHANGE CART ITEM QUANTITY ERROR [SERVER] ${error.message}` });
+        return res.status(400).send({ success: false, msg: `CHANGE CART ITEM QUANTITY ERROR [SERVER] ${error.message}` });
       });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `CHANGE CART ITEM QUANTITY ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `CHANGE CART ITEM QUANTITY ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -80,7 +80,7 @@ const getAllCartItemsServer = async (req, res, next) => {
 
     return res.status(200).send({ success: true, message: "Cart items fetched successfully" });
   } catch (error) {
-    return res.status(500).send({ success: false, message: `ERROR GET ALL CART ITEMS [SERVER]: ${error.message}` });
+    return res.status(400).send({ success: false, message: `ERROR GET ALL CART ITEMS [SERVER]: ${error.message}` });
   }
 };
 
@@ -93,7 +93,7 @@ const clearCartItemsServer = async (req, res, next) => {
 
     return res.status(200).send({ success: true, message: "Cart cleared successfully" });
   } catch (error) {
-    return res.status(500).send({ success: false, message: `ERROR CLEAR CART ITEMS [SERVER]: ${error.message}` });
+    return res.status(400).send({ success: false, message: `ERROR CLEAR CART ITEMS [SERVER]: ${error.message}` });
   }
 };
 
@@ -106,7 +106,7 @@ const getUserCartServer = async (req, res, next) => {
 
     return res.status(200).send({ success: true, message: "Cart instance fetched Successfully" });
   } catch (error) {
-    return res.status(500).send({ success: false, message: `ERROR GET USER CART [SERVER]: ${error.message}` });
+    return res.status(400).send({ success: false, message: `ERROR GET USER CART [SERVER]: ${error.message}` });
   }
 };
 
@@ -119,7 +119,7 @@ const createCartServer = async (req, res, next) => {
 
     return res.status(200).send({ success: true, message: "Cart created successfully" });
   } catch (error) {
-    return res.status(500).send({ success: false, message: `ERROR CREATE CART [SERVER]: ${error.message}` });
+    return res.status(400).send({ success: false, message: `ERROR CREATE CART [SERVER]: ${error.message}` });
   }
 };
 

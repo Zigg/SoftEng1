@@ -24,7 +24,7 @@ const getAllOrdersServer = async (_req, res, next) => {
 
     return res.status(200).send({ success: true, data: response });
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `GET ALL ORDERS ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `GET ALL ORDERS ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -44,7 +44,7 @@ const createOrderServer = async (req, res) => {
 
     return res.status(200).send({ success: true, data: newOrder });
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `CREATE ORDER ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `CREATE ORDER ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -61,7 +61,7 @@ const updateOrderStatusServer = async (req, res, next) => {
 
     return res.status(200).send({ success: true, data: order });
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `UPDATE ORDER STATUS ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `UPDATE ORDER STATUS ERROR [SERVER] ${error.message}` });
   }
 };
 

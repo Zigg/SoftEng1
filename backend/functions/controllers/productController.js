@@ -30,11 +30,11 @@ const addNewProductServer = async (req, res, next) => {
         return res.status(200).send({ success: true, data: product, id: docRef.id });
       }).catch((error) => {
         console.error("Error adding document: ", error);
-        return res.status(500).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
+        return res.status(400).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
       });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -56,7 +56,7 @@ const getAllProductsServer = async (_req, res, next) => {
     res.status(200).send({ success: true, data: response });
   } catch (error) {
     console.log(`GET ALL PRODUCTS ERROR [SERVER] ${error.message}`)
-    return res.status(500).send({ success: false, msg: `GET ALL PRODUCTS ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `GET ALL PRODUCTS ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -97,7 +97,7 @@ const getProductByIdServer = async (req, res, next) => {
     }
   } catch (error) {
     console.log(`GET PRODUCT BY ID ERROR [SERVER] ${error.message}`);
-    return res.status(500).send({ success: false, msg: `GET PRODUCT BY ID ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `GET PRODUCT BY ID ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -115,11 +115,11 @@ const updateProductByIdServer = async (req, res, next) => {
         return res.status(200).send({ success: true, data: value });
       }).catch((error) => {
         console.error("Error updating document: ", error);
-        return res.status(500).send({ success: false, msg: `UPDATE PRODUCT ERROR [SERVER] ${error.message}` });
+        return res.status(400).send({ success: false, msg: `UPDATE PRODUCT ERROR [SERVER] ${error.message}` });
       });
     }
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `UPDATE PRODUCT ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `UPDATE PRODUCT ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -138,7 +138,7 @@ const deleteProductByIdServer = async (req, res, next) => {
     }
   } catch (error) {
     console.log(`DELETE PRODUCT ERROR [SERVER] ${error.message}`)
-    return res.status(500).send({ success: false, msg: `DELETE PRODUCT ERROR [SERVER] ${error.message}` });
+    return res.status(400).send({ success: false, msg: `DELETE PRODUCT ERROR [SERVER] ${error.message}` });
   }
 };
 
