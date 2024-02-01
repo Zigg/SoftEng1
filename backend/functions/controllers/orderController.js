@@ -1,10 +1,11 @@
-/* eslint-disable max-len */
 /* eslint-disable linebreak-style */
+/* eslint-disable max-len */
 /* eslint-disable object-curly-spacing */
 
 const admin = require("firebase-admin");
 const db = admin.firestore();
-const orderRef = ("orders");
+const orderCollectionRef = db.collection("orders");
+const { orderSchema } = require("../models/orderModel");
 
 // TODO: Add Joi for validation
 
@@ -13,53 +14,73 @@ const orderTestRouteServer = (_req, res, next) => {
 };
 
 // TODO:
-const getAllOrdersServer = async (req, res, next) => {
-  const userId = req.params.userId;
-
+const getAllOrdersServer = async (_req, res, next) => {
   try {
-    console.log(userId);
+    const querySnapshot = await db.collection("orders").get();
+
+    const response = querySnapshot.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() };
+    });
+
+    return res.status(200).send({ success: true, data: response });
   } catch (error) {
-    // Handle error
+    return res.status(500).send({ success: false, msg: `GET ALL ORDERS ERROR [SERVER] ${error.message}` });
   }
 };
 
 // TODO:
-const createOrderServer = async (req, res, next) => {
+const createOrderServer = async (req, res) => {
   const userId = req.params.userId;
 
   try {
-    const { orderName, cartId } = req.body;
+    const { id, cartId } = req.body;
 
     const newOrder = await db.collection("orders").add({
-      orderName,
+      id,
       cartId,
       userId,
       status: "pending",
     });
 
-    return res.status(200).send(newOrder);
+    return res.status(200).send({ success: true, data: newOrder });
   } catch (error) {
-    // Handle error
+    return res.status(500).send({ success: false, msg: `CREATE ORDER ERROR [SERVER] ${error.message}` });
   }
 };
 
 // TODO:
-const updateOrderStatusServer = async (req, res) => {
+const updateOrderStatusServer = async (req, res, next) => {
   const orderId = req.params.orderId;
-  const { status } = req.body;
 
   try {
-    await db.collection("orders").doc(`/${orderId}/`).update({ status });
+    const { status } = req.body;
 
-    return res.status(200).send({ success: true, msg: "Order status updated successfully" });
-  } catch (error) {
-    return res.send({
-      success: false,
-      msg: `USER UPDATE ORDER ERROR [SERVER] ${error.message}`,
+    const order = await db.collection("orders").doc(orderId).update({
+      status,
     });
+
+    return res.status(200).send({ success: true, data: order });
+  } catch (error) {
+    return res.status(500).send({ success: false, msg: `UPDATE ORDER STATUS ERROR [SERVER] ${error.message}` });
   }
 };
 
+// TODO:
+const getOrderByIdServer = async (req, res, next) => {
+  const orderId = req.params.orderId;
+
+  try {
+    const order = await db.collection("orders").doc(orderId).get();
+
+    if (!order.exists) {
+      return res.status(404).send({ success: false, msg: "Order not found" });
+    }
+
+    return res.status(200).send({ success: true, data: order.data() });
+  } catch (error) {
+    return res.status(200).send({ success: true, msg: `GET ORDER BY ID ERROR [SERVER] ${error.message}` });
+  }
+};
 
 /**
  * This will be where the order api endpoints will go
@@ -70,5 +91,5 @@ const updateOrderStatusServer = async (req, res) => {
  */
 
 module.exports = {
-  orderTestRouteServer, getAllOrdersServer, createOrderServer, updateOrderStatusServer,
+  orderTestRouteServer, getAllOrdersServer, createOrderServer, updateOrderStatusServer, getOrderByIdServer,
 };

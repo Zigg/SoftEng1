@@ -5,7 +5,7 @@
 
 const admin = require("firebase-admin");
 const db = admin.firestore();
-const cartRef = db.collection("cart");
+const cartCollectionRef = db.collection("cart");
 const { cartSchema } = require("../models/cartModel");
 
 const cartTestRouteServer = (_req, res, next) => {
@@ -14,21 +14,29 @@ const cartTestRouteServer = (_req, res, next) => {
 
 // TODO: Store all these instances to Redux(if applicable)
 
+// TODO:
 const addToCartServer = async (req, res, next) => {
-  // TODO: Assign the cart to a user
-  const userId = req.params.userId;
-  // TODO:
-  const productId = req.body.productId;
-
+  const id = req.params.cartId;
   try {
-    console.log(userId);
-    console.log(productId);
-    if (!userId) {
-      return res.status(401).send({ success: false, msg: `ADD TO CART [SERVER] Unauthorized` });
+    console.log(id);
+    const { error, value } = cartSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
+    } else {
+      const cart = {
+        ...value,
+      };
+
+      cartCollectionRef.add(cart).then((docRef) => {
+        return res.status(200).send({ success: true, data: cart, id: docRef.id });
+      }).catch((error) => {
+        console.error("Error adding document: ", error);
+        return res.status(500).send({ success: false, msg: `ADD TO CART ERROR [SERVER] ${error.message}` });
+      });
     }
-    return res.status(200).send({ success: true, msg: "ADD CARD SUCCESSFUL [SERVER]" });
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `ADD CART ERROR [SERVER] ${error.message}` });
+    return res.status(500).send({ success: false, msg: `ADD TO CART ERROR [SERVER] ${error.message}` });
   }
 };
 
@@ -36,47 +44,85 @@ const addToCartServer = async (req, res, next) => {
 // --Increment & Decrement Items
 // --Same items but different options are separated, product identifier will be created based on the selected options
 // --Adding a product to the cart whilst there already is an instance of the items will add x quantity from the current items selected
+// TODO:
 const changeCartItemQuantityServer = async (req, res, next) => {
   const userId = req.params.userId;
   try {
     console.log(userId);
-    if (!userId) {
-      return res.status(401).send({ success: false, msg: `Unauthorized` });
+    const { error, value } = cartSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
+    } else {
+      const cart = {
+        ...value,
+      };
+
+      cartCollectionRef.add(cart).then((docRef) => {
+        return res.status(200).send({ success: true, data: cart, id: docRef.id });
+      }).catch((error) => {
+        console.error("Error adding document: ", error);
+        return res.status(500).send({ success: false, msg: `CHANGE CART ITEM QUANTITY ERROR [SERVER] ${error.message}` });
+      });
     }
-    return res.status(200).send({ success: true });
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `UPDATE CART ERROR [SERVER] ${error.message}` });
+    return res.status(500).send({ success: false, msg: `CHANGE CART ITEM QUANTITY ERROR [SERVER] ${error.message}` });
   }
 };
 
 // TODO: Fetch currents user's cart items
+// TODO:
+
 const getAllCartItemsServer = async (req, res, next) => {
-  const userId = req.params.userId;
+  const id = req.params.cartId;
   try {
-    console.log(userId);
-    if (!userId) {
-      return res.status(401).send({ success: false, msg: `Unauthorized` });
-    }
-    return res.status(200).send({ success: true });
+    console.log(id);
+
+    return res.status(200).send({ success: true, message: "Cart items fetched successfully" });
   } catch (error) {
-    return res.status(500).send({ success: false, msg: `GET ALL CART ITEMS ERROR [SERVER] ${error.message}` });
+    return res.status(500).send({ success: false, message: `ERROR GET ALL CART ITEMS [SERVER]: ${error.message}` });
   }
 };
 
 // TODO: Clear cart once a checkout session is made a completed successfully, maybe send these items to previously bought items
-
+// TODO:
 const clearCartItemsServer = async (req, res, next) => {
   const userId = req.params.userId;
   try {
     console.log(userId);
 
-    return res.status(200).send({ success: true, message: "All cart items cleared successfully" });
+    return res.status(200).send({ success: true, message: "Cart cleared successfully" });
   } catch (error) {
     return res.status(500).send({ success: false, message: `ERROR CLEAR CART ITEMS [SERVER]: ${error.message}` });
   }
 };
 
+// TODO:
+
+const getUserCartServer = async (req, res, next) => {
+  const userId = req.params.userId;
+  try {
+    console.log(userId);
+
+    return res.status(200).send({ success: true, message: "Cart instance fetched Successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: `ERROR GET USER CART [SERVER]: ${error.message}` });
+  }
+};
+
+// TODO:
+// This can actually just be a helper function and can be invoked upon creation of an account, but for now just leave it here
+const createCartServer = async (req, res, next) => {
+  const userId = req.params.userId;
+  try {
+    console.log(userId);
+
+    return res.status(200).send({ success: true, message: "Cart created successfully" });
+  } catch (error) {
+    return res.status(500).send({ success: false, message: `ERROR CREATE CART [SERVER]: ${error.message}` });
+  }
+};
 
 module.exports = {
-  cartTestRouteServer, addToCartServer, changeCartItemQuantityServer, getAllCartItemsServer, clearCartItemsServer,
+  cartTestRouteServer, addToCartServer, changeCartItemQuantityServer, getAllCartItemsServer, clearCartItemsServer, getUserCartServer, createCartServer,
 };
