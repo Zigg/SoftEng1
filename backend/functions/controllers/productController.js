@@ -20,6 +20,7 @@ const addNewProductServer = async (req, res, next) => {
     const { error, value } = productSchema.validate(req.body);
 
     if (error) {
+      console.error(`VALIDATION ERROR: ${error.message}`);
       return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
     } else {
       const product = {
@@ -27,7 +28,7 @@ const addNewProductServer = async (req, res, next) => {
       };
 
       productsCollectionRef.add(product).then((docRef) => {
-        return res.status(200).send({ success: true, data: product, id: docRef.id });
+        return res.status(200).send({ success: true, msg: "Product created successfully", data: product, id: docRef.id });
       }).catch((error) => {
         console.error("Error adding document: ", error);
         return res.status(400).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
@@ -42,20 +43,21 @@ const getAllProductsServer = async (_req, res, next) => {
   try {
     const querySnapshot = await productsCollectionRef.get();
     const response = querySnapshot.docs.map((doc) => {
-      const { productName, basePrice, sizes, addons, ingredients, description } = doc.data();
+      const { productName, basePrice, sizes, addons, ingredients, description, preparationTime } = doc.data();
       return {
-        id: doc.id,
+        productId: doc.id,
         productName,
         basePrice,
         sizes,
         addons,
         ingredients,
         description,
+        preparationTime,
       };
     });
     res.status(200).send({ success: true, data: response });
   } catch (error) {
-    console.log(`GET ALL PRODUCTS ERROR [SERVER] ${error.message}`)
+    console.error(`GET ALL PRODUCTS ERROR [SERVER] ${error.message}`)
     return res.status(400).send({ success: false, msg: `GET ALL PRODUCTS ERROR [SERVER] ${error.message}` });
   }
 };
@@ -96,7 +98,7 @@ const getProductByIdServer = async (req, res, next) => {
       return res.status(200).send({ success: true, data: response });
     }
   } catch (error) {
-    console.log(`GET PRODUCT BY ID ERROR [SERVER] ${error.message}`);
+    console.error(`GET PRODUCT BY ID ERROR [SERVER] ${error.message}`);
     return res.status(400).send({ success: false, msg: `GET PRODUCT BY ID ERROR [SERVER] ${error.message}` });
   }
 };
@@ -106,9 +108,13 @@ const getProductByIdServer = async (req, res, next) => {
 const updateProductByIdServer = async (req, res, next) => {
   try {
     const id = req.params.productId;
+    const doc = await productsCollectionRef.doc(id).get();
     const { error, value } = updateProductSchema.validate(req.body);
-
+    if (!doc.exists) {
+      return res.status(404).send({ success: false, msg: `PRODUCT NOT FOUND [SERVER]` });
+    }
     if (error) {
+      console.error(`VALIDATION ERROR: [UPDATE BY ID] ${error.message}`)
       return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
     } else {
       productsCollectionRef.doc(id).update(value).then(() => {
