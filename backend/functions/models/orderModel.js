@@ -18,7 +18,7 @@ const orderStatus = [
 
 // Define a schema for the Order class using Joi
 const orderSchema = Joi.object({
-  id: Joi.string(),
+  orderId: Joi.string(),
   userId: Joi.string().required(),
   orderDate: Joi.string().required(),
   // NOTE: firestore doesn't have native support for enums so it needs to be enforced on the application level
@@ -41,16 +41,5 @@ const orderSchema = Joi.object({
   })).optional(),
   totalPrice: Joi.number().required(),
 });
-
-// TODO: Pass the response for validation
-const data = {};
-const { error, value } = orderSchema.validate(data);
-
-// TODO: Handle the validation result
-if (error) {
-  console.error("Validation error:", error.message);
-} else {
-  console.log("Validation success:", value);
-}
 
 module.exports = orderSchema;

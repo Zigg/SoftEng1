@@ -57,6 +57,8 @@ const getUserListServer = async (_req, res, next) => {
   }
 };
 
+// TODO: Create user endpoint, this should be handled by firebase authentication. Upon creation of an account this should create a user collection in firestore based on the uuid of the firebase authentication from the current user
+
 // TODO: Add update user details endpoint.
 
 // TODO: Add delete user endpoint with cascading delete.
