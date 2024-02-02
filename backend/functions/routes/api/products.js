@@ -1,10 +1,7 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable require-jsdoc */
-/* eslint-disable max-len */
+/* eslint-disable new-cap */
 
 const router = require("express").Router();
-const admin = require("firebase-admin");
 
 const productController = require("../../controllers/productController");
 

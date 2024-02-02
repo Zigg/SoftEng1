@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable max-len */
+/* eslint-disable new-cap */
 const router = require("express").Router();
 
 const userController = require("../../controllers/userController");
