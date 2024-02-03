@@ -49,6 +49,12 @@ const addToCartServer = async (req, res) => {
     if (!req.body || !req.body.items || !Array.isArray(req.body.items) || req.body.items.length === 0) {
       return res.status(400).send({ success: false, msg: "CART ADD CANNOT ADD EMPTY REQUEST [SERVER]" });
     }
+    const productIds = req.body.items.map((item) => { return item.productId });
+
+    const productExists = await Promise.all(productIds.map(checkProductExists));
+    if (productExists.includes(false)) {
+      return res.status(400).send({ success: false, msg: "PRODUCT DOES NOT EXIST [SERVER]" });
+    }
 
     // TODO: Create a product identifier based on the chosen options
     const productDoc = await productsCollectionRef.doc(req.body.items[0].productId).get();
@@ -57,13 +63,6 @@ const addToCartServer = async (req, res) => {
     console.log(productDoc.data().sizes[0].name);
 
     const { userId, items: existingItems } = cartDoc.data();
-
-    const productIds = req.body.items.map((item) => { return item.productId });
-
-    const productExists = await Promise.all(productIds.map(checkProductExists));
-    if (productExists.includes(false)) {
-      return res.status(400).send({ success: false, msg: "PRODUCT DOES NOT EXIST [SERVER]" });
-    }
 
     const newItems = (req.body.items || []).map((item) => {
       return {
