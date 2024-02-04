@@ -11,12 +11,10 @@ router.get("/:cartId", cartController.getUserCartServer);
 router.post("/create/:userId", cartController.createCartServer);
 router.post("/add/:cartId", cartController.addToCartServer);
 
-router.patch("/update/:cartId/:productId/:productIdentifier", cartController.changeCartItemQuantityServer);
+router.patch("/update/:cartId/:productId", cartController.updateCartItemQuantityServer);
 // TODO: This will be invoked upon changing product options, i.e change size, addons, etc.
-// router.patch("/update/:cartId/:productId/:productIdentifier", cartController.changeCartItemServer);
+// router.patch("/update/:cartId/:productId", cartController.changeCartItemServer);
 
-router.put("clear/:cartId", cartController.clearCartItemsServer);
-
-router.delete("/delete/:cartId/:productId/:productIdentifier", cartController.deleteCartItemServer);
+router.delete("/delete/:cartId/:productId", cartController.deleteCartItemServer);
 
 module.exports = router;
