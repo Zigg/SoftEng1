@@ -30,15 +30,8 @@ const orderSchema = Joi.object({
     city: Joi.string().required(),
     province: Joi.string().required(),
   })).optional(),
-  // TODO: This should be derived from the cart schema
-  items: Joi.array().items(Joi.object({
-    productId: Joi.string().required(),
-    // This will be derived from the chosen addons,sizes,etc different from the productId
-    // Example: "large_cheese" derived from size and possible addons to help distinguish it from the same items from the cart if any
-    productIdentifier: Joi.string().required(),
-    productQuantity: Joi.number().required(),
-    productPrice: Joi.number().required(),
-  })).optional(),
+  // TODO: This will include the list of items from within the product id we will need to map over this
+  cartId: Joi.string(),
   totalPrice: Joi.number().required(),
 });
 
