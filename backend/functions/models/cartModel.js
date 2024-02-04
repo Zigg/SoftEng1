@@ -43,6 +43,16 @@ const createCartSchema = Joi.object({
 });
 
 
+const cartItemsSchema = Joi.object({
+  items: Joi.array().items(Joi.object({
+    productId: Joi.string(),
+    productIdentifier: Joi.string(),
+    productQuantity: Joi.number(),
+    productPrice: Joi.number(),
+  })).optional(),
+});
+
+
 module.exports = {
-  cartSchema, createCartSchema,
+  cartSchema, createCartSchema, cartItemsSchema
 };
