@@ -38,6 +38,10 @@ if (!app) {
   const cartRoute = require("./routes/api/cart");
   app.use("/api/cart", cartRoute);
 
+  // TODO:
+  const reportRoute = require("./routes/api/report");
+  app.use("/api/reports", reportRoute);
+
   /**
    * This routes is only for testing purposes
    * Create a GET Request to the given BASEURL from firebase
