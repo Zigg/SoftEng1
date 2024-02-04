@@ -10,7 +10,6 @@ const db = admin.firestore();
 const cartCollectionRef = db.collection("cart");
 const { cartSchema, createCartSchema } = require("../models/cartModel");
 const productsCollectionRef = db.collection("products");
-const { checkProductExists } = require("../helpers/checkProductExists");
 
 const cartTestRouteServer = (_req, res, next) => {
   return res.send("Inside the cart router");
@@ -19,8 +18,6 @@ const cartTestRouteServer = (_req, res, next) => {
 // TODO: Store all these instances to Redux(if applicable)
 
 // TODO:
-// TODO: Verify products existence,
-// TODO: Calculate the total price of the items in the cart
 
 // FIXME: If the array is initially empty the price doesn't display the updated price
 const calculateTotalPrice = (items) => {
@@ -39,21 +36,19 @@ const calculateTotalPrice = (items) => {
 
 // REVIEW: This finally adds products with same id's and identifiers
 // NOTE: The product identifier still hasn't yet been assigned to this and must derived from the chosen options
+// FIXME: This doesn't account for multiple product options just the base price, for now...
 const addToCartServer = async (req, res) => {
   const id = req.params.cartId;
   try {
-    // NOTE: This can just be set as a helper function
     const cartDoc = await cartCollectionRef.doc(id).get();
     if (!cartDoc.exists) {
       return res.status(404).send({ success: false, msg: `CART NOT FOUND [SERVER]` });
     }
 
-    // NOTE: This can just be set as a helper function
     if (!id || typeof id !== "string") {
       return res.status(400).send({ success: false, msg: "Invalid ID parameter" });
     }
 
-    // NOTE: This can just be set as a helper function
     if (!req.body || !req.body.items || !Array.isArray(req.body.items) || req.body.items.length === 0) {
       return res.status(404).send({ success: false, msg: "CART ADD CANNOT ADD EMPTY REQUEST [SERVER]" });
     }
@@ -63,26 +58,23 @@ const addToCartServer = async (req, res) => {
       return item.productId
     });
 
-    // NOTE: This can just be set as a helper function
-    const productExists = await Promise.all(productIds.map(checkProductExists));
-    if (productExists.includes(false)) {
+    const productDocs = await Promise.all(productIds.map((productId) => productsCollectionRef.doc(productId).get()));
+    const productExists = productDocs.every((doc) => doc.exists);
+    if (!productExists) {
       return res.status(404).send({ success: false, msg: "PRODUCT DOES NOT EXIST [SERVER]" });
     }
 
     // TODO: Instead of assigning the product price in the request body assign it by looking through the products doc
     // NOTE: This is more annoying than i thought the price in the products are only based prices and increase based on the chosen options, i'll account this later, it shouldn't be mapped from the request body and should be derived from the products doc
-    const productItemPrice = req.body.items.map((item) => {
-      return item.productPrice
-    });
 
     // TODO: Create a product identifier based on the chosen options
     const productDoc = await productsCollectionRef.doc(req.body.items[0].productId).get();
     // console.log(productDoc.data().addons[1].name);
     // console.log(productDoc.data().sizes[0].name);
     // console.log(productDoc.data().sizes[0].name);
-    console.log(productDoc.data(), "Product Doc")
-    // console.log(productDoc.data().basePrice, "Product Price")
 
+    // NOTE: This where the price is assigned
+    req.body.items.productPrice = productDoc.data().basePrice;
     const { userId, items: existingItems } = cartDoc.data();
 
     const newItems = (req.body.items || []).map((item) => {
@@ -91,7 +83,8 @@ const addToCartServer = async (req, res) => {
         // FIXME: This should be derived from the added product to cart...
         productIdentifier: item.productIdentifier,
         productQuantity: item.productQuantity,
-        productPrice: item.productPrice,
+        // NOTE: This where the price is assigned
+        productPrice: req.body.items.productPrice,
       };
     });
 
@@ -107,23 +100,14 @@ const addToCartServer = async (req, res) => {
         // Update the quantity of the existing item
         existingItem.productQuantity += newItem.productQuantity;
       }
-      // Add the existing item
       acc.push(existingItem);
       return acc;
     }, []);
 
-    // Concatenate the new items to add with the updated items
     const finalItems = updatedItems.concat(newItemsToAdd);
-    console.log("Final Items:", finalItems)
-    console.log("New Items to Add", newItemsToAdd)
-
-
     const totalPrice = parseFloat(calculateTotalPrice(finalItems));
-
     req.body.totalPrice = totalPrice;
 
-    // FIXME: This should be an array of objects
-    // FIXME: Validate the items array
     const { error, value } = cartSchema.validate({ ...req.body, userId: userId, items: finalItems, totalPrice: totalPrice, cartId: id });
     if (error) {
       console.error(`VALIDATION ERROR: ${error.message}`);
@@ -144,11 +128,7 @@ const addToCartServer = async (req, res) => {
   }
 };
 
-// TODO: Update Cart based on cart logic
-// --Increment & Decrement Items
-// --Same items but different options are separated, product identifier will be created based on the selected options
-// --Adding a product to the cart whilst there already is an instance of the items will add x quantity from the current items selected
-// TODO:
+// TODO: Update Cart based on cart logic(just quantity for now..)
 // REVIEW:
 const updateCartItemQuantityServer = async (req, res, next) => {
   try {
@@ -161,7 +141,6 @@ const updateCartItemQuantityServer = async (req, res, next) => {
       return res.status(400).send({ success: false, msg: "Invalid ID parameter" });
     }
 
-    // NOTE: This can just be set as a helper function
     const cartDoc = await cartCollectionRef.doc(cartId).get();
     if (!cartDoc.exists) {
       return res.status(404).send({ success: false, msg: "Cart not found" });
@@ -205,17 +184,16 @@ const updateCartItemQuantityServer = async (req, res, next) => {
   }
 };
 
-// REVIEW:
+// TODO: Add a update cart item options which will be based on the product identifier and chosen options
+
 // TODO: Add middleware to check for the owner of the cart or admin, if not the user cannot view that cart
 const getUserCartServer = async (req, res, next) => {
   const id = req.params.cartId;
   try {
-    // NOTE: This can just be set as a helper function
     if (!id || typeof id !== "string") {
       return res.status(400).send({ success: false, msg: "Invalid ID parameter" });
     }
 
-    // NOTE: This can just be set as a helper function
     const doc = await cartCollectionRef.doc(id).get();
     if (!doc.exists) {
       return res.status(404).send({ success: false, msg: "CART NOT FOUND [SERVER]" });
@@ -249,11 +227,9 @@ const getUserCartServer = async (req, res, next) => {
 const createCartServer = async (req, res, next) => {
   try {
     const user = await admin.auth().getUser(req.params.userId);
-    console.log(user.uid);
     const userId = user.uid;
     req.params.userId = userId;
 
-    // NOTE: This can just be set as a helper function
     if (!userId || typeof userId !== "string") {
       return res.status(400).send({ success: false, msg: "Invalid ID parameter" });
     }
@@ -291,19 +267,16 @@ const deleteCartItemServer = async (req, res, next) => {
   const productId = req.params.productId;
   const productIdentifier = req.body.productIdentifier;
   try {
-    // NOTE: This can just be set as a helper function
     if (!cartId || typeof cartId !== "string" || !productId || typeof productId !== "string") {
       return res.status(400).send({ success: false, msg: "Invalid ID parameter" });
     }
 
-    // NOTE: This can just be set as a helper function
     // Check if the cart exists
     const cartDoc = await cartCollectionRef.doc(cartId).get();
     if (!cartDoc.exists) {
       return res.status(404).send({ success: false, msg: "Cart not found" });
     }
 
-    // NOTE: This can just be set as a helper function
     if (!productIdentifier || typeof productIdentifier !== "string") {
       return res.status(400).send({ success: false, msg: "Missing product identifier" });
     }
@@ -332,7 +305,9 @@ const deleteCartItemServer = async (req, res, next) => {
     const updatedCartDoc = await cartCollectionRef.doc(cartId).get();
     const updatedCartItems = updatedCartDoc.data().items;
     const totalPrice = calculateTotalPrice(updatedCartItems);
+
     await cartCollectionRef.doc(cartId).update({ totalPrice });
+
     return res.status(200).send({ success: true, msg: "Item removed from cart", totalPrice: totalPrice });
   } catch (error) {
     console.error(`DELETE CART ITEM ERROR [SERVER] ${error.message}`);
