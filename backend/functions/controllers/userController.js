@@ -159,15 +159,6 @@ const setAdminRoleServer = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  userTestProductServer,
-  getUserCountServer,
-  getUserListServer,
-  getUserByIdServer,
-  deleteUserByIdServer,
-  setAdminRoleServer,
-};
-
 // TODO: Create user endpoint, this should be handled by firebase authentication. Upon creation of an account this should create a user collection in firestore based on the uuid of the firebase authentication from the current user
 
 module.exports = {
