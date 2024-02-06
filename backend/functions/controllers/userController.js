@@ -159,6 +159,7 @@ const setAdminRoleServer = async (req, res, next) => {
   }
 };
 
+
 // TODO: This should be the default role set to a user upon creation of an account
 const setUserRoleServer = async (req, res, next) => {
   const id = req.params.userId;
