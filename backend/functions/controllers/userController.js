@@ -30,7 +30,7 @@ const getUserCountServer = async (_req, res, next) => {
     console.log(`USER COUNT ERROR [SERVER] ${error.message}`);
     return res.status(500).send({
       success: false,
-      msg: `An error occurred while getting the user count`,
+      msg: `USER COUNT ERROR [SERVER]`,
       error: error.message,
     });
   }
@@ -62,7 +62,7 @@ const getUserListServer = async (_req, res, next) => {
     console.log(`USER LIST ERROR [SERVER] ${error.message}`);
     return res.status(500).send({
       success: false,
-      msg: `An error occurred while getting the user list`,
+      msg: `USER LIST ERROR [SERVER]`,
       error: error.message,
     });
   }
@@ -83,7 +83,7 @@ const deleteUserByIdServer = async (req, res, next) => {
     console.error(`DELETE USER BY ID ERROR [SERVER] ${error.message}`);
     return res.status(500).send({
       success: false,
-      msg: "An error occurred while deleting the user",
+      msg: "DELETE USER BY ID ERROR [SERVER] ",
       error: error.message,
     });
   }
@@ -110,9 +110,9 @@ const getUserByIdServer = async (req, res, next) => {
 const setAdminRoleServer = async (req, res, next) => {
   const id = req.params.userId;
   const adminId = req.body.adminId;
-
+  // TODO: Try to make a more descriptive error message, for why a user is not eligible for the certain role
   try {
-    if (req.body.adminId === undefined || req.body.adminId === null) {
+    if (adminId === undefined || adminId === null) {
       return res.status(400).send({ success: false, msg: "Admin ID is required" });
     }
 
@@ -136,7 +136,7 @@ const setAdminRoleServer = async (req, res, next) => {
       user.disabled
     ) {
       console.error(`User with email: ${user.email} isn't eligible for an admin role`);
-      return res.status(400).send({ success: false, msg: "User isn't eligible for an admin role" });
+      return res.status(400).send({ success: false, msg: `User with email: ${user.email} isn't eligible for an admin role` });
     }
 
     const userClaims = await admin.auth().getUser(id).customClaims;
@@ -159,8 +159,111 @@ const setAdminRoleServer = async (req, res, next) => {
   }
 };
 
+
+// TODO: This should be the default role set to a user upon creation of an account
+const setUserRoleServer = async (req, res, next) => {
+  const id = req.params.userId;
+  const adminId = req.body.adminId;
+
+
+  try {
+    if (!adminId) {
+      return res.status(400).send({ success: false, msg: "Admin ID is required" });
+    }
+
+    const adminUser = await admin.auth().getUser(adminId);
+    if (!adminUser.customClaims || !adminUser.customClaims.admin) {
+      console.error(`Admin not found with ID: ${adminId}`);
+      return res.status(404).send({ success: false, msg: `User with id: ${adminId} is not an admin and cannot assign admin role` });
+    }
+
+    const user = await admin.auth().getUser(id);
+    if (!user) {
+      console.error(`User not found with ID: ${id}`);
+      return res.status(404).send({ success: false, msg: "User not found" });
+    }
+
+    if (
+      typeof user.email !== "string" ||
+      typeof user.emailVerified !== "boolean" ||
+      !user.emailVerified || user.disabled
+    ) {
+      console.error(`User with email: ${user.email} isn't eligible for a role type of user`);
+      return res.status(400).send({ success: false, msg: "User isn't eligible for a role type of user" });
+    }
+
+    const userClaims = user.customClaims;
+    if (userClaims && userClaims.user) {
+      console.error(`User is already a role of type "user" with ID: ${id}`);
+      return res.status(400).send({ success: false, msg: "User is already a role of type user" });
+    }
+
+    await admin.auth().setCustomUserClaims(id, { user: true });
+
+    console.log(`Role of type "user" updated successfully for ID: ${id}`);
+    return res.status(200).send({ success: true, msg: "Role of type user updated successfully" });
+  } catch (error) {
+    console.error(`SET ROLE OF TYPE USER ERROR [SERVER] ${error.message}`);
+    return res.status(500).send({
+      success: false,
+      msg: "SET ROLE OF TYPE USER ERROR [SERVER]",
+      error: error.message,
+    });
+  }
+};
+
+const getUserRoleServer = async (req, res, next) => {
+  try {
+    const id = req.params.userId;
+    const user = await admin.auth().getUser(id);
+
+    if (!user) {
+      return res.status(404).send({ success: false, msg: "User not found" });
+    }
+
+    if (!user.customClaims || (!user.customClaims.admin && !user.customClaims.user)) {
+      return res.status(404).send({ success: false, data: null, msg: "User has no assigned role" });
+    }
+
+    return res.status(200).send({ success: true, data: user.customClaims });
+  } catch (error) {
+    console.log(`GET USER ROLE ERROR [SERVER] ${error.message}`);
+    return res.status(500).send({
+      success: false,
+      msg: `GET USER ROLE ERROR [SERVER]`,
+      error: error.message,
+    });
+  }
+};
+
+
+const getUserByEmailServer = async (req, res, next) => {
+  try {
+    const email = req.params.email;
+
+    if (!email) {
+      return res.status(400).send({ success: false, msg: "Email is required" });
+    }
+
+    const user = await admin.auth().getUserByEmail(email);
+
+    if (!user) {
+      return res.status(404).send({ success: false, msg: "User not found" });
+    }
+
+    return res.status(200).send({ success: true, data: user });
+  } catch (error) {
+    console.log(`GET USER BY EMAIL ERROR [SERVER] ${error.message}`);
+    return res.status(500).send({
+      success: false,
+      msg: `GET USER BY EMAIL ERROR [SERVER]`,
+      error: error.message,
+    });
+  }
+};
+
 // TODO: Create user endpoint, this should be handled by firebase authentication. Upon creation of an account this should create a user collection in firestore based on the uuid of the firebase authentication from the current user
 
 module.exports = {
-  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer,
+  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer,
 };
