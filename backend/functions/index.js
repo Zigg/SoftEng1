@@ -42,6 +42,9 @@ if (!app) {
   const reportRoute = require("./routes/api/report");
   app.use("/api/reports", reportRoute);
 
+  const checkoutRoute = require("./routes/api/checkout");
+  app.use("/api/checkout", checkoutRoute);
+
   /**
    * This routes is only for testing purposes
    * Create a GET Request to the given BASEURL from firebase
