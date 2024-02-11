@@ -10,6 +10,7 @@ const serviceAccountKey = require("./serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccountKey),
+  databaseURL: "https://ordering-system-d1976-default-rtdb.firebaseio.com",
 });
 
 let app = null;
