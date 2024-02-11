@@ -1,15 +1,8 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable block-spacing */
-/* eslint-disable semi */
-/* eslint-disable brace-style */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable max-len */
-
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const cartCollectionRef = db.collection("cart");
-const { cartSchema, createCartSchema } = require("../models/cartModel");
 const productsCollectionRef = db.collection("products");
+const { cartSchema, createCartSchema } = require("../models/cartModel");
 
 const cartTestRouteServer = (_req, res, next) => {
   return res.send("Inside the cart router");
@@ -17,9 +10,6 @@ const cartTestRouteServer = (_req, res, next) => {
 
 // TODO: Store all these instances to Redux(if applicable)
 
-// TODO:
-
-// FIXME: If the array is initially empty the price doesn't display the updated price
 const calculateTotalPrice = (items) => {
   let totalPrice = 0;
   if (items.length === 0) {
@@ -53,9 +43,8 @@ const addToCartServer = async (req, res) => {
       return res.status(404).send({ success: false, msg: "CART ADD CANNOT ADD EMPTY REQUEST [SERVER]" });
     }
 
-    // NOTE: Try to make this a function
     const productIds = req.body.items.map((item) => {
-      return item.productId
+      return item.productId;
     });
 
     const productDocs = await Promise.all(productIds.map((productId) => productsCollectionRef.doc(productId).get()));
@@ -64,7 +53,6 @@ const addToCartServer = async (req, res) => {
       return res.status(404).send({ success: false, msg: "PRODUCT DOES NOT EXIST [SERVER]" });
     }
 
-    // TODO: Instead of assigning the product price in the request body assign it by looking through the products doc
     // NOTE: This is more annoying than i thought the price in the products are only based prices and increase based on the chosen options, i'll account this later, it shouldn't be mapped from the request body and should be derived from the products doc
 
     // TODO: Create a product identifier based on the chosen options
@@ -74,7 +62,9 @@ const addToCartServer = async (req, res) => {
     // console.log(productDoc.data().sizes[0].name);
 
     // NOTE: This where the price is assigned
-    req.body.items.productPrice = productDoc.data().basePrice;
+    req.body.items[0].productPrice = productDoc.data().basePrice;
+
+    req.body.items[0].productName = productDoc.data().productName;
     const { userId, items: existingItems } = cartDoc.data();
 
     const newItems = (req.body.items || []).map((item) => {
@@ -83,8 +73,9 @@ const addToCartServer = async (req, res) => {
         // FIXME: This should be derived from the added product to cart...
         productIdentifier: item.productIdentifier,
         productQuantity: item.productQuantity,
-        // NOTE: This where the price is assigned
-        productPrice: req.body.items.productPrice,
+        // NOTE: This where the price is assigned, it  only get its from the base price of the product, it should be derived from the product options as well
+        productPrice: req.body.items[0].productPrice,
+        productName: req.body.items[0].productName,
       };
     });
 
@@ -97,7 +88,6 @@ const addToCartServer = async (req, res) => {
     const updatedItems = existingItems.reduce((acc, existingItem) => {
       const newItem = newItems.find((newItem) => newItem.productId === existingItem.productId && newItem.productIdentifier === existingItem.productIdentifier);
       if (newItem) {
-        // Update the quantity of the existing item
         existingItem.productQuantity += newItem.productQuantity;
       }
       acc.push(existingItem);
@@ -128,8 +118,7 @@ const addToCartServer = async (req, res) => {
   }
 };
 
-// TODO: Update Cart based on cart logic(just quantity for now..)
-// REVIEW:
+// NOTE: This just allow for product quantity to be updated, the product identifier and options will be added later
 const updateCartItemQuantityServer = async (req, res, next) => {
   try {
     const cartId = req.params.cartId;
@@ -153,7 +142,6 @@ const updateCartItemQuantityServer = async (req, res, next) => {
     // Check if the product exists and if not automatically remove from cart
     const productDoc = await productsCollectionRef.doc(productId).get();
     if (!productDoc.exists) {
-      // Remove the item from the cart if the product doesn't exist
       await cartCollectionRef.doc(cartId).update({
         items: admin.firestore.FieldValue.arrayRemove({ productId, productIdentifier }),
       });
@@ -167,7 +155,6 @@ const updateCartItemQuantityServer = async (req, res, next) => {
       return res.status(404).send({ success: false, msg: "Item not found in the cart" });
     }
 
-    // Update the quantity of the cart item
     const item = cartItems[itemIndex];
     item.productQuantity = productQuantity <= 0 ? 1 : productQuantity;
 
@@ -183,8 +170,6 @@ const updateCartItemQuantityServer = async (req, res, next) => {
     return res.status(400).send({ success: false, msg: `UPDATE CART ITEM QUANTITY ERROR [SERVER] ${error.message}` });
   }
 };
-
-// TODO: Add a update cart item options which will be based on the product identifier and chosen options
 
 // TODO: Add middleware to check for the owner of the cart or admin, if not the user cannot view that cart
 const getUserCartServer = async (req, res, next) => {
@@ -223,7 +208,7 @@ const getUserCartServer = async (req, res, next) => {
 };
 
 // REVIEW:
-// NOTE: This can actually just be a helper function and can be invoked upon creation of an account, but for now just leave it here
+// NOTE: This can actually just be a helper function, or webhook and can be invoked upon creation of an account, but for now just leave it here
 const createCartServer = async (req, res, next) => {
   try {
     const user = await admin.auth().getUser(req.params.userId);
@@ -243,7 +228,7 @@ const createCartServer = async (req, res, next) => {
     // NOTE: Initialize the empty array of objects
     const items = [];
     const { error, value } = createCartSchema.validate({ ...req.body, userId: userId, items: items });
-    console.log(value)
+    console.log(value);
     if (error) {
       console.error(`VALIDATION ERROR: ${error.message}`);
       return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
@@ -271,7 +256,6 @@ const deleteCartItemServer = async (req, res, next) => {
       return res.status(400).send({ success: false, msg: "Invalid ID parameter" });
     }
 
-    // Check if the cart exists
     const cartDoc = await cartCollectionRef.doc(cartId).get();
     if (!cartDoc.exists) {
       return res.status(404).send({ success: false, msg: "Cart not found" });
@@ -281,7 +265,6 @@ const deleteCartItemServer = async (req, res, next) => {
       return res.status(400).send({ success: false, msg: "Missing product identifier" });
     }
 
-    // Check if the product exists
     const productDoc = await productsCollectionRef.doc(productId).get();
     if (!productDoc.exists) {
       await cartCollectionRef.doc(cartId).update({
