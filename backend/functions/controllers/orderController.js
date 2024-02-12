@@ -1,7 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable max-len */
-/* eslint-disable object-curly-spacing */
-
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const orderCollectionRef = db.collection("orders");

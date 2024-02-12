@@ -1,19 +1,8 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable comma-dangle */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable no-undef */
-/* eslint-disable max-len */
-/* eslint-disable require-jsdoc */
-/* eslint-disable no-unused-vars */
-/* eslint-disable space-before-function-paren */
-/* eslint-disable eol-last */
-
 // TODO: This is not yet final
 const Joi = require("joi");
 
 const orderStatus = [
-  "pending", "confirmed", "shipped", "delivered", "cancelled"
+  "pending", "confirmed", "shipped", "delivered", "cancelled",
 ];
 
 // Define a schema for the Order class using Joi

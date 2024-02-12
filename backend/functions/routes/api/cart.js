@@ -1,7 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable max-len */
-/* eslint-disable new-cap */
-
 const router = require("express").Router();
 const cartController = require("../../controllers/cartController");
 
