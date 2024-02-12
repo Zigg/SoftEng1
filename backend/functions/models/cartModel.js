@@ -1,13 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable comma-dangle */
-/* eslint-disable max-len */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable require-jsdoc */
-/* eslint-disable no-unused-vars */
-/* eslint-disable space-before-function-paren */
-/* eslint-disable eol-last */
-
 // TODO: These is not yet final
 const Joi = require("joi");
 
@@ -24,12 +14,11 @@ const cartSchema = Joi.object({
     productIdentifier: Joi.string().required(),
     productQuantity: Joi.number().required(),
     productPrice: Joi.number().required(),
+    productName: Joi.string().required(),
   })).optional(),
   totalPrice: Joi.number().required(),
 });
 
-// REVIEW: Test this
-// Forking this has a different effect on the items object array..
 const createCartSchema = Joi.object({
   id: Joi.string(),
   userId: Joi.string().required(),
@@ -38,10 +27,10 @@ const createCartSchema = Joi.object({
     productIdentifier: Joi.string(),
     productQuantity: Joi.number(),
     productPrice: Joi.number(),
+    productName: Joi.string(),
   })).optional(),
   totalPrice: Joi.number(),
 });
-
 
 const cartItemsSchema = Joi.object({
   items: Joi.array().items(Joi.object({
@@ -49,10 +38,10 @@ const cartItemsSchema = Joi.object({
     productIdentifier: Joi.string(),
     productQuantity: Joi.number(),
     productPrice: Joi.number(),
+    productName: Joi.string(),
   })).optional(),
 });
 
-
 module.exports = {
-  cartSchema, createCartSchema, cartItemsSchema
+  cartSchema, createCartSchema, cartItemsSchema,
 };

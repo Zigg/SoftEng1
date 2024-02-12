@@ -1,9 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable require-jsdoc */
-/* eslint-disable max-len */
-
 const Joi = require("joi");
 
 const validCategories = [

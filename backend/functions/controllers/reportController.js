@@ -43,7 +43,6 @@ const reportUserAllServer = (req, res, next) => {
   return res.send(`User Report from ${startDate} to ${endDate}`);
 };
 
-
 // TODO:
 
 module.exports = {

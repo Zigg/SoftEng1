@@ -1,8 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable indent */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable valid-jsdoc */
-/* eslint-disable max-len */
 const admin = require("firebase-admin");
 
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
@@ -164,8 +159,6 @@ const setAdminRoleServer = async (req, res, next) => {
 const setUserRoleServer = async (req, res, next) => {
   const id = req.params.userId;
   const adminId = req.body.adminId;
-
-
   try {
     if (!adminId) {
       return res.status(400).send({ success: false, msg: "Admin ID is required" });
@@ -239,7 +232,7 @@ const getUserRoleServer = async (req, res, next) => {
 
 const getUserByEmailServer = async (req, res, next) => {
   try {
-    const email = req.params.email;
+    const email = req.body.email;
 
     if (!email) {
       return res.status(400).send({ success: false, msg: "Email is required" });

@@ -1,7 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable object-curly-spacing */
-/* eslint-disable semi */
-/* eslint-disable max-len */
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const productsCollectionRef = db.collection("products");
@@ -11,7 +7,7 @@ const { productSchema, updateProductSchema } = require("../models/productModel")
 
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 const productTestRouteServer = (_req, res, next) => {
-  res.status(200).send({ success: true, msg: "Inside Products Route" })
+  res.status(200).send({ success: true, msg: "Inside Products Route" });
 };
 
 // TODO: Add authentication middleware
@@ -28,7 +24,7 @@ const addNewProductServer = async (req, res, next) => {
       };
 
       productsCollectionRef.add(product).then((docRef) => {
-        return res.status(200).send({ success: true, msg: "Product created successfully", data: product, id: docRef.id });
+        return res.status(201).send({ success: true, msg: "Product created successfully", data: product, id: docRef.id });
       }).catch((error) => {
         console.error("Error adding document: ", error);
         return res.status(400).send({ success: false, msg: `CREATE PRODUCT ERROR [SERVER] ${error.message}` });
@@ -57,7 +53,7 @@ const getAllProductsServer = async (_req, res, next) => {
     });
     res.status(200).send({ success: true, data: response });
   } catch (error) {
-    console.error(`GET ALL PRODUCTS ERROR [SERVER] ${error.message}`)
+    console.error(`GET ALL PRODUCTS ERROR [SERVER] ${error.message}`);
     return res.status(400).send({ success: false, msg: `GET ALL PRODUCTS ERROR [SERVER] ${error.message}` });
   }
 };
@@ -114,11 +110,11 @@ const updateProductByIdServer = async (req, res, next) => {
       return res.status(404).send({ success: false, msg: `PRODUCT NOT FOUND [SERVER]` });
     }
     if (error) {
-      console.error(`VALIDATION ERROR: [UPDATE BY ID] ${error.message}`)
+      console.error(`VALIDATION ERROR: [UPDATE BY ID] ${error.message}`);
       return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
     } else {
       productsCollectionRef.doc(id).update(value).then(() => {
-        return res.status(200).send({ success: true, data: value });
+        return res.status(201).send({ success: true, data: value });
       }).catch((error) => {
         console.error("Error updating document: ", error);
         return res.status(400).send({ success: false, msg: `UPDATE PRODUCT ERROR [SERVER] ${error.message}` });
@@ -140,10 +136,10 @@ const deleteProductByIdServer = async (req, res, next) => {
       return res.status(404).send({ success: false, msg: `PRODUCT NOT FOUND [SERVER]` });
     } else {
       const response = await productsCollectionRef.doc(id).delete();
-      return res.status(200).send({ success: true, data: response });
+      return res.status(200).send({ success: true, msg: `Product with ID:${id} deleted successfully`, data: response });
     }
   } catch (error) {
-    console.log(`DELETE PRODUCT ERROR [SERVER] ${error.message}`)
+    console.log(`DELETE PRODUCT ERROR [SERVER] ${error.message}`);
     return res.status(400).send({ success: false, msg: `DELETE PRODUCT ERROR [SERVER] ${error.message}` });
   }
 };
