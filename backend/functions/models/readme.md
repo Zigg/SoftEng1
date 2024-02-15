@@ -128,10 +128,10 @@ const schema = {
     "id": "string",
     "items": "object" {
         {
-            "productId": "string",
-            "productIdentifier": "string",
-            "productQuantity": "number",
-            "productPrice": "number",
+          "productId": "string",
+          "productIdentifier": "string",
+          "productQuantity": "number",
+          "productPrice": "number",
         }
     },
     "totalPrice": "number",
