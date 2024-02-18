@@ -90,19 +90,16 @@ Copy contents and paste into newly created serviceAccountKey.json
 
 ```
 yarn install
-npm i
 ```
 
 ## Install Firebase Tools
 ```
 cd to backend/functions
 npm install -g firebase-tools 
+npm i
 ```
 
 ## Setup backend development server
-```
-cd to backend/functions
-npm i
 ```
 
 ## Login to the firebase CLI
@@ -142,6 +139,8 @@ https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/b4388e
 https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/1d935b90-444f-4265-bbaa-1ab3822ef8f1
 
 
+- **Video 4**: Testing the API Endpoints
+TODO:
 
 
 
