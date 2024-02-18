@@ -139,11 +139,16 @@ https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/b4388e
 https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/1d935b90-444f-4265-bbaa-1ab3822ef8f1
 
 
-- **Video 4**: Testing the API Endpoints
+- **Video 4**: Creating firestore database
+TODO:
+
+- **Video 5**: Testing the API Endpoints
 TODO:
 
 
-
+- **Video 6**: Setting Up Stripe(optional)
+NOTE: Needed for testing checkout routes, order route as ordes will respond to certain events thrown by stripe webhook, (Check Stripe Docs regarding these webhook events)
+TODO:
 
 
 
