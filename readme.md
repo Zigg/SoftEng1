@@ -97,8 +97,8 @@ npm i
 
 ## Install Firebase Tools
 ```
-cd to backend
-npm install firebase-tools 
+cd to backend/functions
+npm install -g firebase-tools 
 ```
 
 ## Setup backend development server
