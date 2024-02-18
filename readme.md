@@ -61,7 +61,6 @@ git clone https://github.com/Software-Engineering-Projects/SoftEng1.git
 #### Note your environment files will be different from mine so do not copy what is in the video
 
 ```
-
 VITE_FIREBASE_API_KEY=
 VITE_FIREBASE_AUTH_DOMAIN= 
 VITE_FIREBASE_PROJECT_ID=
@@ -69,7 +68,6 @@ VITE_FIREBASE_STORAGE_BUCKET=
 VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID= 
 VITE_BASE_URL=
-
 ```
 
 ## Create Service Account Key File
@@ -97,8 +95,8 @@ npm i
 
 ## Install Firebase Tools
 ```
-cd to backend
-npm install firebase-tools 
+cd to backend/functions
+npm install -g firebase-tools 
 ```
 
 ## Setup backend development server
@@ -126,7 +124,7 @@ yarn dev
 ```
 git pull origin main
 ```
-
+## NOTE: Make sure you install firebase in the backend/functions directory along with its dependencies
 ## Installation Video 
 
 - **Video 1**: Installing and Setting Up
