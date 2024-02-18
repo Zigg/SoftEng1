@@ -31,6 +31,8 @@ List of all the technologies, languages, frameworks, libraries etc. used in the 
 
 # Getting Started
 
+#Note the given installation videos has a few commands that do not work as expected make sure to follow the commands written here instead
+
 ## Prerequisites
 Before you begin, make sure you have the following installed on your machine: 
 ### [Node.js Link](https://nodejs.org/en/download)
