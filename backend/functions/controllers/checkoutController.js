@@ -22,84 +22,61 @@ const checkoutTestRouteServer = (_req, res, next) => {
 // FIXME: Webhook payload
 const webhookEventHandler = async (req, res) => {
   // Parse the webhook request body and extract the relevant information
-  const sig = req.headers["stripe-signature"]; // The signature header from the webhook request
-  const rawBody = req.rawBody; // The raw body of the webhook request as a buffer
-  let event;
-  // Validate the webhook request using the stripe.webhooks.constructEvent method
+  const sig = req.headers["stripe-signature"];
+  const rawBody = req.rawBody;
+  let event = {};
+
   try {
     event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
   } catch (error) {
-    // If there is an error, return a 400 Bad Request response with the error message
     console.error(`Webhook Error: ${error.message}`);
     return res.status(400).send(`Webhook Error: ${error.message}`);
   }
-  // Implement the logic for the webhook event based on the event type and the event data
-  const paymentIntent = event.data.object
-  const charge = event.data.object;
-  const session = event.data.object;
-  const checkout = event.data.object
 
   switch (event.type) {
     case "charge.succeeded":
-      // Get the Charge object from the event data
-      // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("charges_webhook").child(charge.id).set({
-        chargeId: charge.id,
-        amount: charge.amount,
+      event.charge = event.data.object;
+      await realtimeDb.ref("charges_webhook").child(event.charge.id).set({
+        chargeId: event.charge.id,
+        amount: event.charge.amount,
       });
-      // Perform any other action you want for a successful charge
-      // TODO: Replace this with your actual action logic
-      // console.log(charge.receipt_email, "Your payment was successful", "Here is your receipt");
+      // console.log(event.charge.receipt_email, "Your payment was successful", "Here is your receipt");
       break;
     case "payment_intent.created":
-      // Get the Payment Intent object from the event data
-      // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("payment_intents_webhook").child(paymentIntent.id).set({
-        paymentIntentId: paymentIntent.id,
-        amount: paymentIntent.amount,
+      event.paymentIntent = event.data.object;
+      await realtimeDb.ref("payment_intents_webhook").child(event.paymentIntent.id).set({
+        paymentIntentId: event.paymentIntent.id,
+        amount: event.paymentIntent.amount,
       });
-      // Perform any other action you want for a created payment intent
-      // TODO: Replace this with your actual action logic
-      // console.log(paymentIntent.receipt_email, "Your payment is being processed", "We will notify you once your payment is confirmed");
+      // console.log(event.paymentIntent.receipt_email, "Your payment is being processed", "We will notify you once your payment is confirmed");
       break;
     case "charge.failed":
-      // Get the Charge object from the event data
-      // Update your Realtime Database with the charge status and the paid flag
-      // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("charges_webhook").child(charge.id).update({
-        chargeStatus: charge.status,
+      event.charge = event.data.object;
+      await realtimeDb.ref("charges_webhook").child(event.charge.id).update({
+        chargeStatus: event.charge.status,
         paid: false,
       });
-      // Perform any other action you want for a failed charge
-      // TODO: Replace this with your actual action logic
-      console.log(charge.receipt_email, "Your payment failed", "Please try again or contact us for support");
+      console.log(event.charge.receipt_email, "Your payment failed", "Please try again or contact us for support");
       break;
     case "payment_intent.succeeded":
-      // const paymentIntent = event.data.object;
-      // Get the Payment Intent object from the event data
-      // Update your Realtime Database with the payment status and the paid flag
-      // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("payment_intents_webhook").child(paymentIntent.id).update({
-        paymentStatus: paymentIntent.status,
-        paid: paymentIntent.status === "succeeded",
+      event.paymentIntent = event.data.object;
+      await realtimeDb.ref("payment_intents_webhook").child(event.paymentIntent.id).update({
+        paymentStatus: event.paymentIntent.status,
+        paid: event.paymentIntent.status === "succeeded",
       });
       break;
     case "payment_intent.canceled":
-      // Get the Payment Intent object from the event data
-      // Update your Realtime Database with the payment intent
-      // Perform any other action you want for a successful payment intent
+      event.paymentIntent = event.data.object;
       break;
     case "checkout.session.expired":
-
-      console.log("Checkout session expired", session.id, session.payment_status, session.url);
+      event.session = event.data.object;
+      console.log("Checkout session expired", event.session.id, event.session.payment_status, event.session.url);
       break;
     case "payment_intent.payment_failed":
-      // Get the Payment Intent object from the event data
-      const failedPaymentIntent = event.data.object;
-      // Update your Realtime Database with the payment status and the paid flag
+      event.failedPaymentIntent = event.data.object;
       // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("payment_intents_webhook").child(failedPaymentIntent.id).update({
-        paymentStatus: failedPaymentIntent.status,
+      await realtimeDb.ref("payment_intents_webhook").child(event.failedPaymentIntent.id).update({
+        paymentStatus: event.failedPaymentIntent.status,
         paid: false,
       });
       break;
@@ -108,38 +85,17 @@ const webhookEventHandler = async (req, res) => {
     case "price.created":
       break;
     case "checkout.session.completed":
-      // Get the Checkout Session object from the event data
-      // Update your Realtime Database with the payment status, the payment intent ID, and the paid flag
+      event.session = event.data.object;
       // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("checkout_sessions_webhook").child(session.id).update({
-        paymentStatus: session.payment_status,
-        paymentIntentId: session.payment_intent,
-        paid: session.payment_status === "paid",
+      await realtimeDb.ref("checkout_sessions_webhook").child(event.session.id).update({
+        paymentStatus: event.session.payment_status,
+        paymentIntentId: event.session.payment_intent,
+        paid: event.session.payment_status === "paid",
       });
-      // Send a confirmation email to the customer or perform any other action you want
       // TODO: Replace this with your actual email or action logic
       // TODO: Replace all session objects(well not all but what is necessary to) with the value from the response body
-      console.log(session.customer_email, "Your payment was successful", "Thank you for your purchase");
+      console.log(event.session.customer_email, "Your payment was successful", "Thank you for your purchase");
       break;
-    // TODO: This must come from the cart
-    // case "product.created":
-    //   // Get the Product object from the event data
-    //   const product = event.data.object;
-    //   // Add the product to your Realtime Database
-    //   // Retrieve the product from the Firestore product collection using the productId
-    //   const productId = product.id; // Derive the productId from the response body
-    //   req.rawBody.id = productId
-    //   const productRef = db.collection("products").doc(productId);
-    //   const productSnapshot = await productRef.get();
-    //   if (productSnapshot.exists) {
-    //     const productData = productSnapshot.data();
-    //     await realtimeDb.ref("products").child(product.id).set(product);
-    //     // Send a confirmation email to the customer or perform any other action you want
-    //     console.log(productData.name, "was added to the database");
-    //   } else {
-    //     console.log("Product not found in Firestore");
-    //   }
-    //   break;
     default:
       console.log(`Unhandled event type: ${event.type}`);
   }
@@ -155,11 +111,41 @@ const webhookEventHandler = async (req, res) => {
 // FIXME: Disable the checkout session if the payment intent is successful, to avoid creating a payment intent for the same checkout session
 // NOTE: This will be not be needed test with the given url from the checkout session object
 // FIXME: A payment intent is created but since the status is not a part of paymentIntent object apparently(it should be don't know why its not working), i cant update the payment intent status to "succeeded", to match the checkout session status, tf?! for now i can just use the checkout session url to checkout
+const createPaymentIntent = async (amount) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: "usd",
+    });
+    return paymentIntent;
+  } catch (error) {
+    console.error(`Error creating payment intent: ${error.message}`);
+    throw error;
+  }
+};
+
+const chargePaymentIntent = async (paymentIntentId) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    if (paymentIntent.amount < paymentIntent.amount_received) {
+      throw new Error("Not enough funds");
+    }
+    // await stripe.paymentIntents.update(paymentIntentId, {
+    //   status: "succeeded",
+    // });
+    return paymentIntent;
+  } catch (error) {
+    console.error(`Error charging payment intent: ${error.message}`);
+    throw error;
+  }
+};
+
 const createCheckoutIntentServer = async (req, res) => {
   const { sessionId, totalPrice } = req.body;
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+    console.log(session);
 
     if (session.payment_status === "paid") {
       console.log("Checkout session is already paid.");
@@ -172,29 +158,13 @@ const createCheckoutIntentServer = async (req, res) => {
     const { customer_email, name } = customer;
 
     if (totalPrice >= session.amount_total) {
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: totalPrice,
-        currency: "usd",
-        description: "(created by Stripe CLI)",
-        payment_method_types: ["card"],
-        customer: customerId,
-        metadata: {
-          customer_email,
-          name,
-          sessionId,
-        },
-      });
+      const paymentIntent = await createPaymentIntent(totalPrice);
 
-      // FIXME: Why is the status not part of the paymentIntent object??
-      await stripe.paymentIntents.update(
-        paymentIntent.id,
-        {
-          metadata: {
-            checkout_session: sessionId,
-          },
-          status: "succeeded"
-        }
-      );
+      await chargePaymentIntent(paymentIntent.id);
+
+      // await stripe.checkout.sessions.update(sessionId, {
+      //   payment_status: "paid",
+      // });
 
       await realtimeDb.ref(`checkout_sessions/${sessionId}`).update({
         session: {
@@ -228,7 +198,7 @@ const createCheckoutIntentServer = async (req, res) => {
 // TODO: Just checkout for the cart owner instead of assigning the userId directly to the checkout session object, this will be done later
 // NOTE: Creating 2 separate calls to the realtime database and stripe's api to create a checkout session, and then updating the checkout session in the realtime database and stripe's api with the same data might slow things down, this will be changed later
 // REVIEW: Check for an existing session that is unpaid, and if it is unpaid, then return that session and persist it, if not create a new session
-// FIXME: There are some issues with the header values 
+// FIXME: There are some issues with the header values
 // ">  Error creating or retrieving checkout session: Cannot set headers after they are sent to the client"
 const createCheckoutSessionServer = async (req, res) => {
   const { userId, cartId } = req.body;
@@ -309,7 +279,6 @@ const createCheckoutSessionServer = async (req, res) => {
         status: session.payment_status,
         amount: session.amount_total,
         currency: session.currency,
-        description: session.description,
         metadata: session.metadata,
       },
     });
@@ -343,11 +312,24 @@ const createCheckoutStatusServer = async (req, res, next) => {
 
     if ((session.payment_status === "paid" || paymentIntent?.status === "succeeded") && session.status === "complete" && session.url === null) {
       return res.status(200).send({ success: true, msg: "Checkout session completed" });
-    } else if (session.payment_status === "unpaid" || paymentIntent?.status === "requires_payment_method") {
-      return res.status(200).send({ success: false, msg: "Checkout session unpaid" });
-    } else {
-      return res.status(400).send("Invalid payment status");
     }
+
+    if (session.payment_status === "unpaid" || paymentIntent?.status === "requires_payment_method") {
+      try {
+        const cartDoc = await cartCollectionRef.doc(session.cart_id).get();
+        const totalPrice = cartDoc.data().total_price;
+        const paymentIntent = await createPaymentIntent(totalPrice);
+        await chargePaymentIntent(paymentIntent.id);
+        await cartCollectionRef.doc(session.cart_id).update({ payment_status: "paid" });
+        await stripe.checkout.sessions.update(sessionId, { payment_status: "paid" });
+        return res.status(200).send({ success: true, msg: "Checkout session completed" });
+      } catch (error) {
+        console.error(`Error processing payment: ${error.message}`);
+        return res.status(400).send({ success: false, msg: "Not enough funds" });
+      }
+    }
+
+    return res.status(400).send("Invalid payment status");
   } catch (error) {
     console.error(`GET CHECKOUT STATUS [SERVER] ${error.message}`);
     return res.status(500).send({
@@ -370,7 +352,6 @@ const getCheckoutSessionByIdServer = async (req, res, next) => {
 const getSessionLineItemsServer = async (req, res, next) => {
   const sessionId = req.params.sessionId;
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
     const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
     return res.status(200).send({ success: true, data: lineItems });
   } catch (error) {
