@@ -31,6 +31,8 @@ List of all the technologies, languages, frameworks, libraries etc. used in the 
 
 # Getting Started
 
+# Note the given installation videos has a few commands that do not work as expected make sure to follow the commands written here instead
+
 ## Prerequisites
 Before you begin, make sure you have the following installed on your machine: 
 ### [Node.js Link](https://nodejs.org/en/download)
@@ -90,19 +92,16 @@ Copy contents and paste into newly created serviceAccountKey.json
 
 ```
 yarn install
-npm i
 ```
 
 ## Install Firebase Tools
 ```
 cd to backend/functions
 npm install -g firebase-tools 
+npm i
 ```
 
 ## Setup backend development server
-```
-cd to backend/functions
-npm i
 ```
 
 ## Login to the firebase CLI
@@ -142,9 +141,16 @@ https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/b4388e
 https://github.com/Software-Engineering-Projects/SoftEng1/assets/56209027/1d935b90-444f-4265-bbaa-1ab3822ef8f1
 
 
+- **Video 4**: Creating firestore database
+TODO:
+
+- **Video 5**: Testing the API Endpoints
+TODO:
 
 
-
+- **Video 6**: Setting Up Stripe(optional)
+NOTE: Needed for testing checkout routes, order route as ordes will respond to certain events thrown by stripe webhook, (Check Stripe Docs regarding these webhook events)
+TODO:
 
 
 
