@@ -6,11 +6,12 @@ const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const cors = require("cors");
 
+require("dotenv").config();
 const serviceAccountKey = require("./serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccountKey),
-  databaseURL: "https://ordering-system-d1976-default-rtdb.firebaseio.com",
+  databaseURL: process.env.DATABASE_URL,
 });
 
 let app = null;
