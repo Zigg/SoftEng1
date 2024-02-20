@@ -35,7 +35,7 @@ const webhookEventHandler = async (req, res) => {
   switch (event.type) {
     case "charge.succeeded":
       event.charge = event.data.object;
-      await realtimeDb.ref(`charges_webhook/${event.charge.id}`).set({
+      await realtimeDb.ref("charges_webhook").child(event.charge.id).set({
         chargeId: event.charge.id,
         amount: event.charge.amount,
       });
@@ -43,7 +43,7 @@ const webhookEventHandler = async (req, res) => {
       break;
     case "payment_intent.created":
       event.paymentIntent = event.data.object;
-      await realtimeDb.ref(`payment_intents_webhook/${event.paymentIntent.id}`).set({
+      await realtimeDb.ref("payment_intents_webhook").child(event.paymentIntent.id).set({
         paymentIntentId: event.paymentIntent.id,
         amount: event.paymentIntent.amount,
       });
@@ -51,7 +51,7 @@ const webhookEventHandler = async (req, res) => {
       break;
     case "charge.failed":
       event.charge = event.data.object;
-      await realtimeDb.ref(`charges_webhook/${event.charge.id}`).update({
+      await realtimeDb.ref("charges_webhook").child(event.charge.id).update({
         chargeStatus: event.charge.status,
         paid: false,
       });
@@ -59,7 +59,7 @@ const webhookEventHandler = async (req, res) => {
       break;
     case "payment_intent.succeeded":
       event.paymentIntent = event.data.object;
-      await realtimeDb.ref(`payment_intents_webhook/${event.paymentIntent.id}`).update({
+      await realtimeDb.ref("payment_intents_webhook").child(event.paymentIntent.id).update({
         paymentStatus: event.paymentIntent.status,
         paid: event.paymentIntent.status === "succeeded",
       });
@@ -67,13 +67,9 @@ const webhookEventHandler = async (req, res) => {
     case "payment_intent.canceled":
       event.paymentIntent = event.data.object;
       break;
-    case "checkout.session.expired":
-      event.session = event.data.object;
-      console.log("Checkout session expired", event.session.id, event.session.payment_status, event.session.url);
-      break;
     case "payment_intent.payment_failed":
       event.failedPaymentIntent = event.data.object;
-      await realtimeDb.ref(`payment_intents_webhook/${event.failedPaymentIntent.id}`).update({
+      await realtimeDb.ref("payment_intents_webhook").child(event.failedPaymentIntent.id).update({
         paymentStatus: event.failedPaymentIntent.status,
         paid: false,
       });
@@ -92,25 +88,23 @@ const webhookEventHandler = async (req, res) => {
           paymentIntentId: session.payment_intent,
           paid: session.payment_status === "paid",
         });
-
-
         const order = {
-          userId: session.metadata.userId,
-          cartId: session.metadata.cartId,
+          userId: session.metadata.userId || "NA",
+          cartId: session.metadata.cartId || "NA",
           checkoutSessionId: session.id,
           orderDate: new Date().toISOString(),
-          customerName: session.customer_details.name,
-          customerEmail: session.customer_details.email || session.customer_email,
+          customerName: session.customer_details.name || "NA",
+          customerEmail: session.customer_details.email || session.customer_email || "NA",
           shippingAddress: {
-            city: session.customer_details.address.city || `NA`,
-            country: session.customer_details.address.country || `NA`,
-            line1: session.customer_details.address.line1 || `NA`,
-            line2: session.customer_details.address.line2 || `NA`,
-            postalCode: session.customer_details.address.postal_code || `NA`,
-            state: session.customer_details.address.state || `NA`,
+            city: session.customer_details.address.city || "NA",
+            country: session.customer_details.address.country || "NA",
+            line1: session.customer_details.address.line1 || "NA",
+            line2: session.customer_details.address.line2 || "NA",
+            postalCode: session.customer_details.address.postal_code || "NA",
+            state: session.customer_details.address.state || "NA",
           },
           status: "pending",
-          totalPrice: session.amount_total / 100,
+          totalPrice: session.amount_total ? session.amount_total / 100 : "NA",
         };
         const { error, value } = orderSchema.validate(order);
 
@@ -172,6 +166,7 @@ const chargePaymentIntent = async (paymentIntentId) => {
   }
 };
 
+// NOTE: I can't seem to allow stripe to create a payment intent and update it's status since its only read-only, i will just use the checkout session url to checkout, and the check for if the given checkout session is paid for will be checked in the realtime database not the stripe api, this will be fixed later
 const createCheckoutIntentServer = async (req, res) => {
   const { sessionId, totalPrice } = req.body;
 
@@ -194,11 +189,18 @@ const createCheckoutIntentServer = async (req, res) => {
 
       await chargePaymentIntent(paymentIntent.id);
 
-      // await stripe.checkout.sessions.update(sessionId, {
-      //   payment_status: "paid",
-      // });
+      // Checks if the session is already paid in the realtime database
+      const sessionRef = realtimeDb.ref().child(`checkout_sessions/${sessionId}`);
+      const sessionSnapshot = await sessionRef.once("value");
+      const sessionData = sessionSnapshot.val();
 
-      await realtimeDb.ref(`checkout_sessions/${sessionId}`).update({
+      if (sessionData && sessionData.session && sessionData.session.payment_status === "paid") {
+        console.log("Checkout session is already paid in the realtime database.");
+        res.status(409).send({ success: true, id: paymentIntent.id, msg: "Checkout session is already paid for" });
+        return;
+      }
+
+      await sessionRef.set({
         session: {
           payment_status: "paid",
           id: session.id,
@@ -256,51 +258,38 @@ const createCheckoutSessionServer = async (req, res) => {
     if (existingCustomer.data.length > 0) {
       customer = existingCustomer.data[0];
     } else {
-      customer = await stripe.customers.create(
-        { email: value.customerEmail },
-        { idempotencyKey: value.customerId }
-      );
-    }
-    // Get the active sessions for the customer
-    const activeSessions = await stripe.checkout.sessions.list({ customer: customer.id });
-    // Find the active session with the same cart ID
-    const activeSession = activeSessions.data.find((s) => s.metadata.cartId === cartId);
-    console.log("Active session: ", activeSession)
-    if (activeSession.payment_status === "requires_payment_method" && activeSession.url) {
-      return res.status(200).json({ success: true, id: activeSession.id, url: activeSession.url });
-    }
-    if (activeSession.url !== null) {
-      session = await stripe.checkout.sessions.retrieve(activeSession.id);
-      console.log("Active checkout session found. Session ID: ", activeSession.id);
-      return res.status(409).json({ success: true, id: activeSession.id, url: activeSession.url, msg: `There is already an existing checkout session for Cart ID: ${cartId}` });
-    }
-    else {
-      session = await stripe.checkout.sessions.create({
-        customer_email: value.customerEmail,
-        client_reference_id: value.userId,
-        customer: customer.id,
-        payment_method_types: ["card"],
-        line_items: cartDoc.data().items.map((item) => ({
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: item.productName,
-            },
-            unit_amount: parseInt((item.productPrice * 100).toFixed(2)),
-          },
-          quantity: item.productQuantity,
-        })),
-        mode: "payment",
-        success_url: `https://example.com/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: "https://example.com/cancel",
-        metadata: {
-          cartId,
-          userId,
-        },
+      customer = await stripe.customers.create({
+        email: value.customerEmail,
+        idempotency_key: value.customerId,
       });
-      console.log("Checkout session created successfully. Session ID: ", session.id);
     }
-    await realtimeDb.ref(`checkout_sessions/${session.id}`).set({
+
+    session = await stripe.checkout.sessions.create({
+      customer_email: value.customerEmail,
+      client_reference_id: value.userId,
+      customer: customer.id,
+      payment_method_types: ["card"],
+      line_items: cartDoc.data().items.map((item) => ({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: item.productName,
+          },
+          unit_amount: parseInt((item.productPrice * 100).toFixed(2)),
+        },
+        quantity: item.productQuantity,
+      })),
+      mode: "payment",
+      success_url: `https://example.com/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: "https://example.com/cancel",
+      metadata: {
+        cartId,
+        userId,
+      },
+    });
+    console.log("Checkout session created successfully. Session ID: ", session.id);
+
+    await realtimeDb.ref().child(`checkout_sessions/${session.id}`).set({
       session: {
         payment_status: session.payment_status,
         payment_intent: session.payment_intent,
@@ -322,11 +311,11 @@ const createCheckoutSessionServer = async (req, res) => {
   }
 };
 
-
 // TODO: Set as an API Action instead of a webhook
 // TODO: Create more validations
 // FIXME: Some fields may actually be null if a payment intent is not yet been made
 // FIXME: The payment intent id is not yet been made, so it is null, and may be causing issues, this will be fixed later
+// TODO: When creating a payment intent through the api instead of the webhook, the payment intent id is not yet been made, so it is null and can't be referenced, and may be causing issues, this will be fixed later, when using the url its fine though
 const createCheckoutStatusServer = async (req, res, next) => {
   const { sessionId } = req.body;
 
@@ -339,8 +328,6 @@ const createCheckoutStatusServer = async (req, res, next) => {
     }
 
     const paymentIntent = await stripe.paymentIntents?.retrieve(paymentIntentId);
-    console.log(session, "Session Data")
-
     if ((session.payment_status === "paid" || paymentIntent?.status === "succeeded") && session.status === "complete" && session.url === null) {
       return res.status(200).send({ success: true, msg: "Checkout session completed" });
     }
