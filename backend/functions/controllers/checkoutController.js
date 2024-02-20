@@ -6,8 +6,10 @@ require("dotenv").config();
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 const cartCollectionRef = db.collection("cart");
-
+const orderCollectionRef = db.collection("orders");
 const checkoutSessionSchema = require("../models/checkoutModel");
+const Joi = require("joi");
+const orderSchema = require("../models/orderModel");
 // TODO: Create a checkout function that will handle the payment intent
 // TODO: Create a createCheckoutSession function that will handle the checkout session
 // TODO: Create a function that will handle the webhook for the checkout session
@@ -18,10 +20,7 @@ const checkoutTestRouteServer = (_req, res, next) => {
   return res.send("Inside the checkout router");
 };
 
-// FIXME: Why the fuck is sig undefined???
-// FIXME: Webhook payload
 const webhookEventHandler = async (req, res) => {
-  // Parse the webhook request body and extract the relevant information
   const sig = req.headers["stripe-signature"];
   const rawBody = req.rawBody;
   let event = {};
@@ -36,7 +35,7 @@ const webhookEventHandler = async (req, res) => {
   switch (event.type) {
     case "charge.succeeded":
       event.charge = event.data.object;
-      await realtimeDb.ref("charges_webhook").child(event.charge.id).set({
+      await realtimeDb.ref(`charges_webhook/${event.charge.id}`).set({
         chargeId: event.charge.id,
         amount: event.charge.amount,
       });
@@ -44,7 +43,7 @@ const webhookEventHandler = async (req, res) => {
       break;
     case "payment_intent.created":
       event.paymentIntent = event.data.object;
-      await realtimeDb.ref("payment_intents_webhook").child(event.paymentIntent.id).set({
+      await realtimeDb.ref(`payment_intents_webhook/${event.paymentIntent.id}`).set({
         paymentIntentId: event.paymentIntent.id,
         amount: event.paymentIntent.amount,
       });
@@ -52,7 +51,7 @@ const webhookEventHandler = async (req, res) => {
       break;
     case "charge.failed":
       event.charge = event.data.object;
-      await realtimeDb.ref("charges_webhook").child(event.charge.id).update({
+      await realtimeDb.ref(`charges_webhook/${event.charge.id}`).update({
         chargeStatus: event.charge.status,
         paid: false,
       });
@@ -60,7 +59,7 @@ const webhookEventHandler = async (req, res) => {
       break;
     case "payment_intent.succeeded":
       event.paymentIntent = event.data.object;
-      await realtimeDb.ref("payment_intents_webhook").child(event.paymentIntent.id).update({
+      await realtimeDb.ref(`payment_intents_webhook/${event.paymentIntent.id}`).update({
         paymentStatus: event.paymentIntent.status,
         paid: event.paymentIntent.status === "succeeded",
       });
@@ -74,8 +73,7 @@ const webhookEventHandler = async (req, res) => {
       break;
     case "payment_intent.payment_failed":
       event.failedPaymentIntent = event.data.object;
-      // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("payment_intents_webhook").child(event.failedPaymentIntent.id).update({
+      await realtimeDb.ref(`payment_intents_webhook/${event.failedPaymentIntent.id}`).update({
         paymentStatus: event.failedPaymentIntent.status,
         paid: false,
       });
@@ -85,16 +83,49 @@ const webhookEventHandler = async (req, res) => {
     case "price.created":
       break;
     case "checkout.session.completed":
-      event.session = event.data.object;
-      // TODO: Replace this with your actual Realtime Database update logic
-      await realtimeDb.ref("checkout_sessions_webhook").child(event.session.id).update({
-        paymentStatus: event.session.payment_status,
-        paymentIntentId: event.session.payment_intent,
-        paid: event.session.payment_status === "paid",
-      });
-      // TODO: Replace this with your actual email or action logic
-      // TODO: Replace all session objects(well not all but what is necessary to) with the value from the response body
-      console.log(event.session.customer_email, "Your payment was successful", "Thank you for your purchase");
+      try {
+        const session = event.data.object;
+        console.log("Checkout session completed", session.id, session.payment_status);
+
+        await realtimeDb.ref(`checkout_sessions_webhook/${session.id}`).update({
+          paymentStatus: session.payment_status,
+          paymentIntentId: session.payment_intent,
+          paid: session.payment_status === "paid",
+        });
+
+
+        const order = {
+          userId: session.metadata.userId,
+          cartId: session.metadata.cartId,
+          checkoutSessionId: session.id,
+          orderDate: new Date().toISOString(),
+          customerName: session.customer_details.name,
+          customerEmail: session.customer_details.email || session.customer_email,
+          shippingAddress: {
+            city: session.customer_details.address.city || `NA`,
+            country: session.customer_details.address.country || `NA`,
+            line1: session.customer_details.address.line1 || `NA`,
+            line2: session.customer_details.address.line2 || `NA`,
+            postalCode: session.customer_details.address.postal_code || `NA`,
+            state: session.customer_details.address.state || `NA`,
+          },
+          status: "pending",
+          totalPrice: session.amount_total / 100,
+        };
+        const { error, value } = orderSchema.validate(order);
+
+        if (error) {
+          console.error(`Validation error: ${error.message}`);
+          return res.status(400).send(error.message);
+        }
+
+        const orderId = orderCollectionRef.doc().id;
+        await orderCollectionRef.doc(orderId).set(value);
+        console.log("Order created successfully", orderId);
+      } catch (error) {
+        console.error("Error processing checkout session:", error.message);
+        return res.status(500).send({ success: false, msg: `Error processing checkout session[SERVER] ${error.message}` });
+      }
       break;
     default:
       console.log(`Unhandled event type: ${event.type}`);
@@ -130,12 +161,13 @@ const chargePaymentIntent = async (paymentIntentId) => {
     if (paymentIntent.amount < paymentIntent.amount_received) {
       throw new Error("Not enough funds");
     }
+    // NOTE: The status is apparently only read-only and cannot be updated, so i can't update the status to "succeeded" to match the checkout session status, which can cause some false positives, so just use the checkout session url to checkout
     // await stripe.paymentIntents.update(paymentIntentId, {
     //   status: "succeeded",
     // });
     return paymentIntent;
   } catch (error) {
-    console.error(`Error charging payment intent: ${error.message}`);
+    console.error(`Error charging payment intent[SERVER]: ${error.message}`);
     throw error;
   }
 };
@@ -234,7 +266,6 @@ const createCheckoutSessionServer = async (req, res) => {
     // Find the active session with the same cart ID
     const activeSession = activeSessions.data.find((s) => s.metadata.cartId === cartId);
     console.log("Active session: ", activeSession)
-    // Check if the session is still pending payment and has a valid URL
     if (activeSession.payment_status === "requires_payment_method" && activeSession.url) {
       return res.status(200).json({ success: true, id: activeSession.id, url: activeSession.url });
     }
