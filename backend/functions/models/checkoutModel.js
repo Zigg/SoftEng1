@@ -18,9 +18,9 @@ const paymentStatusList = [
 ];
 // NOTE: This will follow the Stripe Checkout Session object, as much as possible
 // NOTE: Only the required fields are actually needed in the api request body
+// NOTE: This wont be used to validate the checkout session because that will be done by Stripe
 const checkoutSessionSchema = Joi.object({
   checkoutSessionId: Joi.string(),
-  // NOTE: This is needed in the request body to create a checkout session
   userId: Joi.string().required(),
   createdAt: Joi.date().iso(),
   paymentMethod: Joi.string().valid(...paymentMethodList).default("card"),
@@ -38,15 +38,6 @@ const checkoutSessionSchema = Joi.object({
     }).required(),
     quantity: Joi.number().required(),
   })).optional(),
-  // shippingAddress: Joi.object({
-  //   addressLine1: Joi.string().required(),
-  //   addressLine2: Joi.string().optional(),
-  //   city: Joi.string().required(),
-  //   state: Joi.string().required(),
-  //   postalCode: Joi.string().required(),
-  //   country: Joi.string().required(),
-  // }).optional(),
-  // NOTE: This is needed in the request body to create a checkout session
   cartId: Joi.string().required(),
   paymentStatus: Joi.string().valid(...paymentStatusList),
   paid: Joi.boolean(),

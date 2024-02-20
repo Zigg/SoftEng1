@@ -5,22 +5,23 @@ const orderStatus = [
   "pending", "confirmed", "shipped", "delivered", "cancelled",
 ];
 
-// Define a schema for the Order class using Joi
 const orderSchema = Joi.object({
   orderId: Joi.string(),
+  checkoutSessionId: Joi.string().required(),
   userId: Joi.string().required(),
+  cartId: Joi.string().required(),
   orderDate: Joi.string().required(),
-  // NOTE: firestore doesn't have native support for enums so it needs to be enforced on the application level
-  status: Joi.string().valid(...orderStatus).required(),
   customerName: Joi.string(),
-  customerEmail: Joi.string().email().required(),
-  shippingAddress: Joi.array().items(Joi.object({
-    address: Joi.string().required(),
-    city: Joi.string().required(),
-    province: Joi.string().required(),
+  customerEmail: Joi.string().email(),
+  shippingAddress: (Joi.object({
+    city: Joi.string(),
+    country: Joi.string(),
+    line1: Joi.string(),
+    line2: Joi.string(),
+    postalCode: Joi.string(),
+    state: Joi.string(),
   })).optional(),
-  // TODO: This will include the list of items from within the product id we will need to map over this
-  cartId: Joi.string(),
+  status: Joi.string().valid(...orderStatus).required(),
   totalPrice: Joi.number().required(),
 });
 
