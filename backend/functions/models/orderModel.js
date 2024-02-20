@@ -6,7 +6,6 @@ const orderStatus = [
 ];
 
 const orderSchema = Joi.object({
-  orderId: Joi.string(),
   checkoutSessionId: Joi.string().required(),
   userId: Joi.string().required(),
   cartId: Joi.string().required(),
