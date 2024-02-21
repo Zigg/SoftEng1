@@ -115,7 +115,7 @@ const setAdminRoleServer = async (req, res, next) => {
     const isAdmin = adminUser.customClaims && adminUser.customClaims.admin === true;
     if (!isAdmin) {
       console.error(`Admin not found with ID: ${adminId}`);
-      return res.status(404).send({ success: false, msg: `User with id: ${adminId} is not an admin and cannot assign admin role` });
+      return res.status(400).send({ success: false, msg: `User with id: ${adminId} is not an admin and cannot assign admin role` });
     }
 
     const user = await admin.auth().getUser(id);
@@ -218,7 +218,7 @@ const getUserRoleServer = async (req, res, next) => {
       return res.status(404).send({ success: false, data: null, msg: "User has no assigned role" });
     }
 
-    return res.status(200).send({ success: true, data: user.customClaims });
+    return res.status(200).send({ success: true, role: user.customClaims.admin ? "admin" : "user" });
   } catch (error) {
     console.log(`GET USER ROLE ERROR [SERVER] ${error.message}`);
     return res.status(500).send({

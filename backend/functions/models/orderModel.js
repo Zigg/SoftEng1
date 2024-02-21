@@ -1,7 +1,7 @@
 // TODO: This is not yet final
 const Joi = require("joi");
 
-const orderStatus = [
+const orderStatusList = [
   "pending", "confirmed", "shipped", "delivered", "cancelled",
 ];
 
@@ -20,8 +20,10 @@ const orderSchema = Joi.object({
     postalCode: Joi.string(),
     state: Joi.string(),
   })).optional(),
-  status: Joi.string().valid(...orderStatus).required(),
+  status: Joi.string().valid(...orderStatusList).required(),
   totalPrice: Joi.number().required(),
 });
 
-module.exports = orderSchema;
+module.exports = {
+  orderSchema,
+};

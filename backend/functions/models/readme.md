@@ -4,16 +4,19 @@
 
 ```javascript
 const schema = {
-    "id": "string",
-    "name": "string",
+    "productName": "string",
     "basePrice": "number",
-    "sizes": "object" {
+    "sizes": "array" {
+      "map": {
         "price": "number",
         "name": "string"
+      }
     },
-    "addons": "object"{
+    "addons": "array"{
+      "map": {
         "name": "string",
         "price": "number"
+      }
     },
     "ingredients": "array" [
         "string"
@@ -23,7 +26,7 @@ const schema = {
     "imageUrl": "string",
     "isFeatured": "boolean",
     "isPublished": "boolean",
-    "nutritionalInfo": "object" {
+    "nutritionalInfo": "map" {
         "calories": "number",
         "carbohydrates": "number",
         "fat": "number",
@@ -39,7 +42,6 @@ const schema = {
 
 ```javascript
 const data = {
-  "id": "p1",
   "productName": "Cheese Pizza",
   "basePrice": 10,
   "sizes": [
@@ -84,49 +86,54 @@ const data = {
 
 ```javascript
 const schema = {
-    "id": "string",
+    "cartId": "string",
+    "checkoutSessionId": : "string",
     "userId": "string",
     "orderDate": "string",
     "status": "string",
     "customerName": "string",
     "customerEmail": "string",
-    "shippingAddress": "object" {
-        "address": "string",
+    "shippingAddress": "map" {
         "city": "string",
-        "province": "string"
+        "country": "string",
+        "line1": "string",
+        "line2": "string",
+        "postalCode": "string",
+        "state": "string"
     },
-    // This will contain all items from the cart based on the user's Id (Based on the cart model)
     "cartId": "string",
     "totalPrice": "number",
 }
 ```
 
 ## Order Example (Valid Inputs)
-
 ```javascript
 const data = {
-    "id": "o1",
-    "userId": "u1",
-    "orderDate": "2024-01-30",
-    "status": "confirmed",
-    "customerName": "Alice",
-    "customerEmail": "alice@example.com",
-    "shippingAddress": {
-        "address": "123 Main Street",
-        "city": "Binangonan",
-        "province": "Calabarzon"
-    },
-    "cartId": "c1",
-    "totalPrice": 35
-}
+  "cartId": "c1",
+  "checkoutSessionId": "cs1",
+  "userId": "u1",
+  "orderDate": "2024-02-20T02:33:19.915Z",
+  "status": "pending",
+  "customerName": "Alice",
+  "customerEmail": "alice@example.com",
+  "shippingAddress": {
+    "city": "Binangonan",
+    "country": "Philippines",
+    "line1": "123 Main Street",
+    "line2": "",
+    "postalCode": "1940",
+    "state": "Rizal"
+  },
+  "totalPrice": 35
+};
 ```
 
 ## Cart Collection Schema
 
 ```javascript
 const schema = {
-    "id": "string",
-    "items": "object" {
+    "cartId": "string",
+    "items": "array" {
         {
           "productId": "string",
           "productIdentifier": "string",
@@ -135,6 +142,7 @@ const schema = {
         }
     },
     "totalPrice": "number",
+    "userId": "string"
 }
 ```
 
@@ -142,7 +150,7 @@ const schema = {
 
 ```javascript
 const data = {
-  "id": "c1",
+  "cartId": "c1",
   "items": [
     {
       "productId": "p1",
@@ -157,5 +165,6 @@ const data = {
       "productPrice": 12
     }
   ],
-  "totalPrice": 32
+  "totalPrice": 32,
+  "userId": "u1"
 };
