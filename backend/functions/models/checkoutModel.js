@@ -21,7 +21,7 @@ const paymentStatusList = [
 // NOTE: This wont be used to validate the checkout session because that will be done by Stripe
 const checkoutSessionSchema = Joi.object({
   checkoutSessionId: Joi.string(),
-  userId: Joi.string().required(),
+  userId: Joi.string(),
   createdAt: Joi.date().iso(),
   paymentMethod: Joi.string().valid(...paymentMethodList).default("card"),
   customerName: Joi.string(),
