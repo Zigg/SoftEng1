@@ -101,7 +101,6 @@ const schema = {
         "postalCode": "string",
         "state": "string"
     },
-    "cartId": "string",
     "totalPrice": "number",
 }
 ```

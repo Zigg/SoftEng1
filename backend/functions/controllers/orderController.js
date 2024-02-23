@@ -51,15 +51,16 @@ const updateOrderStatusServer = async (req, res, next) => {
   try {
     const { status } = req.body;
 
-    const order = await db.collection("orders").doc(orderId).update({
+    await db.collection("orders").doc(orderId).update({
       status,
     });
 
-    return res.status(200).send({ success: true, data: order });
+    return res.status(200).send({ success: true, msg: "Order status updated successfully" });
   } catch (error) {
     return res.status(400).send({ success: false, msg: `UPDATE ORDER STATUS ERROR [SERVER] ${error.message}` });
   }
 };
+
 
 // TODO:
 const getOrderByIdServer = async (req, res, next) => {
