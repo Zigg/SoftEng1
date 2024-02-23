@@ -46,12 +46,12 @@ const createOrderServer = async (req, res) => {
 
 // TODO:
 const updateOrderStatusServer = async (req, res, next) => {
-  const orderId = req.params.orderId;
+  const cartId = req.params.cartId;
 
   try {
     const { status } = req.body;
 
-    await db.collection("orders").doc(orderId).update({
+    await db.collection("orders").doc(cartId).update({
       status,
     });
 
