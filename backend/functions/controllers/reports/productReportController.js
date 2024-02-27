@@ -1,11 +1,13 @@
 const admin = require("firebase-admin");
 const realtimeDb = admin.database();
+const productReportsRef = realtimeDb.ref("product_reports");
+const productRef = admin.firestore().collection("products");
 
+const productsFetched = 3;
 
-const productIncrement = async (productId) => {
+const productClickTrackerIncrement = async (productId) => {
   try {
-    const productReportsRef = realtimeDb.ref("product_reports");
-    const productSearchCountRef = productReportsRef.child("product_search_count");
+    const productSearchCountRef = productReportsRef.child("product_count_data");
     const productRef = productSearchCountRef.child(productId);
     // Increment the count for the specified product.
     await productRef.transaction((currentCount) => {
@@ -17,25 +19,25 @@ const productIncrement = async (productId) => {
   }
 };
 
+// const getProductDetails = async (productId) => {
+//   try {
+//     const productSnapshot = await productRef.doc(productId).get();
+//     return productSnapshot.data();
+//   } catch (error) {
+//     console.error(`GET PRODUCT DETAILS ERROR: ${error.message}`);
+//     throw error;
+//   }
+// };
 
-// This function retrieves the details of the product with the given productId.
-const getProductDetails = async (productId) => {
-  const productRef = realtimeDb.ref(`products/${productId}`);
-  const snapshot = await productRef.once("value");
-  return snapshot.val();
-};
-
-// This function fetches all the trending products based on "product_search_count".
-const getTrendingProducts = async () => {
+const getMostTrendingProducts = async () => {
   try {
-    const productReportsRef = realtimeDb.ref("product_reports");
-    const snapshot = await productReportsRef.once("value");
-    const productReports = snapshot.val();
+    const snapshot = await productReportsRef.child("product_count_data").once("value");
+    const productCounts = snapshot.val();
 
     // Create an array of products with their search counts.
-    const productsWithCounts = Object.keys(productReports).map((productId) => ({
+    const productsWithCounts = Object.keys(productCounts).map((productId) => ({
       id: productId,
-      searchCount: productReports[productId].product_search_count || 0,
+      searchCount: productCounts[productId] || 0,
     }));
 
     // Sort the array by search count in descending order.
@@ -43,9 +45,9 @@ const getTrendingProducts = async () => {
 
     // Fetch the product details for the top trending products.
     const trendingProductDetails = await Promise.all(
-      productsWithCounts.slice(0, 3).map(async (product) => ({
-        ...await getProductDetails(product.id),
-        searchCount: product.searchCount,
+      productsWithCounts.slice(0, productsFetched).map(async (product) => ({
+        // ...await getProductDetails(product.id),
+        searchCount: product.searchCount, productId: product.id,
       })),
     );
 
@@ -56,11 +58,10 @@ const getTrendingProducts = async () => {
   }
 };
 
-// This server function sends the trending products data as a response.
 const trendingProductsReportServer = async (_req, res, next) => {
   try {
-    const data = await getTrendingProducts();
-    return res.status(200).send({ success: true, data });
+    const data = await getMostTrendingProducts();
+    return res.status(200).send({ success: true, data: data });
   } catch (error) {
     console.error(`TRENDING PRODUCTS REPORT ERROR [SERVER] ${error.message}`);
     return res.status(500).send({
@@ -71,28 +72,7 @@ const trendingProductsReportServer = async (_req, res, next) => {
   }
 };
 
-
-const getLeastTrendingProducts = async () => {
-
-};
-
-const leastTrendingProductsReportServer = async (_req, res, next) => {
-  try {
-    const data = await getLeastTrendingProducts();
-    return res.status(200).send({ success: true, data });
-  }
-  catch (error) {
-    console.error(`LEAST TRENDING PRODUCTS REPORT ERROR [SERVER] ${error.message}`);
-    return res.status(500).send({
-      success: false,
-      msg: "LEAST TRENDING PRODUCTS REPORT ERROR [SERVER]",
-      error: error.message,
-    });
-  }
-};
-
 module.exports = {
   trendingProductsReportServer,
-  leastTrendingProductsReportServer,
-  productIncrement,
+  productClickTrackerIncrement,
 };
