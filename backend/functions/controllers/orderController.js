@@ -44,14 +44,24 @@ const createOrderServer = async (req, res) => {
   }
 };
 
-// TODO:
+// TODO: reference orderId and status
 const updateOrderStatusServer = async (req, res, next) => {
-  const cartId = req.params.cartId;
+  const orderId = req.params.orderId;
 
   try {
     const { status } = req.body;
 
-    await db.collection("orders").doc(cartId).update({
+    if (!status) {
+      return res.status(400).send({ success: false, msg: "Status is required" });
+    }
+
+    const allowedStatus = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
+
+    if (!allowedStatus.includes(status)) {
+      return res.status(400).send({ success: false, msg: "Invalid status" });
+    }
+
+    await db.collection("orders").doc(orderId).update({
       status,
     });
 
