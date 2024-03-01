@@ -44,7 +44,6 @@ const createOrderServer = async (req, res) => {
   }
 };
 
-// TODO: reference orderId and status
 const updateOrderStatusServer = async (req, res, next) => {
   const orderId = req.params.orderId;
 
@@ -54,7 +53,7 @@ const updateOrderStatusServer = async (req, res, next) => {
     if (!status) {
       return res.status(400).send({ success: false, msg: "Status is required" });
     }
-
+// TODO: Reference this from Joi from the order models schema
     const allowedStatus = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
     if (!allowedStatus.includes(status)) {
