@@ -2,7 +2,6 @@ const admin = require("firebase-admin");
 const db = admin.firestore();
 const productsCollectionRef = db.collection("products");
 const { productSchema, updateProductSchema } = require("../models/productModel");
-const { productClickTrackerIncrement } = require("./reports/productReportController");
 
 // NOTE: All of these endpoints are working as expected, further test should still be made to ensure that the data is being stored and retrieved correctly.
 
@@ -92,7 +91,6 @@ const getProductByIdServer = async (req, res, next) => {
         nutritionalInfo,
         preparationTime,
       };
-      await productClickTrackerIncrement(id);
       return res.status(200).send({ success: true, data: response });
     }
   } catch (error) {
