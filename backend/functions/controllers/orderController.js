@@ -44,32 +44,22 @@ const createOrderServer = async (req, res) => {
   }
 };
 
+// TODO:
 const updateOrderStatusServer = async (req, res, next) => {
   const orderId = req.params.orderId;
 
   try {
     const { status } = req.body;
 
-    if (!status) {
-      return res.status(400).send({ success: false, msg: "Status is required" });
-    }
-// TODO: Reference this from Joi from the order models schema
-    const allowedStatus = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
-
-    if (!allowedStatus.includes(status)) {
-      return res.status(400).send({ success: false, msg: "Invalid status" });
-    }
-
-    await db.collection("orders").doc(orderId).update({
+    const order = await db.collection("orders").doc(orderId).update({
       status,
     });
 
-    return res.status(200).send({ success: true, msg: "Order status updated successfully", data: order });
+    return res.status(200).send({ success: true, data: order });
   } catch (error) {
     return res.status(400).send({ success: false, msg: `UPDATE ORDER STATUS ERROR [SERVER] ${error.message}` });
   }
 };
-
 
 // TODO:
 const getOrderByIdServer = async (req, res, next) => {
