@@ -11,7 +11,7 @@ const productTestRouteServer = (_req, res, next) => {
 };
 
 // TODO: Add authentication middleware
-const addNewProductServer = async (req, res, next) => {
+const addNewProductServer = async (req, res, next) => {   
   try {
     const { error, value } = productSchema.validate(req.body);
 
@@ -101,25 +101,23 @@ const getProductByIdServer = async (req, res, next) => {
 
 // TODO: Add authentication middleware
 // TODO: Fork and fetch the current product details and update the fields that were changed only
-const updateProductByIdServer = async (req, res, next) => {
+const updateProductByIdServer = async (req, res) => {
+  const id = req.params.productId;
+  const doc = await productsCollectionRef.doc(id).get();
+
+  if (!doc.exists) {
+    return res.status(404).send({ success: false, msg: 'PRODUCT NOT FOUND [SERVER]' });
+  }
+
+  const { error, value } = updateProductSchema.validate(req.body);
+
+  if (error) {
+    return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
+  }
+
   try {
-    const id = req.params.productId;
-    const doc = await productsCollectionRef.doc(id).get();
-    const { error, value } = updateProductSchema.validate(req.body);
-    if (!doc.exists) {
-      return res.status(404).send({ success: false, msg: `PRODUCT NOT FOUND [SERVER]` });
-    }
-    if (error) {
-      console.error(`VALIDATION ERROR: [UPDATE BY ID] ${error.message}`);
-      return res.status(400).send({ success: false, msg: `VALIDATION ERROR: ${error.message}` });
-    } else {
-      productsCollectionRef.doc(id).update(value).then(() => {
-        return res.status(201).send({ success: true, data: value });
-      }).catch((error) => {
-        console.error("Error updating document: ", error);
-        return res.status(400).send({ success: false, msg: `UPDATE PRODUCT ERROR [SERVER] ${error.message}` });
-      });
-    }
+    await productsCollectionRef.doc(id).update(value);
+    return res.status(201).send({ success: true, data: value });
   } catch (error) {
     return res.status(400).send({ success: false, msg: `UPDATE PRODUCT ERROR [SERVER] ${error.message}` });
   }
