@@ -64,7 +64,7 @@ const updateOrderStatusServer = async (req, res, next) => {
       status,
     });
 
-    return res.status(200).send({ success: true, msg: "Order status updated successfully" });
+    return res.status(200).send({ success: true, msg: "Order status updated successfully", data: order });
   } catch (error) {
     return res.status(400).send({ success: false, msg: `UPDATE ORDER STATUS ERROR [SERVER] ${error.message}` });
   }
