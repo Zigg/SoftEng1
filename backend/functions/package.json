@@ -22,6 +22,7 @@
     "firebase-admin": "^11.11.0",
     "firebase-functions": "^4.7.0",
     "joi": "^17.12.1",
+    "resend": "^3.2.0",
     "stripe": "^14.15.0"
   },
   "devDependencies": {

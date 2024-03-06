@@ -152,5 +152,7 @@ https://drive.google.com/file/d/1R4FPRYh7YzpeYxYRZ6e0Zzk0-Z0vSQXP/view?usp=drive
 NOTE: Needed for testing checkout routes, order route as ordes will respond to certain events thrown by stripe webhook, (Check Stripe Docs regarding these webhook events)
 https://drive.google.com/file/d/1tLhtRhPr38FAhrbuF0v66UBUnfRlXKFz/view?usp=drive_link
 
+- **Video 7**: Setting Up Resend(for email verification)
+https://drive.google.com/file/d/12DR-m0uIaIK_rlgJCTAgWoEIOkRNPMaq/view?usp=drive_link
 
 
