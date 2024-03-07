@@ -3,7 +3,6 @@ const router = require("express").Router();
 const productController = require("../../controllers/productController");
 const { checkAdminRole } = require("../../middleware/adminMiddlewareProducts");
 
-
 router.get("/", productController.productTestRouteServer);
 router.post("/create", checkAdminRole, productController.addNewProductServer);
 router.get("/all", productController.getAllProductsServer);

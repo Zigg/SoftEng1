@@ -1,12 +1,11 @@
 const admin = require("firebase-admin");
 
 const axios = require('axios').default;
-
-//Make sure to add your own api key to the .env file
-//Example: FIREBASE_API_KEY=your_own_api_key
+//Make sure to add your own api key to the .env file from backend/functions
+//Example: VITE_FIREBASE_API_KEY=your_own_api_key
 //                          ^^^^^^^^^^^^^^^^
 require('dotenv').config();
-const FIREBASE_API_KEY= process.env.FIREBASE_API_KEY;
+const FIREBASE_API_KEY= process.env.VITE_FIREBASE_API_KEY;
 
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
