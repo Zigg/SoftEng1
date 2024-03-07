@@ -1,5 +1,13 @@
 const admin = require("firebase-admin");
 
+const axios = require('axios').default;
+
+//Make sure to add your own api key to the .env file
+//Example: FIREBASE_API_KEY=your_own_api_key
+//                          ^^^^^^^^^^^^^^^^
+require('dotenv').config();
+const FIREBASE_API_KEY= process.env.FIREBASE_API_KEY;
+
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
 const userTestProductServer = (_req, res, next) => {
@@ -257,6 +265,50 @@ const getUserByEmailServer = async (req, res, next) => {
 
 // TODO: Create user endpoint, this should be handled by firebase authentication. Upon creation of an account this should create a user collection in firestore based on the uuid of the firebase authentication from the current user
 
+// login user to get a token for authentication.
+const loginUserServer = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await admin.auth().getUserByEmail(email);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'User does not exist' });
+    }
+
+    const customToken = await admin.auth().createCustomToken(user.uid);
+    const idToken = await exchangeCustomTokenForIdToken(customToken);
+
+    return res.status(200).json({ success: true, idToken });
+  } catch (error) {
+    console.error(`LOGIN USER ERROR [SERVER]`, error);
+    return res.status(500).json({
+      success: false,
+      message: `LOGIN USER ERROR [SERVER]`,
+      error: error.message,
+    });
+  }
+};
+
+// This function is used to exchange a custom token for an id token
+const exchangeCustomTokenForIdToken = async (customToken) => {
+  try {
+    const response = await axios({
+      url: `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${FIREBASE_API_KEY}`,
+      method: 'post',
+      data: {
+        token: customToken,
+        returnSecureToken: true
+      },
+      json: true,
+    });
+
+    return response.data.idToken;
+  } catch (error) {
+    console.error(`EXCHANGE TOKEN ERROR [SERVER]`, error);
+    throw error;
+  }
+};
+
 module.exports = {
-  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer,
+  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer, loginUserServer,
 };
