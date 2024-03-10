@@ -12,7 +12,7 @@ const productTestRouteServer = (_req, res, next) => {
 };
 
 // TODO: Add authentication middleware
-const addNewProductServer = async (req, res, next) => { 
+const addNewProductServer = async (req, res, next) => {
   try {
     const { error, value } = productSchema.validate(req.body);
 
