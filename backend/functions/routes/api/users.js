@@ -14,7 +14,7 @@ router.post("/setUserRole/:userId", userController.setUserRoleServer);
 
 router.delete("/:userId", userController.deleteUserByIdServer);
 
-//login user to get a token for authentication
-router.post('/auth/loginUser', userController.loginUserServer);
+router.post("/auth/loginUser", userController.loginUserServer);
+router.post("/auth/registerUser", userController.registerUserServer);
 
 module.exports = router;
