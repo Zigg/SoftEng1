@@ -1,12 +1,7 @@
 const admin = require("firebase-admin");
-
-const axios = require('axios').default;
-//Make sure to add your own api key to the .env file from backend/functions
-//Example: VITE_FIREBASE_API_KEY=your_own_api_key
-//                          ^^^^^^^^^^^^^^^^
-require('dotenv').config();
-const FIREBASE_API_KEY= process.env.VITE_FIREBASE_API_KEY;
-
+const db = admin.firestore();
+const bcrypt = require("bcrypt");
+const userCollectionRef = db.collection("users");
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
 const userTestProductServer = (_req, res, next) => {
@@ -189,7 +184,9 @@ const setUserRoleServer = async (req, res, next) => {
       !user.emailVerified || user.disabled
     ) {
       console.error(`User with email: ${user.email} isn't eligible for a role type of user`);
-      return res.status(400).send({ success: false, msg: "User isn't eligible for a role type of user" });
+      return res.status(400).send({
+        success: false, msg: "User isn't eligible for a role type of user",
+      });
     }
 
     const userClaims = user.customClaims;
@@ -263,21 +260,91 @@ const getUserByEmailServer = async (req, res, next) => {
 };
 
 // TODO: Create user endpoint, this should be handled by firebase authentication. Upon creation of an account this should create a user collection in firestore based on the uuid of the firebase authentication from the current user
+const registerUserServer = async (req, res) => {
+  const { email, password, displayName } = req.body;
 
-// login user to get a token for authentication.
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    const userRecord = await admin.auth().createUser({
+      email,
+      password: hashedPassword,
+      displayName: displayName || null,
+    });
+
+    await saveUserDataToFirestore(userRecord.uid, email, hashedPassword, displayName);
+
+    const customToken = await admin.auth().createCustomToken(userRecord.uid);
+
+    return res.status(200).json({
+      success: true,
+      message: "User created successfully",
+      data: [userRecord.toJSON()],
+      customToken,
+    });
+  } catch (error) {
+    console.error(`REGISTER USER ERROR [SERVER]`, error);
+    return res.status(500).json({
+      success: false,
+      message: `REGISTER USER ERROR [SERVER]`,
+      error: error.message,
+    });
+  }
+};
+
+const hashPassword = async (plainPassword) => {
+  const saltRounds = 10;
+  return bcrypt.hash(plainPassword, saltRounds);
+};
+
+const saveUserDataToFirestore = async (uid, email, hashedPassword, displayName) => {
+  try {
+    await userCollectionRef.doc(uid).set({
+      email,
+      hashedPassword,
+      displayName,
+    });
+    console.log(`User data saved to Firestore for UID: ${uid}`);
+  } catch (error) {
+    console.error(`Error saving user data to Firestore:`, error);
+  }
+};
+
+// TODO: Create the session object
 const loginUserServer = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await admin.auth().getUserByEmail(email);
-    if (!user) {
-      return res.status(401).json({ success: false, message: 'User does not exist' });
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
     }
 
-    const customToken = await admin.auth().createCustomToken(user.uid);
-    const idToken = await exchangeCustomTokenForIdToken(customToken);
+    const userSnapshot = await userCollectionRef.where("email", "==", email).get();
 
-    return res.status(200).json({ success: true, idToken });
+    if (userSnapshot.empty) {
+      return res.status(401).json({ success: false, message: "User not found" });
+    }
+
+    const userDoc = userSnapshot.docs[0];
+    const uid = userDoc.id;
+    console.log(`User data fetched from Firestore for UID: ${uid}`);
+
+    if (!uid || typeof uid !== "string") {
+      return res.status(500).json({ success: false, message: "Invalid user data" });
+    }
+
+    const { hashedPassword } = userDoc.data();
+    const passwordMatch = await comparePassword(password, hashedPassword);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    return res.status(200).json({ success: true, message: "User logged in successfully" });
   } catch (error) {
     console.error(`LOGIN USER ERROR [SERVER]`, error);
     return res.status(500).json({
@@ -288,26 +355,10 @@ const loginUserServer = async (req, res) => {
   }
 };
 
-// This function is used to exchange a custom token for an id token
-const exchangeCustomTokenForIdToken = async (customToken) => {
-  try {
-    const response = await axios({
-      url: `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=${FIREBASE_API_KEY}`,
-      method: 'post',
-      data: {
-        token: customToken,
-        returnSecureToken: true
-      },
-      json: true,
-    });
-
-    return response.data.idToken;
-  } catch (error) {
-    console.error(`EXCHANGE TOKEN ERROR [SERVER]`, error);
-    throw error;
-  }
+const comparePassword = async (plainPassword, hashedPassword) => {
+  return bcrypt.compare(plainPassword, hashedPassword);
 };
 
 module.exports = {
-  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer, loginUserServer,
+  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer, loginUserServer, registerUserServer,
 };
