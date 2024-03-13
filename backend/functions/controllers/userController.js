@@ -276,9 +276,7 @@ const registerUserServer = async (req, res) => {
       displayName: displayName || null,
     });
 
-    const customToken = await admin.auth().createCustomToken(userRecord.uid);
-
-    const saveUserDataToFirestore = async (uid, email, hashedPassword, displayName, customToken) => {
+    const saveUserDataToFirestore = async (uid, email, hashedPassword, displayName) => {
       try {
         const existingUser = await userCollectionRef.where("email", "==", email).get();
         if (!existingUser.empty) {
@@ -289,7 +287,6 @@ const registerUserServer = async (req, res) => {
           email,
           hashedPassword,
           displayName,
-          customToken,
         });
         console.log(`User data saved to Firestore for UID: ${uid}`);
       } catch (error) {
@@ -297,13 +294,12 @@ const registerUserServer = async (req, res) => {
       }
     };
 
-    await saveUserDataToFirestore(userRecord.uid, email, hashedPassword, displayName, customToken);
+    await saveUserDataToFirestore(userRecord.uid, email, hashedPassword, displayName);
 
     return res.status(200).json({
       success: true,
       message: "User created successfully",
       data: [userRecord.toJSON()],
-      customToken,
     });
   } catch (error) {
     console.error(`REGISTER USER ERROR [SERVER]`, error);
