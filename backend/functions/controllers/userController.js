@@ -276,9 +276,28 @@ const registerUserServer = async (req, res) => {
       displayName: displayName || null,
     });
 
-    await saveUserDataToFirestore(userRecord.uid, email, hashedPassword, displayName);
-
     const customToken = await admin.auth().createCustomToken(userRecord.uid);
+
+    const saveUserDataToFirestore = async (uid, email, hashedPassword, displayName, customToken) => {
+      try {
+        const existingUser = await userCollectionRef.where("email", "==", email).get();
+        if (!existingUser.empty) {
+          existingUser.docs[0].ref.delete();
+          console.log(`User data deleted from Firestore for UID: ${existingUser.docs[0].id}`);
+        }
+        await userCollectionRef.doc(uid).set({
+          email,
+          hashedPassword,
+          displayName,
+          customToken,
+        });
+        console.log(`User data saved to Firestore for UID: ${uid}`);
+      } catch (error) {
+        console.error(`Error saving user data to Firestore:`, error);
+      }
+    };
+
+    await saveUserDataToFirestore(userRecord.uid, email, hashedPassword, displayName, customToken);
 
     return res.status(200).json({
       success: true,
@@ -299,19 +318,6 @@ const registerUserServer = async (req, res) => {
 const hashPassword = async (plainPassword) => {
   const saltRounds = 10;
   return bcrypt.hash(plainPassword, saltRounds);
-};
-
-const saveUserDataToFirestore = async (uid, email, hashedPassword, displayName) => {
-  try {
-    await userCollectionRef.doc(uid).set({
-      email,
-      hashedPassword,
-      displayName,
-    });
-    console.log(`User data saved to Firestore for UID: ${uid}`);
-  } catch (error) {
-    console.error(`Error saving user data to Firestore:`, error);
-  }
 };
 
 // TODO: Create the session object
