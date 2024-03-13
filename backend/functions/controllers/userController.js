@@ -1,5 +1,7 @@
 const admin = require("firebase-admin");
-
+const db = admin.firestore();
+const bcrypt = require("bcrypt");
+const userCollectionRef = db.collection("users");
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
 const userTestProductServer = (_req, res, next) => {
@@ -182,7 +184,9 @@ const setUserRoleServer = async (req, res, next) => {
       !user.emailVerified || user.disabled
     ) {
       console.error(`User with email: ${user.email} isn't eligible for a role type of user`);
-      return res.status(400).send({ success: false, msg: "User isn't eligible for a role type of user" });
+      return res.status(400).send({
+        success: false, msg: "User isn't eligible for a role type of user",
+      });
     }
 
     const userClaims = user.customClaims;
@@ -256,7 +260,107 @@ const getUserByEmailServer = async (req, res, next) => {
 };
 
 // TODO: Create user endpoint, this should be handled by firebase authentication. Upon creation of an account this should create a user collection in firestore based on the uuid of the firebase authentication from the current user
+const registerUserServer = async (req, res) => {
+  const { email, password, displayName } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    const userRecord = await admin.auth().createUser({
+      email,
+      password: hashedPassword,
+      displayName: displayName || null,
+    });
+
+    const saveUserDataToFirestore = async (uid, email, hashedPassword, displayName) => {
+      try {
+        const existingUser = await userCollectionRef.where("email", "==", email).get();
+        if (!existingUser.empty) {
+          existingUser.docs[0].ref.delete();
+          console.log(`User data deleted from Firestore for UID: ${existingUser.docs[0].id}`);
+        }
+        await userCollectionRef.doc(uid).set({
+          email,
+          hashedPassword,
+          displayName,
+        });
+        console.log(`User data saved to Firestore for UID: ${uid}`);
+      } catch (error) {
+        console.error(`Error saving user data to Firestore:`, error);
+      }
+    };
+
+    await saveUserDataToFirestore(userRecord.uid, email, hashedPassword, displayName);
+
+    return res.status(200).json({
+      success: true,
+      message: "User created successfully",
+      data: [userRecord.toJSON()],
+    });
+  } catch (error) {
+    console.error(`REGISTER USER ERROR [SERVER]`, error);
+    return res.status(500).json({
+      success: false,
+      message: `REGISTER USER ERROR [SERVER]`,
+      error: error.message,
+    });
+  }
+};
+
+const hashPassword = async (plainPassword) => {
+  const saltRounds = 10;
+  return bcrypt.hash(plainPassword, saltRounds);
+};
+
+// TODO: Create the session object
+const loginUserServer = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
+    }
+
+    const userSnapshot = await userCollectionRef.where("email", "==", email).get();
+
+    if (userSnapshot.empty) {
+      return res.status(401).json({ success: false, message: "User not found" });
+    }
+
+    const userDoc = userSnapshot.docs[0];
+    const uid = userDoc.id;
+    console.log(`User data fetched from Firestore for UID: ${uid}`);
+
+    if (!uid || typeof uid !== "string") {
+      return res.status(500).json({ success: false, message: "Invalid user data" });
+    }
+
+    const { hashedPassword } = userDoc.data();
+    const passwordMatch = await comparePassword(password, hashedPassword);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    return res.status(200).json({ success: true, message: "User logged in successfully" });
+  } catch (error) {
+    console.error(`LOGIN USER ERROR [SERVER]`, error);
+    return res.status(500).json({
+      success: false,
+      message: `LOGIN USER ERROR [SERVER]`,
+      error: error.message,
+    });
+  }
+};
+
+const comparePassword = async (plainPassword, hashedPassword) => {
+  return bcrypt.compare(plainPassword, hashedPassword);
+};
 
 module.exports = {
-  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer,
+  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer, loginUserServer, registerUserServer,
 };
