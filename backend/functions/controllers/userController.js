@@ -1,6 +1,9 @@
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const bcrypt = require("bcrypt");
+require("dotenv").config();
+const { verifyToken, generateToken } = require("../helpers/tokens/tokenActions");
+const fetchRole = require("../helpers/fetchRole");
 const userCollectionRef = db.collection("users");
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
 
@@ -113,11 +116,10 @@ const setAdminRoleServer = async (req, res, next) => {
       return res.status(400).send({ success: false, msg: "Admin ID is required" });
     }
 
-    const adminUser = await admin.auth().getUser(adminId);
-    const isAdmin = adminUser.customClaims && adminUser.customClaims.admin === true;
-    if (!isAdmin) {
+    const adminUser = await fetchRole(adminId);
+    if (!adminUser || adminUser !== "admin") {
       console.error(`Admin not found with ID: ${adminId}`);
-      return res.status(400).send({ success: false, msg: `User with id: ${adminId} is not an admin and cannot assign admin role` });
+      return res.status(404).send({ success: false, msg: `User with id: ${adminId} is not an admin and cannot assign admin role` });
     }
 
     const user = await admin.auth().getUser(id);
@@ -136,7 +138,7 @@ const setAdminRoleServer = async (req, res, next) => {
       return res.status(400).send({ success: false, msg: `User with email: ${user.email} isn't eligible for an admin role` });
     }
 
-    const userClaims = await admin.auth().getUser(id).customClaims;
+    const userClaims = await fetchRole(id);
     if (userClaims && userClaims.admin) {
       console.error(`User is already an admin with ID: ${id}`);
       return res.status(400).send({ success: false, msg: "User is already an admin" });
@@ -156,7 +158,6 @@ const setAdminRoleServer = async (req, res, next) => {
   }
 };
 
-
 // TODO: This should be the default role set to a user upon creation of an account
 const setUserRoleServer = async (req, res, next) => {
   const id = req.params.userId;
@@ -166,8 +167,8 @@ const setUserRoleServer = async (req, res, next) => {
       return res.status(400).send({ success: false, msg: "Admin ID is required" });
     }
 
-    const adminUser = await admin.auth().getUser(adminId);
-    if (!adminUser.customClaims || !adminUser.customClaims.admin) {
+    const adminUser = await fetchRole(adminId);
+    if (!adminUser || adminUser !== "admin") {
       console.error(`Admin not found with ID: ${adminId}`);
       return res.status(404).send({ success: false, msg: `User with id: ${adminId} is not an admin and cannot assign admin role` });
     }
@@ -189,8 +190,8 @@ const setUserRoleServer = async (req, res, next) => {
       });
     }
 
-    const userClaims = user.customClaims;
-    if (userClaims && userClaims.user) {
+    const userClaims = await fetchRole(id);
+    if (userClaims && userClaims === "user") {
       console.error(`User is already a role of type "user" with ID: ${id}`);
       return res.status(400).send({ success: false, msg: "User is already a role of type user" });
     }
@@ -212,17 +213,18 @@ const setUserRoleServer = async (req, res, next) => {
 const getUserRoleServer = async (req, res, next) => {
   try {
     const id = req.params.userId;
+    const role = await fetchRole(id);
     const user = await admin.auth().getUser(id);
 
     if (!user) {
       return res.status(404).send({ success: false, msg: "User not found" });
     }
 
-    if (!user.customClaims || (!user.customClaims.admin && !user.customClaims.user)) {
-      return res.status(404).send({ success: false, data: null, msg: "User has no assigned role" });
+    if (!role) {
+      return res.status(404).send({ success: false, msg: "User has no assigned role" });
     }
 
-    return res.status(200).send({ success: true, role: user.customClaims.admin ? "admin" : "user" });
+    return res.status(200).send({ success: true, role: role });
   } catch (error) {
     console.log(`GET USER ROLE ERROR [SERVER] ${error.message}`);
     return res.status(500).send({
@@ -232,7 +234,6 @@ const getUserRoleServer = async (req, res, next) => {
     });
   }
 };
-
 
 const getUserByEmailServer = async (req, res, next) => {
   try {
@@ -259,7 +260,6 @@ const getUserByEmailServer = async (req, res, next) => {
   }
 };
 
-// TODO: Create user endpoint, this should be handled by firebase authentication. Upon creation of an account this should create a user collection in firestore based on the uuid of the firebase authentication from the current user
 const registerUserServer = async (req, res) => {
   const { email, password, displayName } = req.body;
 
@@ -346,7 +346,11 @@ const loginUserServer = async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    return res.status(200).json({ success: true, message: "User logged in successfully" });
+    await fetchRole(uid);
+    console.log(fetchRole(uid) === "admin" ? "Admin logged in successfully" : "User logged in successfully");
+
+    const token = await generateToken(uid);
+    return res.status(200).json({ success: true, message: "User logged in successfully", jwtToken: token });
   } catch (error) {
     console.error(`LOGIN USER ERROR [SERVER]`, error);
     return res.status(500).json({
