@@ -1,28 +1,44 @@
 const admin = require("firebase-admin");
+const db = admin.firestore();
+const tokensCollectionRef = db.collection("tokens");
+const { verifyToken } = require("../helpers/tokens/tokenActions");
+
+const checkToken = async (req, res) => {
+  try {
+    const authorizationHeader = req.headers.authorization;
+    const token = authorizationHeader && authorizationHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).send({ success: false, msg: "Token required for Authorization" });
+    }
+
+    const verifiedToken = await verifyToken(token, res, req);
+    const tokenDoc = await tokensCollectionRef.doc(token).get();
+
+    if (!tokenDoc.exists && !verifiedToken) {
+      return res.status(404).send({ success: false, msg: "Token not found" });
+    }
+
+    return tokenDoc.data();
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(403).send({ success: false, msg: "You are not authorized" });
+  }
+};
 
 const checkAdminRole = async (req, res, next) => {
   try {
-    // NOTE: Assigning the UID to req.headers.authorization for testing, this will later be changed to a bearer token returned by firestore, I will create another endpoint to create an valid api key that will be assigned certain permissions based on the role of the user and the permissions set by the user.
-    const authorizationHeader = req.headers.authorization;
-    const token = authorizationHeader && authorizationHeader.split(" ")[1];
-    const uid = token;
+    const tokenData = await checkToken(req, res);
 
-    if (!uid) {
-      return res.status(401).send({ success: false, msg: "UID required for Authorization" });
-    }
+    // TODO: Cache the role value, and check if the token is still valid, use an in memory store, maybe
+    const role = tokenData.role;
 
-    const user = await admin.auth().getUser(uid);
-
-    if (!user) {
-      return res.status(404).send({ success: false, msg: "User not found" });
-    }
-
-    if (user.customClaims && user.customClaims.admin === true) {
+    if (role === "admin") {
       return next();
     }
-
     return res.status(403).send({ success: false, msg: "You are not authorized!" });
   } catch (error) {
+    console.error("Error:", error);
     res.status(403).send({ success: false, msg: "You are not authorized" });
   }
 };
