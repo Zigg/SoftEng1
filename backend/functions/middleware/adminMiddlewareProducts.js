@@ -1,27 +1,37 @@
 const admin = require("firebase-admin");
-
+const db = admin.firestore();
+const tokensCollectionRef = db.collection("tokens");
+const { verifyToken } = require("../helpers/tokens/tokenActions");
 const checkAdminRole = async (req, res, next) => {
   try {
-    // NOTE: Assigning the UID to req.headers.authorization for testing, this will later be changed to a bearer token returned by firestore, I will create another endpoint to create an valid api key that will be assigned certain permissions based on the role of the user and the permissions set by the user.
     const authorizationHeader = req.headers.authorization;
     const token = authorizationHeader && authorizationHeader.split(" ")[1];
-    const uid = token;
 
-    if (!uid) {
-      return res.status(401).send({ success: false, msg: "UID required for Authorization" });
+    if (!token) {
+      return res.status(401).send({ success: false, msg: "Token required for Authorization" });
+    }
+    const verifiedToken = await verifyToken(token);
+    console.log("verifiedToken", verifiedToken);
+    const tokenDoc = await tokensCollectionRef.doc(token).get();
+
+    if (!tokenDoc.exists) {
+      return res.status(404).send({ success: false, msg: "Token not found" });
     }
 
-    const user = await admin.auth().getUser(uid);
+    const tokenData = tokenDoc.data();
 
-    if (!user) {
-      return res.status(404).send({ success: false, msg: "User not found" });
+    // NOTE: Check if the token is expired, this is not yet final
+    if (tokenData.expires < Date.now()) {
+      return res.status(401).send({ success: false, msg: "Token expired" });
     }
 
-    if (user.customClaims && user.customClaims.admin === true) {
+    // TODO: Cache the role value
+    const role = tokenData.role;
+
+    if (role === "admin") {
       return next();
     }
-
-    return res.status(403).send({ success: false, msg: "You are not authorized!" });
+    return res.status(403).send({ success: false, msg: "You are not authorized!", token: tokenData });
   } catch (error) {
     res.status(403).send({ success: false, msg: "You are not authorized" });
   }
