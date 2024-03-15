@@ -2,12 +2,10 @@
 /* eslint-disable object-curly-spacing */
 /* eslint-disable require-jsdoc */
 const express = require("express");
-const session = require("express-session");
 const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const cors = require("cors");
 require("dotenv").config();
-const expressSessionSecret = process.env.EXPRESS_SESSION_SECRET;
 const serviceAccountKey = require("./serviceAccountKey.json");
 
 let app = null;
@@ -49,12 +47,6 @@ if (!app) {
   const checkoutRoute = require("./routes/api/checkout");
   app.use("/api/checkout", checkoutRoute);
 
-  app.use(session({
-    secret: expressSessionSecret,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false, maxAge: 60000, sameSite: "none" },
-  }));
   app.get("/", (_req, res) => {
     res.send("Hello World");
   });
