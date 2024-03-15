@@ -2,7 +2,8 @@ const admin = require("firebase-admin");
 const db = admin.firestore();
 const bcrypt = require("bcrypt");
 require("dotenv").config();
-const { verifyToken, generateToken } = require("../helpers/tokens/tokenActions");
+const { verifyToken, generateToken, expireToken } = require("../helpers/tokens/tokenActions");
+const { createSession } = require("../helpers/sessions/sessionActions");
 const fetchRole = require("../helpers/fetchRole");
 const userCollectionRef = db.collection("users");
 // NOTE: To get a sample response from these API endpoints refer to the readme in the route directory
@@ -296,7 +297,7 @@ const registerUserServer = async (req, res) => {
 
     await saveUserDataToFirestore(userRecord.uid, email, hashedPassword, displayName);
 
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       message: "User created successfully",
       data: [userRecord.toJSON()],
@@ -349,8 +350,30 @@ const loginUserServer = async (req, res) => {
     await fetchRole(uid);
     console.log(fetchRole(uid) === "admin" ? "Admin logged in successfully" : "User logged in successfully");
 
-    const token = await generateToken(uid);
-    return res.status(200).json({ success: true, message: "User logged in successfully", jwtToken: token });
+    let token;
+    try {
+      token = await generateToken(uid);
+    } catch (error) {
+      console.error(`Error generating token`, error);
+      return res.status(500).json({
+        success: false,
+        message: `Error generating token`,
+        error: error.message,
+      });
+    }
+    let session;
+    try {
+      session = await createSession(token);
+    } catch (error) {
+      console.error(`Error creating session`, error);
+      return res.status(500).json({
+        success: false,
+        message: `Error creating session`,
+        error: error.message,
+      });
+    }
+
+    return res.status(200).json({ success: true, message: "User logged in successfully", session: session });
   } catch (error) {
     console.error(`LOGIN USER ERROR [SERVER]`, error);
     return res.status(500).json({
@@ -361,10 +384,35 @@ const loginUserServer = async (req, res) => {
   }
 };
 
+const logOutUserServer = async (req, res) => {
+  try {
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) {
+      return res.status(401).json({ success: false, message: "Authorization header missing" });
+    }
+
+    const token = authorizationHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Token missing" });
+    }
+
+    await verifyToken(token, res, req);
+    await expireToken(token);
+    return res.status(200).json({ success: true, message: "User logged out successfully" });
+  } catch (error) {
+    console.error(`LOGOUT USER ERROR [SERVER]`, error);
+    return res.status(500).json({
+      success: false,
+      message: `LOGOUT USER ERROR [SERVER]`,
+      error: error.message,
+    });
+  }
+};
+
 const comparePassword = async (plainPassword, hashedPassword) => {
   return bcrypt.compare(plainPassword, hashedPassword);
 };
 
 module.exports = {
-  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer, loginUserServer, registerUserServer,
+  userTestProductServer, getUserCountServer, getUserListServer, getUserByIdServer, deleteUserByIdServer, setAdminRoleServer, getUserRoleServer, setUserRoleServer, getUserByEmailServer, loginUserServer, registerUserServer, logOutUserServer,
 };
