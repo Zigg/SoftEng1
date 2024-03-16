@@ -6,13 +6,13 @@ const { checkSession } = require("../../helpers/sessions/sessionActions");
 
 const verifySession = async (req, res) => {
   try {
-    const sessionID = req.headers.sessionid;
+    const sessionId = req.headers.sessionId;
 
-    if (!sessionID) {
+    if (!sessionId) {
       return res.status(401).send({ success: false, msg: "Session ID required for Authorization" });
     }
 
-    const sessionDoc = await sessionsCollectionRef.doc(sessionID).get(sessionID);
+    const sessionDoc = await sessionsCollectionRef.doc(sessionId).get(sessionId);
 
     if (!sessionDoc.exists) {
       return res.status(404).send({ success: false, msg: "Session not found" });
