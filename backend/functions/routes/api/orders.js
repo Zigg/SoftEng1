@@ -7,6 +7,6 @@ router.get("/:orderId", orderController.getOrderByIdServer);
 
 router.post("/create", orderController.createOrderServer);
 
-router.patch("/update/:orderId", orderController.updateOrderStatusServer);
+router.put("/update/:orderId", orderController.updateOrderStatusServer);
 
 module.exports = router;
